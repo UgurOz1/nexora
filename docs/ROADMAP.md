@@ -52,11 +52,12 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 **Öğrenilecekler:** Docker nedir (image, container, layer, volume, network), Dockerfile, Docker Compose, monorepo, pnpm workspaces, Git akışı, Conventional Commits, ESLint/Prettier.
 
 - [x] Docker Desktop kurulumu (WSL2 ile)
-- [ ] Docker alıştırması: `hello-world`, bir Postgres container'ı açıp içine bağlanma, volume'un ne işe yaradığını görme
-- [ ] Git repo + GitHub repo, `main` için branch koruması
-- [ ] pnpm monorepo iskeleti: `apps/api`, `apps/web`, `packages/config`
-- [ ] `docker-compose.yml`: Postgres, Redis, Mailpit (S3 uyumlu depolama Hafta 11'de eklenecek)
-- [ ] ESLint, Prettier, TypeScript strict, Husky + commitlint
+- [x] Docker alıştırması: `hello-world`, bir Postgres container'ı açıp içine bağlanma, volume'un ne işe yaradığını görme
+- [x] Yerel Git repo (GitHub repo + `main` için branch koruması: bekliyor)
+- [x] pnpm monorepo iskeleti (`apps/` ve `packages/` boş, içerikleri Hafta 2'de gelecek)
+- [x] `docker-compose.yml`: Postgres, Redis, Mailpit (S3 uyumlu depolama Hafta 11'de eklenecek)
+- [x] Prettier, Husky, lint-staged, commitlint
+- [ ] ESLint + TypeScript strict (ilk TypeScript paketiyle birlikte Hafta 2'de)
 - [ ] İlk GitHub Actions iş akışı: lint + typecheck
 - [ ] `.env.example`, `README.md` (ilk hali)
 - [ ] ADR-0001: teknoloji yığını
