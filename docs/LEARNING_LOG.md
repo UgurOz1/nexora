@@ -99,4 +99,26 @@ Bu dosya mülakat hazırlığında da ana kaynağın olacak.
 
 **Dürüst not:** Birim test kapsamı ~%45; servis mantığı çoğunlukla e2e testlerle doğrulanıyor ve e2e kapsamı bu rakama dahil değil.
 
-**Sonraki adım:** Hafta 6, ileri görev özellikleri (görev bağımlılıkları ve döngü tespiti, değişiklik geçmişi, tekrarlayan görevler).
+### 2026-10-31 · Hafta 6 · Bağımlılıklar, geçmiş, tekrarlayan görevler
+
+**Ne yaptık:** Görev bağımlılıkları (döngü tespiti, durum kapısı), değişiklik geçmişi (iki sürümü karşılaştırma), tekrarlayan görevler (RRULE, zamanla tetiklenen üretim mantığı), 73 e2e test, ADR-0005.
+**Kavramlar:**
+
+- _Yönlü graf ve döngü:_ Bağımlılıklar bir graf. Yeni kenar `A -> B` ancak `B` zaten `A`'ya ulaşabiliyorsa döngü kapatır; bunu DFS ile ararız. Her düğüm bir kez gezilir: O(V+E). Yinelemeli yazdık, 50.000 görevlik zincirde bile yığın taşmıyor.
+- _Yarış durumu (race condition):_ İki istek aynı anda ters kenarlar eklerse, ikisi de diğerini görmeden kontrolü geçer ve birlikte döngü yaratır. Çözüm: şirket başına **advisory lock**; yazanlar sıraya girer, kilit işlem bitince kalkar.
+- _Satır kilidi (`SELECT ... FOR UPDATE`):_ İki kişi aynı görevi aynı anda düzenlerse ikinci işlem beklemek zorunda; böylece geçmiş kayıtları zincirleme tutarlı kalır (A→X, sonra X→Y).
+- _Transaction:_ Değişiklik ve geçmiş kaydı ya birlikte yazılır ya hiç.
+- _Olay + snapshot:_ Olay "ne değişti", snapshot "sonra nasıldı" der. İki sürümün farkı iki snapshot'tan hesaplanır.
+- _Idempotency (aynı işi iki kez yapmama):_ Tekrarlayan görev üretiminde iki bağımsız katman: koşullu güncelleme ile "talep etme" ve veritabanı unique kısıtı. Biri bozulsa diğeri korur.
+- _Misfire politikası:_ İş uzun süre çalışmazsa kaçırılan 30 oluşum için 30 görev değil, 1 görev üretilir.
+- _RRULE:_ Takvim uygulamalarının standardı; cron "her ayın ilk pazartesisi"ni ifade edemez.
+
+**Dersler:**
+
+- Mutasyon testi bu hafta çok işe yaradı: kilitleri tek tek kaldırınca eşzamanlılık testleri başarısız oldu; yani testler zamanlama hatalarını da yakalıyor. Altı mutasyondan biri başta "geçti": sadece "talep etme" katmanını kaldırmıştım ve veritabanı kısıtı kopyaları yine engelledi. Bu bir test eksiği değil, iki katmanın bağımsız çalıştığının kanıtıydı; ikisini birlikte kaldırınca 6 test başarısız oldu.
+- TypeScript'in yakalamadığı bir hata riski: `{ startsAt, ...dto }` yazınca, DTO'da gönderilmemiş alan `undefined` olarak durduğu için hesaplanan değeri ezebilir. Hesaplanan değerleri spread'in sonuna koymak gerekir.
+- Test yazarken yanlış beklenti: şablon silinince üretilmiş görevlerin `recurringTaskId`'si bilerek NULL oluyor; testim görevleri hâlâ şablon kimliğiyle arıyordu.
+
+**Dürüst notlar:** Birim test kapsamı ~%39'a düştü (yeni servisler ağırlıklı olarak e2e testlerle doğrulanıyor). Proje silinince görevlerin silinmesi için tek tek olay yazılmıyor; kuruluş geneli denetim kaydı Hafta 11'de.
+
+**Sonraki adım:** Hafta 7, frontend temeli (Next.js, Tailwind, shadcn/ui, giriş sayfaları).

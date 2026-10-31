@@ -2,7 +2,15 @@ import type { PrismaClient } from '../generated/prisma/client';
 
 // Models that carry an organizationId column. Everything else (users, organizations, tokens)
 // is global and must be used through the regular PrismaService.
-const TENANT_MODELS = new Set(['Membership', 'Invitation', 'Project', 'Task']);
+const TENANT_MODELS = new Set([
+  'Membership',
+  'Invitation',
+  'Project',
+  'Task',
+  'TaskDependency',
+  'TaskEvent',
+  'RecurringTask',
+]);
 
 const WHERE_OPERATIONS = new Set([
   'findMany',
@@ -89,6 +97,10 @@ function guardUpdateData(data: unknown, organizationId: string): unknown {
   }
   return data;
 }
+
+// The client returned by forTenant, and the one handed to a callback inside its $transaction.
+export type TenantClient = ReturnType<typeof forTenant>;
+export type TenantTx = Parameters<Parameters<TenantClient['$transaction']>[0]>[0];
 
 export function forTenant(client: PrismaClient, organizationId: string) {
   return client.$extends({

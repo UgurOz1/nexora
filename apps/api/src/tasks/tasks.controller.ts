@@ -60,11 +60,11 @@ export class TasksController {
 
   @Patch('tasks/:taskId')
   update(
-    @Param('orgId') orgId: string,
+    @CurrentMembership() actor: OrgMembership,
     @Param('taskId', ParseUUIDPipe) taskId: string,
     @Body() dto: UpdateTaskDto,
   ) {
-    return this.tasks.update(orgId, taskId, dto);
+    return this.tasks.update(actor.organizationId, actor, taskId, dto);
   }
 
   @Delete('tasks/:taskId')

@@ -13,6 +13,7 @@ import { HealthModule } from './health/health.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ProjectsModule } from './projects/projects.module';
+import { RecurringTasksModule } from './recurring-tasks/recurring-tasks.module';
 import { RedisModule } from './redis/redis.module';
 import { TasksModule } from './tasks/tasks.module';
 
@@ -51,6 +52,7 @@ import { TasksModule } from './tasks/tasks.module';
     OrganizationsModule,
     ProjectsModule,
     TasksModule,
+    RecurringTasksModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_FILTER, useClass: AllExceptionsFilter }],
