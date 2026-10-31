@@ -205,6 +205,11 @@ describe('organizations: tenant isolation and roles (e2e)', () => {
       expect(((await get(mia, '/organizations').expect(200)).body as Org[]).length).toBe(0);
     });
 
+    it('does not let a manager or member remove anyone', async () => {
+      await del(max, `/organizations/${acme.id}/members/${ann.id}`).expect(403);
+      await del(max, `/organizations/${acme.id}/members/${ada.id}`).expect(403);
+    });
+
     it('lets an admin remove a manager but not another admin', async () => {
       const members = `/organizations/${acme.id}/members`;
 

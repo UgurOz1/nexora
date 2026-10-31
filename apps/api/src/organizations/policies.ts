@@ -1,5 +1,5 @@
 import { Role } from '../generated/prisma/client';
-import { outranks } from './roles';
+import { hasAtLeast, outranks } from './roles';
 
 // Pure decision functions: the "who may do what" rules live here, away from HTTP and the database,
 // so they are easy to read, test and keep in sync with docs/PERMISSIONS.md.
@@ -24,11 +24,11 @@ export function canChangeRole(
   );
 }
 
-// Anyone can leave (except the OWNER, who must delete the organization instead);
-// removing someone else needs a higher rank than theirs.
+// Anyone can leave (except the OWNER, who must delete the organization instead).
+// Removing someone else needs at least ADMIN and a higher rank than theirs.
 export function canRemove(actor: Role, target: { role: Role; isSelf: boolean }): boolean {
   if (target.isSelf) {
     return target.role !== Role.OWNER;
   }
-  return outranks(actor, target.role);
+  return hasAtLeast(actor, Role.ADMIN) && outranks(actor, target.role);
 }

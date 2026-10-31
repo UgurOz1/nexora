@@ -65,6 +65,10 @@ describe('canRemove', () => {
     expect(canRemove(ADMIN, { role: ADMIN, isSelf: false })).toBe(false);
     expect(canRemove(ADMIN, { role: OWNER, isSelf: false })).toBe(false);
     expect(canRemove(OWNER, { role: ADMIN, isSelf: false })).toBe(true);
-    expect(canRemove(MANAGER, { role: MEMBER, isSelf: false })).toBe(true);
+  });
+
+  it('does not let managers or members remove anyone else', () => {
+    expect(canRemove(MANAGER, { role: MEMBER, isSelf: false })).toBe(false);
+    expect(canRemove(MEMBER, { role: MEMBER, isSelf: false })).toBe(false);
   });
 });
