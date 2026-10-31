@@ -70,7 +70,7 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 **Öğrenilecekler:** NestJS mimarisi (module, controller, provider, dependency injection), DTO + class-validator, pipe/guard/interceptor/filter farkı, Prisma (schema, migration, client), ilişkisel modelleme ve ERD.
 
 - [x] NestJS uygulaması iskeleti (`apps/api`), ilk unit test, build (ADR-0003: NestJS 11 + TS 5.9)
-- [ ] `ConfigModule` + env doğrulama (zod)
+- [x] `ConfigModule` + env doğrulama (zod), fail fast
 - [ ] Global hata filtresi, standart hata formatı
 - [ ] `/api/v1` öneki ve API versiyonlama
 - [ ] Swagger (OpenAPI) dokümantasyonu
@@ -130,7 +130,7 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 
 **Öğrenilecekler:** Graf veri yapısı, döngü tespiti (DFS), cron ifadeleri, değişiklik geçmişi (event/history tablosu), transaction'lar ve izolasyon seviyeleri.
 
-- [ ] Görev bağımlılıkları: "A bitmeden B başlayamaz", **döngü tespiti** (sen yazacaksın)
+- [ ] Görev bağımlılıkları: "A bitmeden B başlayamaz", **döngü tespiti**
 - [ ] Bağımlılık engelliyse durum değişikliğini reddetme
 - [ ] Görev geçmişi: her değişikliğin kaydı ve iki versiyonu karşılaştırma (diff)
 - [ ] Tekrarlayan görev tanımı (cron/RRULE), üretim mantığı Hafta 10'da kuyruğa bağlanacak
@@ -158,7 +158,7 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 **Öğrenilecekler:** Sürükle-bırak (dnd-kit), sıralama için fractional indexing (LexoRank benzeri), optimistic update ve hata durumunda geri alma, erişilebilirlik (klavye ile sürükleme).
 
 - [ ] Kanban panosu: sütunlar = durumlar
-- [ ] Sürükle-bırak, sıralamanın kalıcı olması (fractional index, sen yazacaksın)
+- [ ] Sürükle-bırak, sıralamanın kalıcı olması (fractional index)
 - [ ] Optimistic update
 - [ ] Görev detay paneli: alt görevler, bağımlılıklar, geçmiş
 - [ ] Liste görünümü + filtreler
