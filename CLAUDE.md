@@ -14,40 +14,35 @@ Amaç bir Trello kopyası değil; organizasyon bazlı yetkilendirme, veri izolas
 - Öğrenme günlüğü: [docs/LEARNING_LOG.md](docs/LEARNING_LOG.md)
 - Bu projeden sonra DOCUMIND (RAG platformu) yapılacak; plan ROADMAP'in sonunda.
 
-## En önemli kural: öğretme modu
+## Çalışma şekli: Claude yapar, kısa anlatır
 
-Uğur bu projeyi teknolojileri **öğrenmek** için yapıyor. Kodu yazıp geçmek başarı değildir; Uğur'un her parçayı anlayıp mülakatta anlatabilmesi başarıdır.
+Uğur'un tercihi (2026-10-31): **Kodu, testleri, PR'ı, CI takibini ve merge'ü Claude yapar; Uğur'a görev bırakılmaz.** Uğur, yapılanı anlamak ve mülakatta anlatabilmek için kısa açıklama ister.
 
-Her yeni teknoloji, kavram veya özellikte Claude şunları anlatır:
+Her adımdan sonra Claude **kısa ve öz** anlatır:
 
-1. **Ne?** Bu araç/kavram nedir, hangi problemi çözer?
-2. **Neden?** Bu projede neden bunu seçtik? Alternatifleri neydi (en az bir tane), neden onları seçmedik?
-3. **Nasıl?** Nasıl çalışır? Gerekirse küçük bir örnek veya diyagram.
-4. **Nerede?** Projede hangi dosyada/katmanda duruyor, diğer parçalarla nasıl bağlanıyor?
-5. **Gerçek hayatta:** Şirketlerde nasıl kullanılır, mülakatta nasıl sorulur?
+- **Ne yaptık?** Hangi dosyalar, ne işe yarıyor.
+- **Neden?** Seçilen yaklaşım ve (varsa) reddedilen alternatif, bir cümleyle.
+- **Mülakat notu:** Bu konu sorulursa söylenecek bir iki cümle (gerekirse).
 
-Anlatımlar Türkçe; kod, değişken isimleri, commit mesajları ve kod içi yorumlar İngilizce.
+Uzun ders anlatımı yok; Uğur sorarsa ayrıntıya girilir. Anlatımlar Türkçe; kod, değişken isimleri, commit mesajları ve kod içi yorumlar İngilizce.
 
-### İş bölümü
-
-- **Uğur yazar:** çekirdek iş mantığı (yetkilendirme kuralları, görev bağımlılığı / döngü tespiti, sıralama mantığı, tenant izolasyonu, test senaryoları). Claude burada önce kavramı anlatır, sonra ipucu verir, kodu doğrudan yazmaz. Uğur takılırsa ipuçları adım adım somutlaşır.
-- **Claude yazabilir:** boilerplate, konfigürasyon dosyaları, tekrar eden CRUD iskeletleri, UI bileşen iskeletleri. Yazdıktan sonra satır satır ne yaptığını açıklar.
-- Uğur "sen yaz" derse Claude yazar, ama yine açıklar ve Uğur'a kodu kendi cümleleriyle anlattırır.
+Uğur'un yapması gereken tek şeyler, Claude'un teknik olarak yapamadıkları: hesaba giriş, yönetici izni (UAC) onayı, ödeme gibi kişisel işlemler.
 
 ### Her özellik için akış
 
-1. **Kavram:** Claude konuyu anlatır (yukarıdaki 5 madde).
-2. **Tasarım:** Kısa bir tasarım notu (endpoint'ler, veri modeli, edge case'ler). Önemli bir kararsa `docs/adr/` altına ADR yazılır.
-3. **Branch:** `feat/<kısa-isim>` gibi bir branch açılır.
-4. **Uygulama:** küçük adımlar, her adım çalışır halde.
-5. **Test:** unit test ve gerekirse e2e test.
-6. **İnceleme:** Claude kodu inceler; Uğur kodun ne yaptığını kendi cümleleriyle anlatır.
-7. **Kayıt:** PR açılır, merge edilir. `docs/ROADMAP.md` içindeki kutucuk işaretlenir, `docs/LEARNING_LOG.md` güncellenir.
+1. **Branch:** `feat/<kısa-isim>` gibi bir branch açılır.
+2. **Uygulama + test:** küçük adımlar, her adım çalışır halde; unit test ve gerekirse e2e test. Önemli bir kararsa `docs/adr/` altına ADR yazılır.
+3. **Doğrulama:** typecheck, test, build ve gerekirse uygulamayı çalıştırıp deneme.
+4. **PR:** Claude `gh` ile açar, CI'ı takip eder, yeşilse merge eder ve yerel `main`'i günceller.
+5. **Kayıt:** `docs/ROADMAP.md` kutucukları ve `docs/LEARNING_LOG.md` güncellenir.
+6. **Anlatım:** yukarıdaki kısa format.
 
 ### Claude'un unutmaması gerekenler
 
 - Oturum başında ROADMAP'e bakıp nerede kaldığımızı söyle.
-- Oturum sonunda: ROADMAP kutucuklarını güncelle, LEARNING_LOG'a o oturumda öğrenilenleri ekle (Uğur'la birlikte).
+- Oturum sonunda: ROADMAP kutucuklarını güncelle, LEARNING_LOG'a o oturumda yapılanları ve kavramları kısa notlarla ekle.
+- `gh` yolu: `C:\Program Files\GitHub CLI\gh.exe`; `pnpm` yolu: `C:\Users\ugur\AppData\Roaming\npm` (eski terminal oturumlarında PATH'te olmayabilir).
+- Türkçe içerikli dosyaları PowerShell `Get-Content`/`Set-Content` ile değiştirme (kodlamayı bozar); Edit aracını kullan.
 - Plandan sapılırsa (yeni karar, kapsam değişikliği) ROADMAP'i ve gerekirse ADR'yi güncelle.
 - Uğur'un bilmediği bir şeyi "biliyormuş gibi" geçme. Docker şu an yeni; ilk haftalarda Docker konularını daha ayrıntılı anlat.
 
@@ -90,5 +85,5 @@ Bir özellik ancak şunlar sağlanınca "bitti" sayılır:
 - [ ] Testleri yazıldı ve CI yeşil
 - [ ] Yetki ve tenant izolasyonu kontrol edildi
 - [ ] Swagger dokümantasyonu güncel (endpoint ise)
-- [ ] Uğur kodu kendi cümleleriyle açıklayabiliyor
+- [ ] Uğur'a kısa açıklama yapıldı
 - [ ] ROADMAP ve LEARNING_LOG güncellendi
