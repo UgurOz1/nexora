@@ -1,7 +1,8 @@
-import { VersioningType } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import cookieParser from 'cookie-parser';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 import type { Env } from './config/env';
@@ -16,11 +17,19 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
   app.enableShutdownHooks();
+  app.use(cookieParser());
+  // whitelist + forbidNonWhitelisted: unknown fields are rejected, so a client cannot sneak in
+  // e.g. `role: "OWNER"` on an endpoint that never meant to accept it (mass assignment).
+  app.useGlobalPipes(
+    new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }),
+  );
 
   const openApi = new DocumentBuilder()
     .setTitle('NEXORA API')
     .setDescription('Multi-tenant team, project and task management API')
     .setVersion('1.0')
+    .addBearerAuth()
+    .addCookieAuth('nexora_refresh')
     .build();
   SwaggerModule.setup('api/docs', app, () => SwaggerModule.createDocument(app, openApi));
 
