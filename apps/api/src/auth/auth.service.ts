@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { hash, verify } from '@node-rs/argon2';
 import type { Env } from '../config/env';
 import { PrismaService } from '../prisma/prisma.service';
+import { AccountService } from './account.service';
 import type { LoginDto, RegisterDto } from './dto/auth.dto';
 import { ClientMeta, IssuedRefreshToken, TokenService } from './token.service';
 
@@ -27,6 +28,7 @@ export class AuthService implements OnModuleInit {
   constructor(
     private readonly prisma: PrismaService,
     private readonly tokens: TokenService,
+    private readonly account: AccountService,
     private readonly config: ConfigService<Env, true>,
   ) {}
 
@@ -44,6 +46,7 @@ export class AuthService implements OnModuleInit {
     const user = await this.prisma.user.create({
       data: { email: dto.email, name: dto.name, passwordHash: await hash(dto.password) },
     });
+    await this.account.sendVerificationEmail(user.id);
     return this.startSession(user.id, meta);
   }
 

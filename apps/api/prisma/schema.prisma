@@ -44,8 +44,30 @@ model User {
   assignedTasks   Task[]       @relation("TaskAssignee")
   createdTasks    Task[]       @relation("TaskCreator")
   refreshTokens   RefreshToken[]
+  userTokens      UserToken[]
 
   @@map("users")
+}
+
+enum UserTokenType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
+// Single-use tokens sent by email. Only the hash is stored, like refresh tokens.
+model UserToken {
+  id        String        @id @default(uuid())
+  userId    String
+  type      UserTokenType
+  tokenHash String        @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime      @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+  @@map("user_tokens")
 }
 
 // One row per issued refresh token. Tokens from one login share a familyId; each refresh
