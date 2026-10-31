@@ -1,5 +1,11 @@
 import { z } from 'zod';
 
+// An empty `KEY=` line in .env means "not set".
+const optionalString = z.preprocess(
+  (value) => (value === '' ? undefined : value),
+  z.string().min(1).optional(),
+);
+
 export const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   // Env vars are always strings; coerce turns "3001" into 3001.
@@ -17,6 +23,10 @@ export const envSchema = z.object({
   SMTP_HOST: z.string().default('127.0.0.1'),
   SMTP_PORT: z.coerce.number().int().min(1).max(65535).default(1025),
   MAIL_FROM: z.string().default('NEXORA <no-reply@nexora.test>'),
+  // Google sign-in is optional: without these two, the Google endpoints answer 404.
+  GOOGLE_CLIENT_ID: optionalString,
+  GOOGLE_CLIENT_SECRET: optionalString,
+  GOOGLE_REDIRECT_URI: z.url().default('http://localhost:3001/api/v1/auth/google/callback'),
 });
 
 export type Env = z.infer<typeof envSchema>;

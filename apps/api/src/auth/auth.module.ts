@@ -7,6 +7,7 @@ import { MailModule } from '../mail/mail.module';
 import { AccountService } from './account.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { GoogleAuthService } from './google/google-auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { TokenService } from './token.service';
 
@@ -30,6 +31,7 @@ import { TokenService } from './token.service';
   providers: [
     AuthService,
     AccountService,
+    GoogleAuthService,
     TokenService,
     { provide: APP_GUARD, useClass: JwtAuthGuard },
   ],
