@@ -57,7 +57,7 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 - [x] pnpm monorepo iskeleti (`apps/` ve `packages/` boş, içerikleri Hafta 2'de gelecek)
 - [x] `docker-compose.yml`: Postgres, Redis, Mailpit (S3 uyumlu depolama Hafta 11'de eklenecek)
 - [x] Prettier, Husky, lint-staged, commitlint
-- [ ] ESLint + TypeScript strict (ilk TypeScript paketiyle birlikte Hafta 2'de)
+- [x] ESLint (type-aware) + TypeScript strict, CI'da lint adımı
 - [x] İlk GitHub Actions iş akışı (şimdilik format kontrolü; lint + typecheck Hafta 2'de eklenecek)
 - [x] `.env.example`, `README.md` (ilk hali)
 - [x] ADR-0001: teknoloji yığını, ADR-0002: monorepo
@@ -71,14 +71,14 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 
 - [x] NestJS uygulaması iskeleti (`apps/api`), ilk unit test, build (ADR-0003: NestJS 11 + TS 5.9)
 - [x] `ConfigModule` + env doğrulama (zod), fail fast
-- [ ] Global hata filtresi, standart hata formatı
+- [x] Global hata filtresi, standart hata formatı (Prisma P2002 → 409, P2025 → 404)
 - [x] `/api/v1` öneki ve API versiyonlama
 - [x] Swagger (OpenAPI) dokümantasyonu (`/api/docs`)
 - [x] Health check endpoint'i: Redis (`/api/health`)
 - [x] Health check'e veritabanı kontrolü
 - [x] ERD çizimi: User, Organization, Membership, Invitation, Project, Task ([docs/ERD.md](ERD.md))
 - [x] Prisma 7 şeması + ilk migration + seed script
-- [ ] Yapılandırılmış loglama (pino) ve request ID
+- [x] Yapılandırılmış loglama (pino) ve request ID (`x-request-id`)
 
 **Çıktı:** Swagger'da görünen, DB'ye bağlı, loglayan bir API iskeleti.
 **Mülakat soruları:** Dependency injection ne işe yarar? Guard ile middleware farkı ne? Migration neden var, şemayı elle değiştirsek ne olur?
