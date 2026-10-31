@@ -28,6 +28,17 @@ Roller bir merdiven oluşturur: **OWNER > ADMIN > MANAGER > MEMBER**. Bir şirke
 | Başkasının görevini silmek                        |   ✓   |   ✓   |    ✓    |        |
 | Kendi oluşturduğu görevi silmek                   |   ✓   |   ✓   |    ✓    |   ✓    |
 
+### Bağımlılıklar, geçmiş ve tekrarlayan görevler
+
+| İşlem                                                    | OWNER | ADMIN | MANAGER | MEMBER |
+| -------------------------------------------------------- | :---: | :---: | :-----: | :----: |
+| Görev bağımlılığı eklemek, kaldırmak                     |   ✓   |   ✓   |    ✓    |   ✓    |
+| Görev geçmişini görmek, iki sürümü karşılaştırmak        |   ✓   |   ✓   |    ✓    |   ✓    |
+| Tekrarlayan görev şablonlarını görmek                    |   ✓   |   ✓   |    ✓    |   ✓    |
+| Tekrarlayan görev şablonu oluşturmak, düzenlemek, silmek |   ✓   |   ✓   |    ✓    |        |
+
+Şablon sürekli yeni iş ürettiği için yönetimi MANAGER ve üstüne ait. Bağımlılığı olan ve bitmemiş bir görev, bekledikleri DONE olana kadar `TODO`'dan ilerletilemez (409).
+
 Bir göreve yalnızca aynı şirketin üyesi atanabilir. Silme "soft delete"tir: kayıtlar veritabanında kalır, API'den kaybolur.
 
 ## "Kimin üzerinde" kuralları

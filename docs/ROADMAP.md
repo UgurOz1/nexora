@@ -131,11 +131,11 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 
 **Öğrenilecekler:** Graf veri yapısı, döngü tespiti (DFS), cron ifadeleri, değişiklik geçmişi (event/history tablosu), transaction'lar ve izolasyon seviyeleri.
 
-- [ ] Görev bağımlılıkları: "A bitmeden B başlayamaz", **döngü tespiti**
-- [ ] Bağımlılık engelliyse durum değişikliğini reddetme
-- [ ] Görev geçmişi: her değişikliğin kaydı ve iki versiyonu karşılaştırma (diff)
-- [ ] Tekrarlayan görev tanımı (cron/RRULE), üretim mantığı Hafta 10'da kuyruğa bağlanacak
-- [ ] Kritik işlemlerde transaction kullanımı
+- [x] Görev bağımlılıkları: "A bitmeden B başlayamaz", **döngü tespiti** (yinelemeli DFS, O(V+E), şirket başına advisory lock)
+- [x] Bağımlılık engelliyse durum değişikliğini reddetme (409, engelleyen görevleri adlarıyla söyler)
+- [x] Görev geçmişi: her değişikliğin kaydı ve iki versiyonu karşılaştırma (olay + snapshot, [ADR-0005](adr/0005-task-dependencies-history-recurrence.md))
+- [x] Tekrarlayan görev tanımı (RRULE; üretim mantığı `generateDue(now)` hazır ve test edildi, Hafta 10'da kuyruğa bağlanacak)
+- [x] Kritik işlemlerde transaction kullanımı (değişiklik + geçmiş tek işlemde, satır kilidi `FOR UPDATE`, koşullu güncelleme ile "talep etme")
 
 **Çıktı:** NEXORA'yı sıradan bir öğrenci projesinden ayıran özellikler.
 **Mülakat soruları:** Döngüyü nasıl tespit ettin, karmaşıklığı ne? İki kullanıcı aynı görevi aynı anda değiştirirse ne olur?
