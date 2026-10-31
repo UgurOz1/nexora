@@ -10,6 +10,7 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { genRequestId } from './common/logging/request-id';
 import { Env, validateEnv } from './config/env';
 import { HealthModule } from './health/health.module';
+import { OrganizationsModule } from './organizations/organizations.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { RedisModule } from './redis/redis.module';
 
@@ -27,7 +28,7 @@ import { RedisModule } from './redis/redis.module';
         const nodeEnv = config.get('NODE_ENV', { infer: true });
         return {
           pinoHttp: {
-            level: nodeEnv === 'production' ? 'info' : 'debug',
+            level: { production: 'info', development: 'debug', test: 'silent' }[nodeEnv],
             // JSON lines in production (for log tools), readable single lines locally.
             transport:
               nodeEnv === 'development'
@@ -44,6 +45,8 @@ import { RedisModule } from './redis/redis.module';
     RedisModule,
     HealthModule,
     AuthModule,
+    // After AuthModule so its guard runs after the JWT guard.
+    OrganizationsModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_FILTER, useClass: AllExceptionsFilter }],

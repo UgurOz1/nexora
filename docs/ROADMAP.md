@@ -102,15 +102,15 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 
 **Öğrenilecekler:** Multi-tenancy modelleri (ayrı DB / ayrı şema / ortak şema), RBAC, NestJS guard + custom decorator, Prisma client extension, Postgres Row Level Security (kavram olarak).
 
-- [ ] Organizasyon oluşturma, kullanıcının birden fazla organizasyonu olabilmesi
-- [ ] Roller: Owner, Admin, Manager, Member ve yetki matrisi (dokümanda tablo)
-- [ ] E-posta ile davet (süreli token), daveti kabul etme
-- [ ] `@Roles()` decorator + `RolesGuard`
-- [ ] Tenant bağlamı: istekten aktif organizasyonu çözme, tüm sorgulara `organizationId` zorunluluğu
-- [ ] **İzolasyon testleri:** A şirketi B şirketinin verisini hiçbir endpoint'ten göremiyor
-- [ ] ADR-0004: çok kiracılık modeli
+- [x] Organizasyon oluşturma, kullanıcının birden fazla organizasyonu olabilmesi
+- [x] Roller: Owner, Admin, Manager, Member ve yetki matrisi ([docs/PERMISSIONS.md](PERMISSIONS.md))
+- [x] E-posta ile davet (süreli token), daveti kabul etme
+- [x] `@MinRole()` decorator + global `OrganizationGuard` (üyelik + rol kontrolü, üye değilse 404)
+- [x] Tenant bağlamı: `prisma.forTenant(orgId)` uzantısı, tüm sorgulara `organizationId` otomatik eklenir
+- [x] **İzolasyon testleri:** A şirketi B şirketinin verisini hiçbir endpoint'ten göremiyor (22 e2e test, gerçek DB, CI'da çalışır; koruma bilerek bozulunca testler başarısız oluyor)
+- [x] ADR-0004: çok kiracılık modeli
 
-**Çıktı:** M1. Rol bazlı, tenant'ları izole bir backend.
+**Çıktı:** M1. Rol bazlı, tenant'ları izole bir backend. **Tamamlandı.**
 **Mülakat soruları:** Neden ortak şema seçtin? Bir geliştirici `organizationId` filtresini unutursa sistemin seni nasıl korur? RBAC ile ABAC farkı ne?
 
 ### Hafta 5 (30 Kas – 6 Ara): Projeler, görevler ve test altyapısı

@@ -12,6 +12,33 @@ concurrency:
 jobs:
   checks:
     runs-on: ubuntu-latest
+    # Real Postgres and Redis for the integration tests, started next to the job.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: nexora
+          POSTGRES_PASSWORD: ci-password
+          POSTGRES_DB: nexora
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U nexora"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://nexora:ci-password@localhost:5432/nexora
+      REDIS_URL: redis://localhost:6379
     steps:
       - uses: actions/checkout@v4
 
@@ -38,3 +65,8 @@ jobs:
 
       - name: Unit tests
         run: pnpm --filter @nexora/api test
+
+      # Creates a nexora_test database, applies the real migrations and runs the tenant
+      # isolation and permission tests over HTTP.
+      - name: Integration tests
+        run: pnpm --filter @nexora/api test:e2e
