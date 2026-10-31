@@ -117,12 +117,12 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 
 **Öğrenilecekler:** REST tasarımı (kaynak isimleri, status kodları, idempotency), sayfalama (offset vs cursor), filtreleme/sıralama, soft delete, Testcontainers ile gerçek DB'de test, test piramidi.
 
-- [ ] Projeler CRUD (departman/ekip alanıyla)
-- [ ] Görevler CRUD: başlık, açıklama, durum, öncelik, deadline, atanan kişi, etiketler
-- [ ] Alt görevler
-- [ ] Cursor tabanlı sayfalama, filtreleme ve sıralama
-- [ ] Soft delete
-- [ ] Testcontainers ile e2e testler, CI'da test aşaması ve kapsam raporu
+- [x] Projeler CRUD (departman alanıyla; MANAGER+ oluşturur/düzenler, ADMIN+ siler)
+- [x] Görevler CRUD: başlık, açıklama, durum, öncelik, deadline, atanan kişi, etiketler
+- [x] Alt görevler (tek seviye)
+- [x] Cursor tabanlı sayfalama, filtreleme (durum, öncelik, atanan, etiket, başlık araması, süresi geçenler) ve sıralama
+- [x] Soft delete (proje silinince görevleri, görev silinince alt görevleri de gizlenir)
+- [x] CI'da gerçek Postgres'te e2e testler ve kapsam raporu. Testcontainers yerine GitHub Actions servis container'ları ve `docker compose` kullanıldı: aynı sonuç, daha az hareketli parça (Hafta 4'te kuruldu).
 
 **Çıktı:** Proje/görev API'si, CI'da gerçek Postgres üzerinde çalışan testler.
 **Mülakat soruları:** Cursor sayfalaması neden offset'ten iyi? Unit test ile integration test farkı ne? PUT ile PATCH farkı ne?

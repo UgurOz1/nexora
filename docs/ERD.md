@@ -47,6 +47,8 @@ erDiagram
         uuid id PK
         uuid organizationId FK
         string name
+        string description
+        string department "ekip / departman"
         datetime deletedAt "soft delete"
     }
     tasks {
@@ -58,6 +60,7 @@ erDiagram
         enum status "TODO | IN_PROGRESS | IN_REVIEW | DONE"
         enum priority "LOW | MEDIUM | HIGH | URGENT"
         datetime dueDate
+        string_array labels "küçük harfli, tekil, en fazla 10"
         uuid assigneeId FK
         uuid createdById FK
         string position "Kanban sırası"
@@ -70,6 +73,7 @@ erDiagram
 - **Çok kiracılık:** Tenant'a ait her tabloda `organizationId` var. `tasks` tablosunda da (projeden türetilebilse bile) tutuluyor, böylece her sorgu doğrudan tenant ile filtrelenebiliyor ve indekslenebiliyor.
 - **Membership ayrı tablo:** Bir kullanıcı birden fazla organizasyonda, her birinde farklı rolle olabilir (çoka çok ilişki + rol).
 - **Davet token'ı hash'li:** Veritabanı sızsa bile davet linkleri kullanılamaz.
-- **Soft delete:** Projeler ve görevler silinince `deletedAt` dolar; geri alma ve denetim kaydı mümkün olur.
+- **Soft delete:** Projeler ve görevler silinince `deletedAt` dolar; geri alma ve denetim kaydı mümkün olur. Proje silinince görevleri aynı işlemde silinmiş olarak işaretlenir; görev silinince alt görevleri de. Her okuma sorgusu `deletedAt: null` filtresi uygular.
+- **Alt görev:** Aynı tabloda `parentId` ile; yalnızca bir seviye (alt görevin alt görevi yok) ve üstüyle aynı projede.
 - **UUID kimlikler:** Sıralı sayılar URL'de tahmin edilebilir (`/tasks/1`, `/tasks/2`) ve kayıt sayısını açığa çıkarır.
-- **İndeksler:** Kanban ekranının ana sorgusu (`organizationId + projectId + status`) için birleşik indeks.
+- **İndeksler:** Kanban ekranının ana sorgusu (`organizationId + projectId + status`) ve şirket genelindeki liste/sayfalama (`organizationId + createdAt`) için birleşik indeksler.

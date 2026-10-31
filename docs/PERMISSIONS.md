@@ -17,7 +17,18 @@ Roller bir merdiven oluşturur: **OWNER > ADMIN > MANAGER > MEMBER**. Bir şirke
 | Üyeyi çıkarmak                             |   ✓   |   ✓   |         |        |
 | Kendi isteğiyle şirketten ayrılmak         |       |   ✓   |    ✓    |   ✓    |
 
-Projeler ve görevler için kurallar Hafta 5'te bu tabloya eklenecek (MANAGER ve üstü proje oluşturabilir gibi).
+### Projeler ve görevler
+
+| İşlem                                             | OWNER | ADMIN | MANAGER | MEMBER |
+| ------------------------------------------------- | :---: | :---: | :-----: | :----: |
+| Projeleri ve görevleri görmek                     |   ✓   |   ✓   |    ✓    |   ✓    |
+| Proje oluşturmak, düzenlemek                      |   ✓   |   ✓   |    ✓    |        |
+| Projeyi silmek (görevleri de gizlenir)            |   ✓   |   ✓   |         |        |
+| Görev ve alt görev oluşturmak, düzenlemek, atamak |   ✓   |   ✓   |    ✓    |   ✓    |
+| Başkasının görevini silmek                        |   ✓   |   ✓   |    ✓    |        |
+| Kendi oluşturduğu görevi silmek                   |   ✓   |   ✓   |    ✓    |   ✓    |
+
+Bir göreve yalnızca aynı şirketin üyesi atanabilir. Silme "soft delete"tir: kayıtlar veritabanında kalır, API'den kaybolur.
 
 ## "Kimin üzerinde" kuralları
 

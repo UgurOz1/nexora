@@ -24,6 +24,11 @@ export function canChangeRole(
   );
 }
 
+// A task can be deleted by whoever created it, or by a MANAGER and above.
+export function canDeleteTask(actor: Role, task: { createdById: string }, userId: string): boolean {
+  return task.createdById === userId || hasAtLeast(actor, Role.MANAGER);
+}
+
 // Anyone can leave (except the OWNER, who must delete the organization instead).
 // Removing someone else needs at least ADMIN and a higher rank than theirs.
 export function canRemove(actor: Role, target: { role: Role; isSelf: boolean }): boolean {

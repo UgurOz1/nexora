@@ -149,6 +149,8 @@ model Project {
   organizationId String
   name           String
   description    String?
+  // Free-form team or department this project belongs to, e.g. "Marketing".
+  department     String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime?
@@ -172,6 +174,7 @@ model Task {
   status         TaskStatus   @default(TODO)
   priority       TaskPriority @default(MEDIUM)
   dueDate        DateTime?
+  labels         String[]     @default([])
   assigneeId     String?
   createdById    String
   // Fractional index string used to order tasks inside a Kanban column (week 8).
@@ -188,6 +191,7 @@ model Task {
   createdBy    User         @relation("TaskCreator", fields: [createdById], references: [id], onDelete: Restrict)
 
   @@index([organizationId, projectId, status])
+  @@index([organizationId, createdAt])
   @@index([assigneeId])
   @@index([parentId])
   @@map("tasks")
