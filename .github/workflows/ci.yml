@@ -57,6 +57,16 @@ jobs:
       - name: Generate Prisma client
         run: pnpm --filter @nexora/api prisma:generate
 
+      # openapi.json is the contract the web client is generated from. If a controller or DTO
+      # changed and the file was not regenerated, this fails with a diff.
+      - name: API contract is up to date
+        run: |
+          pnpm --filter @nexora/api openapi:generate
+          git diff --exit-code -- apps/api/openapi.json || {
+            echo "::error::apps/api/openapi.json is out of date. Run: pnpm --filter @nexora/api openapi:generate"
+            exit 1
+          }
+
       - name: Lint
         run: pnpm lint
 

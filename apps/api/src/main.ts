@@ -1,9 +1,9 @@
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
-import { configureApp } from './app.setup';
+import { configureApp, openApiConfig } from './app.setup';
 import type { Env } from './config/env';
 
 async function bootstrap() {
@@ -15,14 +15,7 @@ async function bootstrap() {
   configureApp(app);
   app.enableShutdownHooks();
 
-  const openApi = new DocumentBuilder()
-    .setTitle('NEXORA API')
-    .setDescription('Multi-tenant team, project and task management API')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .addCookieAuth('nexora_refresh')
-    .build();
-  SwaggerModule.setup('api/docs', app, () => SwaggerModule.createDocument(app, openApi));
+  SwaggerModule.setup('api/docs', app, () => SwaggerModule.createDocument(app, openApiConfig()));
 
   await app.listen(config.get('API_PORT', { infer: true }));
 }
