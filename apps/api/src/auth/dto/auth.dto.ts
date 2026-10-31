@@ -41,6 +41,30 @@ export class LoginDto {
   password!: string;
 }
 
+export class TokenDto {
+  @ApiProperty({ description: 'Token from the link in the email' })
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(128)
+  token!: string;
+}
+
+export class ForgotPasswordDto {
+  @ApiProperty({ example: 'ada@example.com' })
+  @Transform(normalizeEmail)
+  @IsEmail()
+  @MaxLength(254)
+  email!: string;
+}
+
+export class ResetPasswordDto extends TokenDto {
+  @ApiProperty({ minLength: 8, maxLength: 128 })
+  @IsString()
+  @MinLength(8)
+  @MaxLength(128)
+  password!: string;
+}
+
 export class AccessTokenResponseDto {
   @ApiProperty()
   accessToken!: string;

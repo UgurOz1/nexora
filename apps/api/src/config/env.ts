@@ -10,6 +10,13 @@ export const envSchema = z.object({
   JWT_ACCESS_SECRET: z.string().min(32),
   JWT_ACCESS_TTL_SECONDS: z.coerce.number().int().positive().default(900),
   REFRESH_TOKEN_TTL_DAYS: z.coerce.number().int().positive().default(30),
+  // Links in emails point to the web app, which then calls the API.
+  APP_URL: z.url().default('http://localhost:3000'),
+  // 127.0.0.1, not "localhost": nodemailer does its own DNS lookup, and some networks resolve
+  // "localhost" to the machine's LAN address, where Mailpit is not listening.
+  SMTP_HOST: z.string().default('127.0.0.1'),
+  SMTP_PORT: z.coerce.number().int().min(1).max(65535).default(1025),
+  MAIL_FROM: z.string().default('NEXORA <no-reply@nexora.test>'),
 });
 
 export type Env = z.infer<typeof envSchema>;

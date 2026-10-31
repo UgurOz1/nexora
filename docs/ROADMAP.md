@@ -89,8 +89,8 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 
 - [x] Kayıt ve giriş (e-posta + şifre, argon2id)
 - [x] Access token (kısa ömürlü) + refresh token (DB'de hash'li, rotasyonlu, çalınma tespiti)
-- [ ] E-posta doğrulama (Mailpit ile)
-- [ ] Şifre sıfırlama (tek kullanımlık, süreli token)
+- [x] E-posta doğrulama (Mailpit ile)
+- [x] Şifre sıfırlama (tek kullanımlık, süreli token; sıfırlayınca tüm oturumlar kapanır)
 - [ ] Google ile giriş
 - [x] Çıkış ve tüm oturumlardan çıkış
 - [x] Auth için unit testler (e2e testler Hafta 5'te Testcontainers ile)

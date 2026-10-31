@@ -15,8 +15,16 @@ import type { CookieOptions, Request, Response } from 'express';
 import { AuthUser, CurrentUser } from '../common/auth/current-user.decorator';
 import { Public } from '../common/auth/public.decorator';
 import type { Env } from '../config/env';
+import { AccountService } from './account.service';
 import { AuthService, Session } from './auth.service';
-import { AccessTokenResponseDto, LoginDto, RegisterDto } from './dto/auth.dto';
+import {
+  AccessTokenResponseDto,
+  ForgotPasswordDto,
+  LoginDto,
+  RegisterDto,
+  ResetPasswordDto,
+  TokenDto,
+} from './dto/auth.dto';
 import type { ClientMeta } from './token.service';
 
 export const REFRESH_COOKIE = 'nexora_refresh';
@@ -26,6 +34,7 @@ export const REFRESH_COOKIE = 'nexora_refresh';
 export class AuthController {
   constructor(
     private readonly auth: AuthService,
+    private readonly account: AccountService,
     private readonly config: ConfigService<Env, true>,
   ) {}
 
@@ -99,6 +108,40 @@ export class AuthController {
   @ApiBearerAuth()
   me(@CurrentUser() user: AuthUser) {
     return this.auth.me(user.id);
+  }
+
+  @Public()
+  @Post('verify-email')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  verifyEmail(@Body() dto: TokenDto): Promise<void> {
+    return this.account.verifyEmail(dto.token);
+  }
+
+  @Post('resend-verification')
+  @HttpCode(HttpStatus.ACCEPTED)
+  @ApiBearerAuth()
+  async resendVerification(@CurrentUser() user: AuthUser) {
+    await this.account.sendVerificationEmail(user.id);
+    return { message: 'If your email is not verified yet, a new link is on its way.' };
+  }
+
+  @Public()
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.ACCEPTED)
+  async forgotPassword(@Body() dto: ForgotPasswordDto) {
+    await this.account.requestPasswordReset(dto.email);
+    return { message: 'If an account exists for this email, a reset link is on its way.' };
+  }
+
+  @Public()
+  @Post('reset-password')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async resetPassword(
+    @Body() dto: ResetPasswordDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<void> {
+    await this.account.resetPassword(dto.token, dto.password);
+    res.clearCookie(REFRESH_COOKIE, this.cookieOptions());
   }
 
   // Access token goes in the body (kept in memory by the client); the refresh token goes in an
