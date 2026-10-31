@@ -4,6 +4,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { validateEnv } from './config/env';
+import { HealthModule } from './health/health.module';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
@@ -13,6 +15,8 @@ import { validateEnv } from './config/env';
       envFilePath: resolve(__dirname, '../../../.env'),
       validate: validateEnv,
     }),
+    RedisModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
