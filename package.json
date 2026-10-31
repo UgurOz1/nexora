@@ -1,0 +1,14 @@
+{
+  "name": "nexora",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Multi-tenant SaaS platform for team, project and task management",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "infra:up": "docker compose up -d",
+    "infra:down": "docker compose down",
+    "infra:logs": "docker compose logs -f"
+  }
+}
