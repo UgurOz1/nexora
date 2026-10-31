@@ -39,7 +39,7 @@
           └─────────┘ └────────┘
 ```
 
-**Çok kiracılık modeli:** Tek veritabanı, tek şema; tenant'a ait her tabloda `organizationId` sütunu var. Bu kuralı merkezi bir katmanda (Prisma extension + guard) zorunlu kılıyoruz. Gerekçe: ADR-0003 (Hafta 4'te yazılacak).
+**Çok kiracılık modeli:** Tek veritabanı, tek şema; tenant'a ait her tabloda `organizationId` sütunu var. Bu kuralı merkezi bir katmanda (Prisma extension + guard) zorunlu kılıyoruz. Gerekçe: ADR-0004 (Hafta 4'te yazılacak).
 
 ---
 
@@ -69,7 +69,8 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 
 **Öğrenilecekler:** NestJS mimarisi (module, controller, provider, dependency injection), DTO + class-validator, pipe/guard/interceptor/filter farkı, Prisma (schema, migration, client), ilişkisel modelleme ve ERD.
 
-- [ ] NestJS uygulaması, `ConfigModule` + env doğrulama (zod)
+- [x] NestJS uygulaması iskeleti (`apps/api`), ilk unit test, build (ADR-0003: NestJS 11 + TS 5.9)
+- [ ] `ConfigModule` + env doğrulama (zod)
 - [ ] Global hata filtresi, standart hata formatı
 - [ ] `/api/v1` öneki ve API versiyonlama
 - [ ] Swagger (OpenAPI) dokümantasyonu
@@ -106,7 +107,7 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 - [ ] `@Roles()` decorator + `RolesGuard`
 - [ ] Tenant bağlamı: istekten aktif organizasyonu çözme, tüm sorgulara `organizationId` zorunluluğu
 - [ ] **İzolasyon testleri:** A şirketi B şirketinin verisini hiçbir endpoint'ten göremiyor
-- [ ] ADR-0003: çok kiracılık modeli
+- [ ] ADR-0004: çok kiracılık modeli
 
 **Çıktı:** M1. Rol bazlı, tenant'ları izole bir backend.
 **Mülakat soruları:** Neden ortak şema seçtin? Bir geliştirici `organizationId` filtresini unutursa sistemin seni nasıl korur? RBAC ile ABAC farkı ne?
