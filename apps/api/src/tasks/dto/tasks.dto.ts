@@ -84,7 +84,7 @@ export class UpdateTaskDto {
   @MaxLength(200)
   title?: string;
 
-  @ApiPropertyOptional({ maxLength: 5000, nullable: true })
+  @ApiPropertyOptional({ type: String, maxLength: 5000, nullable: true })
   @IsOptional()
   @IsString()
   @MaxLength(5000)
@@ -100,13 +100,13 @@ export class UpdateTaskDto {
   @IsEnum(TaskPriority)
   priority?: TaskPriority;
 
-  @ApiPropertyOptional({ nullable: true })
+  @ApiPropertyOptional({ type: String, format: 'date-time', nullable: true })
   @IsOptional()
   @Type(() => Date)
   @IsDate()
   dueDate?: Date | null;
 
-  @ApiPropertyOptional({ nullable: true })
+  @ApiPropertyOptional({ type: String, nullable: true })
   @IsOptional()
   @IsUUID()
   assigneeId?: string | null;

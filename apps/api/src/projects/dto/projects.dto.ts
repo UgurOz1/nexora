@@ -36,13 +36,15 @@ export class UpdateProjectDto {
   @MaxLength(100)
   name?: string;
 
-  @ApiPropertyOptional({ maxLength: 2000, nullable: true })
+  // `type` is explicit on every nullable field: Swagger cannot read a "string | null" union from
+  // TypeScript and would publish it as an object in the contract.
+  @ApiPropertyOptional({ type: String, maxLength: 2000, nullable: true })
   @IsOptional()
   @IsString()
   @MaxLength(2000)
   description?: string | null;
 
-  @ApiPropertyOptional({ maxLength: 100, nullable: true })
+  @ApiPropertyOptional({ type: String, maxLength: 100, nullable: true })
   @IsOptional()
   @Transform(trim)
   @IsString()

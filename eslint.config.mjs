@@ -1,5 +1,7 @@
 import js from '@eslint/js';
+import nextPlugin from '@next/eslint-plugin-next';
 import prettier from 'eslint-config-prettier';
+import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -11,6 +13,11 @@ export default tseslint.config(
       '**/coverage/',
       '**/.next/',
       'apps/api/src/generated/',
+      // Generated from openapi.json; regenerated, never edited by hand.
+      'apps/web/src/lib/api/schema.d.ts',
+      // Copied in by the shadcn/ui CLI.
+      'apps/web/src/components/ui/',
+      'apps/web/next-env.d.ts',
     ],
   },
   js.configs.recommended,
@@ -34,6 +41,19 @@ export default tseslint.config(
   {
     files: ['**/*.mjs'],
     ...tseslint.configs.disableTypeChecked,
+  },
+  {
+    // The web app runs in the browser and uses React and Next.js.
+    files: ['apps/web/**/*.{ts,tsx}'],
+    plugins: { 'react-hooks': reactHooks, '@next/next': nextPlugin },
+    languageOptions: { globals: { ...globals.browser } },
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs['core-web-vitals'].rules,
+      // This rule looks for a legacy pages/ directory; the app uses the App Router.
+      '@next/next/no-html-link-for-pages': 'off',
+    },
   },
   {
     // Tests use jest mocks heavily; these rules add noise there without catching real bugs.
