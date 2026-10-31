@@ -3,5 +3,7 @@ packages:
   - 'packages/*'
 allowBuilds:
   '@parcel/watcher': false
+  '@prisma/engines': true
   '@scarf/scarf': false
+  prisma: true
   unrs-resolver: false

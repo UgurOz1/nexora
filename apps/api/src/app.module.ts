@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { validateEnv } from './config/env';
 import { HealthModule } from './health/health.module';
+import { PrismaModule } from './prisma/prisma.module';
 import { RedisModule } from './redis/redis.module';
 
 @Module({
@@ -15,6 +16,7 @@ import { RedisModule } from './redis/redis.module';
       envFilePath: resolve(__dirname, '../../../.env'),
       validate: validateEnv,
     }),
+    PrismaModule,
     RedisModule,
     HealthModule,
   ],
