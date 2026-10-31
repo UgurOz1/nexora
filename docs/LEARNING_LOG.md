@@ -17,9 +17,11 @@ Bu dosya mülakat hazırlığında da ana kaynağın olacak.
 ---
 
 ### 2026-10-31 · Hazırlık · Planlama
+
 **Ne yaptık:** Proje planını, çalışma kurallarını (CLAUDE.md) ve karar kayıt sistemini (ADR) oluşturduk.
 **Öğrendiğim kavramlar:**
-- *CLAUDE.md:* Claude'un her oturumda okuduğu proje talimatları dosyası. Projenin bağlamı ve kurallar burada durur, böylece her oturumda baştan anlatmam gerekmez.
-- *ADR (Architecture Decision Record):* Önemli bir teknik kararı, alternatifleri ve gerekçesiyle kaydeden kısa doküman. Şirketlerde "bunu neden böyle yaptık?" sorusunun cevabıdır.
-- *Definition of Done:* Bir işin "bitti" sayılması için gereken ortak kriterler listesi.
-**Sonraki adım:** Hafta 1, Docker'ı kurmak ve öğrenmek.
+
+- _CLAUDE.md:_ Claude'un her oturumda okuduğu proje talimatları dosyası. Projenin bağlamı ve kurallar burada durur, böylece her oturumda baştan anlatmam gerekmez.
+- _ADR (Architecture Decision Record):_ Önemli bir teknik kararı, alternatifleri ve gerekçesiyle kaydeden kısa doküman. Şirketlerde "bunu neden böyle yaptık?" sorusunun cevabıdır.
+- _Definition of Done:_ Bir işin "bitti" sayılması için gereken ortak kriterler listesi.
+  **Sonraki adım:** Hafta 1, Docker'ı kurmak ve öğrenmek.

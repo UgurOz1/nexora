@@ -4,13 +4,13 @@
 
 ## Genel takvim
 
-| Dönem | Tarihler | Hedef |
-|---|---|---|
-| NEXORA | 2 Kas – 31 Oca (13 hafta) | Canlıda çalışan, testli, dokümante SaaS |
-| Tampon | 1 – 7 Şub | Final sınavları ve geciken işler |
-| DOCUMIND | 8 Şub – 2 May (12 hafta) | Değerlendirme sistemi olan RAG platformu |
-| Cilalama ve başvuru | 3 – 31 May | İki proje için README, demo, CV, başvurular |
-| Mezuniyet | Haziran | Mülakatlar |
+| Dönem               | Tarihler                  | Hedef                                       |
+| ------------------- | ------------------------- | ------------------------------------------- |
+| NEXORA              | 2 Kas – 31 Oca (13 hafta) | Canlıda çalışan, testli, dokümante SaaS     |
+| Tampon              | 1 – 7 Şub                 | Final sınavları ve geciken işler            |
+| DOCUMIND            | 8 Şub – 2 May (12 hafta)  | Değerlendirme sistemi olan RAG platformu    |
+| Cilalama ve başvuru | 3 – 31 May                | İki proje için README, demo, CV, başvurular |
+| Mezuniyet           | Haziran                   | Mülakatlar                                  |
 
 **Kilometre taşları**
 
@@ -235,20 +235,20 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 
 Ayrıntılı haftalık plan Şubat başında, NEXORA'dan öğrendiklerimizle yazılacak. Taslak:
 
-| Hafta | Konu |
-|---|---|
-| 1 | Python proje yapısı, FastAPI, Pydantic, Docker'a taşıma (NEXORA altyapısını yeniden kullanma) |
-| 2 | Doküman yükleme, S3, Celery ile asenkron işleme, durum takibi |
-| 3 | Metin çıkarma (PyMuPDF, python-docx, openpyxl), sayfa numarası koruma |
-| 4 | Chunking stratejileri (sabit, cümle bazlı, semantik), embedding, pgvector |
-| 5 | Semantic search + keyword search (BM25 / full-text) → hybrid search (RRF) |
-| 6 | RAG cevap üretimi, kaynak/sayfa gösterimi, streaming cevap |
-| 7 | **Değerlendirme sistemi:** 100 soruluk test seti, Recall@K, Precision@K, MRR |
-| 8 | Faithfulness, answer relevance (LLM-as-judge), latency ölçümü, deney karşılaştırmaları |
-| 9 | Kullanıcı başına bilgi alanı, erişim izinleri, tekrar eden doküman tespiti |
-| 10 | Prompt injection koruması, token/maliyet takibi, geri bildirim toplama |
-| 11 | Next.js arayüzü: sohbet, kaynak paneli, doküman yönetimi |
-| 12 | Deploy, README'de deney sonuçları tablosu, demo videosu |
+| Hafta | Konu                                                                                          |
+| ----- | --------------------------------------------------------------------------------------------- |
+| 1     | Python proje yapısı, FastAPI, Pydantic, Docker'a taşıma (NEXORA altyapısını yeniden kullanma) |
+| 2     | Doküman yükleme, S3, Celery ile asenkron işleme, durum takibi                                 |
+| 3     | Metin çıkarma (PyMuPDF, python-docx, openpyxl), sayfa numarası koruma                         |
+| 4     | Chunking stratejileri (sabit, cümle bazlı, semantik), embedding, pgvector                     |
+| 5     | Semantic search + keyword search (BM25 / full-text) → hybrid search (RRF)                     |
+| 6     | RAG cevap üretimi, kaynak/sayfa gösterimi, streaming cevap                                    |
+| 7     | **Değerlendirme sistemi:** 100 soruluk test seti, Recall@K, Precision@K, MRR                  |
+| 8     | Faithfulness, answer relevance (LLM-as-judge), latency ölçümü, deney karşılaştırmaları        |
+| 9     | Kullanıcı başına bilgi alanı, erişim izinleri, tekrar eden doküman tespiti                    |
+| 10    | Prompt injection koruması, token/maliyet takibi, geri bildirim toplama                        |
+| 11    | Next.js arayüzü: sohbet, kaynak paneli, doküman yönetimi                                      |
+| 12    | Deploy, README'de deney sonuçları tablosu, demo videosu                                       |
 
 **DOCUMIND kuralı:** Chunking, hybrid search ve değerlendirme metriklerini framework'e bırakmadan önce bir kez elle yazacağız. LlamaIndex'i ancak neyi soyutladığını anladıktan sonra kullanacağız.
 
@@ -267,6 +267,6 @@ Ayrıntılı haftalık plan Şubat başında, NEXORA'dan öğrendiklerimizle yaz
 
 ## İlerleme kaydı
 
-| Tarih | Hafta | Not |
-|---|---|---|
-| 31 Eki 2026 | — | Plan oluşturuldu |
+| Tarih       | Hafta | Not              |
+| ----------- | ----- | ---------------- |
+| 31 Eki 2026 | —     | Plan oluşturuldu |

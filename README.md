@@ -13,8 +13,8 @@ cp .env.example .env
 pnpm infra:up
 ```
 
-| Service | URL / Port |
-|---|---|
-| PostgreSQL | `localhost:5433` |
-| Redis | `localhost:6380` |
+| Service          | URL / Port            |
+| ---------------- | --------------------- |
+| PostgreSQL       | `localhost:5433`      |
+| Redis            | `localhost:6380`      |
 | Mailpit (web UI) | http://localhost:8025 |
