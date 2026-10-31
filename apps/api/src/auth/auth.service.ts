@@ -11,6 +11,7 @@ import type { Env } from '../config/env';
 import { PrismaService } from '../prisma/prisma.service';
 import { AccountService } from './account.service';
 import type { LoginDto, RegisterDto } from './dto/auth.dto';
+import type { GoogleProfile } from './google/google-auth.service';
 import { ClientMeta, IssuedRefreshToken, TokenService } from './token.service';
 
 export interface Session {
@@ -62,6 +63,49 @@ export class AuthService implements OnModuleInit {
       throw new UnauthorizedException('Invalid email or password');
     }
     return this.startSession(user.id, meta);
+  }
+
+  async loginWithGoogle(profile: GoogleProfile, meta: ClientMeta): Promise<Session> {
+    // We only trust an email address Google itself has verified.
+    if (!profile.emailVerified) {
+      throw new UnauthorizedException('Your Google email address is not verified');
+    }
+
+    const byGoogleId = await this.prisma.user.findUnique({ where: { googleId: profile.googleId } });
+    if (byGoogleId) {
+      return this.startSession(byGoogleId.id, meta);
+    }
+
+    const byEmail = await this.prisma.user.findUnique({ where: { email: profile.email } });
+    if (!byEmail) {
+      const created = await this.prisma.user.create({
+        data: {
+          email: profile.email,
+          name: profile.name,
+          googleId: profile.googleId,
+          emailVerifiedAt: new Date(),
+        },
+      });
+      return this.startSession(created.id, meta);
+    }
+
+    // The email already belongs to a password account: link Google to it.
+    // Pre-hijacking defense: if that account never proved it owns the email, someone may have
+    // registered it with their own password hoping the real owner signs in with Google later.
+    // Drop that password and every session so only the verified owner keeps access.
+    const neverVerified = !byEmail.emailVerifiedAt;
+    await this.prisma.user.update({
+      where: { id: byEmail.id },
+      data: {
+        googleId: profile.googleId,
+        emailVerifiedAt: byEmail.emailVerifiedAt ?? new Date(),
+        ...(neverVerified && { passwordHash: null }),
+      },
+    });
+    if (neverVerified) {
+      await this.tokens.revokeAllForUser(byEmail.id);
+    }
+    return this.startSession(byEmail.id, meta);
   }
 
   async refresh(refreshToken: string, meta: ClientMeta): Promise<Session> {

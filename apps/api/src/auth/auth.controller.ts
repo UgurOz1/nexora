@@ -5,12 +5,19 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Query,
   Req,
   Res,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ApiBearerAuth, ApiCookieAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCookieAuth,
+  ApiExcludeEndpoint,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import type { CookieOptions, Request, Response } from 'express';
 import { AuthUser, CurrentUser } from '../common/auth/current-user.decorator';
 import { Public } from '../common/auth/public.decorator';
@@ -25,9 +32,14 @@ import {
   ResetPasswordDto,
   TokenDto,
 } from './dto/auth.dto';
+import { GoogleAuthService } from './google/google-auth.service';
+import { safeEqual } from './google/safe-equal';
 import type { ClientMeta } from './token.service';
 
 export const REFRESH_COOKIE = 'nexora_refresh';
+const GOOGLE_STATE_COOKIE = 'nexora_oauth_state';
+const GOOGLE_VERIFIER_COOKIE = 'nexora_oauth_verifier';
+const GOOGLE_COOKIE_PATH = '/api/v1/auth/google';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -35,6 +47,7 @@ export class AuthController {
   constructor(
     private readonly auth: AuthService,
     private readonly account: AccountService,
+    private readonly google: GoogleAuthService,
     private readonly config: ConfigService<Env, true>,
   ) {}
 
@@ -110,6 +123,53 @@ export class AuthController {
     return this.auth.me(user.id);
   }
 
+  // Browsers navigate to this URL (it is a link, not an AJAX call): it redirects to Google.
+  @Public()
+  @Get('google')
+  @ApiExcludeEndpoint()
+  async googleStart(@Res() res: Response): Promise<void> {
+    const { url, state, codeVerifier } = await this.google.createAuthorization();
+    res.cookie(GOOGLE_STATE_COOKIE, state, this.oauthCookieOptions());
+    res.cookie(GOOGLE_VERIFIER_COOKIE, codeVerifier, this.oauthCookieOptions());
+    res.redirect(url);
+  }
+
+  // Google redirects the browser here. We finish sign-in, set the refresh cookie, and send the
+  // browser to the web app, which then calls POST /auth/refresh to get an access token.
+  // The access token never travels through a URL, where it could leak into history or logs.
+  @Public()
+  @Get('google/callback')
+  @ApiExcludeEndpoint()
+  async googleCallback(
+    @Query() query: Record<string, string | undefined>,
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
+    const cookies = req.cookies as Record<string, string | undefined> | undefined;
+    const expectedState = cookies?.[GOOGLE_STATE_COOKIE];
+    const codeVerifier = cookies?.[GOOGLE_VERIFIER_COOKIE];
+    this.clearOauthCookies(res);
+
+    const appUrl = this.config.get('APP_URL', { infer: true });
+    const failure = (reason: string) => res.redirect(`${appUrl}/login?error=${reason}`);
+
+    if (query.error) {
+      return failure('google_denied');
+    }
+    if (!query.code || !codeVerifier || !safeEqual(query.state, expectedState)) {
+      return failure('google_invalid_state');
+    }
+
+    try {
+      const profile = await this.google.exchangeCode(query.code, codeVerifier);
+      const session = await this.auth.loginWithGoogle(profile, clientMeta(req));
+      this.setRefreshCookie(res, session);
+      res.redirect(`${appUrl}/auth/callback`);
+    } catch {
+      failure('google_failed');
+    }
+  }
+
   @Public()
   @Post('verify-email')
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -147,11 +207,33 @@ export class AuthController {
   // Access token goes in the body (kept in memory by the client); the refresh token goes in an
   // httpOnly cookie that JavaScript, and therefore XSS, cannot read.
   private respond(res: Response, session: Session): AccessTokenResponseDto {
+    this.setRefreshCookie(res, session);
+    return { accessToken: session.accessToken, tokenType: 'Bearer', expiresIn: session.expiresIn };
+  }
+
+  private setRefreshCookie(res: Response, session: Session): void {
     res.cookie(REFRESH_COOKIE, session.refresh.token, {
       ...this.cookieOptions(),
       expires: session.refresh.expiresAt,
     });
-    return { accessToken: session.accessToken, tokenType: 'Bearer', expiresIn: session.expiresIn };
+  }
+
+  // These two cookies must be SameSite=Lax, not Strict: the callback is a redirect coming back
+  // from google.com, and browsers do not send Strict cookies on cross-site navigations.
+  private oauthCookieOptions(): CookieOptions {
+    return {
+      httpOnly: true,
+      secure: this.config.get('NODE_ENV', { infer: true }) === 'production',
+      sameSite: 'lax',
+      path: GOOGLE_COOKIE_PATH,
+      maxAge: 10 * 60 * 1000,
+    };
+  }
+
+  private clearOauthCookies(res: Response): void {
+    const { maxAge: _maxAge, ...options } = this.oauthCookieOptions();
+    res.clearCookie(GOOGLE_STATE_COOKIE, options);
+    res.clearCookie(GOOGLE_VERIFIER_COOKIE, options);
   }
 
   private cookieOptions(): CookieOptions {

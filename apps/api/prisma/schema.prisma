@@ -34,6 +34,8 @@ model User {
   email           String    @unique
   // Null for users who only sign in with Google.
   passwordHash    String?
+  // Google's stable account id (the "sub" claim). Emails can change, this cannot.
+  googleId        String?   @unique
   name            String
   emailVerifiedAt DateTime?
   createdAt       DateTime  @default(now())

@@ -22,6 +22,12 @@ describe('validateEnv', () => {
     expect(env.API_PORT).toBe(3001);
   });
 
+  it('treats empty Google credentials as not configured', () => {
+    const env = validateEnv({ ...validEnv, GOOGLE_CLIENT_ID: '', GOOGLE_CLIENT_SECRET: '' });
+    expect(env.GOOGLE_CLIENT_ID).toBeUndefined();
+    expect(env.GOOGLE_CLIENT_SECRET).toBeUndefined();
+  });
+
   it('fails when DATABASE_URL is missing', () => {
     const { DATABASE_URL, ...rest } = validEnv;
     expect(() => validateEnv(rest)).toThrow(/DATABASE_URL/);

@@ -91,7 +91,7 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 - [x] Access token (kısa ömürlü) + refresh token (DB'de hash'li, rotasyonlu, çalınma tespiti)
 - [x] E-posta doğrulama (Mailpit ile)
 - [x] Şifre sıfırlama (tek kullanımlık, süreli token; sıfırlayınca tüm oturumlar kapanır)
-- [ ] Google ile giriş
+- [x] Google ile giriş (Authorization Code + PKCE, hesap bağlama, ön ele geçirme savunması)
 - [x] Çıkış ve tüm oturumlardan çıkış
 - [x] Auth için unit testler (e2e testler Hafta 5'te Testcontainers ile)
 
