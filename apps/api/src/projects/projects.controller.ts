@@ -10,10 +10,17 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Role } from '../generated/prisma/client';
 import { MinRole } from '../organizations/roles';
 import { CreateProjectDto, UpdateProjectDto } from './dto/projects.dto';
+import { ProjectResponseDto } from './dto/projects.response';
 import { ProjectsService } from './projects.service';
 
 // Reading is open to every member; changing projects needs MANAGER, deleting needs ADMIN.
@@ -25,22 +32,26 @@ export class ProjectsController {
 
   @Post()
   @MinRole(Role.MANAGER)
+  @ApiCreatedResponse({ type: ProjectResponseDto })
   create(@Param('orgId') orgId: string, @Body() dto: CreateProjectDto) {
     return this.projects.create(orgId, dto);
   }
 
   @Get()
+  @ApiOkResponse({ type: [ProjectResponseDto] })
   list(@Param('orgId') orgId: string) {
     return this.projects.list(orgId);
   }
 
   @Get(':projectId')
+  @ApiOkResponse({ type: ProjectResponseDto })
   get(@Param('orgId') orgId: string, @Param('projectId', ParseUUIDPipe) projectId: string) {
     return this.projects.get(orgId, projectId);
   }
 
   @Patch(':projectId')
   @MinRole(Role.MANAGER)
+  @ApiOkResponse({ type: ProjectResponseDto })
   update(
     @Param('orgId') orgId: string,
     @Param('projectId', ParseUUIDPipe) projectId: string,
@@ -52,6 +63,7 @@ export class ProjectsController {
   @Delete(':projectId')
   @MinRole(Role.ADMIN)
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse()
   remove(
     @Param('orgId') orgId: string,
     @Param('projectId', ParseUUIDPipe) projectId: string,

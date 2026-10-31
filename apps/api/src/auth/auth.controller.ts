@@ -12,9 +12,12 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
+  ApiAcceptedResponse,
   ApiBearerAuth,
   ApiCookieAuth,
+  ApiCreatedResponse,
   ApiExcludeEndpoint,
+  ApiNoContentResponse,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -32,6 +35,7 @@ import {
   ResetPasswordDto,
   TokenDto,
 } from './dto/auth.dto';
+import { MeResponseDto, MessageResponseDto } from './dto/auth.response';
 import { GoogleAuthService } from './google/google-auth.service';
 import { safeEqual } from './google/safe-equal';
 import type { ClientMeta } from './token.service';
@@ -53,7 +57,7 @@ export class AuthController {
 
   @Public()
   @Post('register')
-  @ApiOkResponse({ type: AccessTokenResponseDto })
+  @ApiCreatedResponse({ type: AccessTokenResponseDto })
   async register(
     @Body() dto: RegisterDto,
     @Req() req: Request,
@@ -98,6 +102,7 @@ export class AuthController {
   @Public()
   @Post('logout')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse()
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<void> {
     const token = readRefreshCookie(req);
     if (token) {
@@ -109,6 +114,7 @@ export class AuthController {
   @Post('logout-all')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth()
+  @ApiNoContentResponse()
   async logoutAll(
     @CurrentUser() user: AuthUser,
     @Res({ passthrough: true }) res: Response,
@@ -119,6 +125,7 @@ export class AuthController {
 
   @Get('me')
   @ApiBearerAuth()
+  @ApiOkResponse({ type: MeResponseDto })
   me(@CurrentUser() user: AuthUser) {
     return this.auth.me(user.id);
   }
@@ -173,6 +180,7 @@ export class AuthController {
   @Public()
   @Post('verify-email')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse()
   verifyEmail(@Body() dto: TokenDto): Promise<void> {
     return this.account.verifyEmail(dto.token);
   }
@@ -180,6 +188,7 @@ export class AuthController {
   @Post('resend-verification')
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiBearerAuth()
+  @ApiAcceptedResponse({ type: MessageResponseDto })
   async resendVerification(@CurrentUser() user: AuthUser) {
     await this.account.sendVerificationEmail(user.id);
     return { message: 'If your email is not verified yet, a new link is on its way.' };
@@ -188,6 +197,7 @@ export class AuthController {
   @Public()
   @Post('forgot-password')
   @HttpCode(HttpStatus.ACCEPTED)
+  @ApiAcceptedResponse({ type: MessageResponseDto })
   async forgotPassword(@Body() dto: ForgotPasswordDto) {
     await this.account.requestPasswordReset(dto.email);
     return { message: 'If an account exists for this email, a reset link is on its way.' };
@@ -196,6 +206,7 @@ export class AuthController {
   @Public()
   @Post('reset-password')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse()
   async resetPassword(
     @Body() dto: ResetPasswordDto,
     @Res({ passthrough: true }) res: Response,
