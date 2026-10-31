@@ -30,6 +30,9 @@ jobs:
       - name: Generate Prisma client
         run: pnpm --filter @nexora/api prisma:generate
 
+      - name: Lint
+        run: pnpm lint
+
       - name: Typecheck
         run: pnpm --filter @nexora/api typecheck
 
