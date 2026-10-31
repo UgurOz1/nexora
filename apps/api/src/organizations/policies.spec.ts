@@ -1,5 +1,5 @@
 import { Role } from '../generated/prisma/client';
-import { canChangeRole, canInvite, canRemove } from './policies';
+import { canChangeRole, canDeleteTask, canInvite, canRemove } from './policies';
 import { hasAtLeast, outranks } from './roles';
 
 const { OWNER, ADMIN, MANAGER, MEMBER } = Role;
@@ -50,6 +50,18 @@ describe('canChangeRole', () => {
     expect(canChangeRole(OWNER, other(ADMIN), OWNER)).toBe(false);
     expect(canChangeRole(OWNER, { role: OWNER, isSelf: true }, ADMIN)).toBe(false);
     expect(canChangeRole(ADMIN, { role: ADMIN, isSelf: true }, MEMBER)).toBe(false);
+  });
+});
+
+describe('canDeleteTask', () => {
+  it('lets creators delete their own tasks', () => {
+    expect(canDeleteTask(MEMBER, { createdById: 'u1' }, 'u1')).toBe(true);
+  });
+
+  it("lets managers and above delete anyone's tasks, but not plain members", () => {
+    expect(canDeleteTask(MANAGER, { createdById: 'u2' }, 'u1')).toBe(true);
+    expect(canDeleteTask(ADMIN, { createdById: 'u2' }, 'u1')).toBe(true);
+    expect(canDeleteTask(MEMBER, { createdById: 'u2' }, 'u1')).toBe(false);
   });
 });
 

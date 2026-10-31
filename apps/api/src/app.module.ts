@@ -12,7 +12,9 @@ import { Env, validateEnv } from './config/env';
 import { HealthModule } from './health/health.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { ProjectsModule } from './projects/projects.module';
 import { RedisModule } from './redis/redis.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
@@ -47,6 +49,8 @@ import { RedisModule } from './redis/redis.module';
     AuthModule,
     // After AuthModule so its guard runs after the JWT guard.
     OrganizationsModule,
+    ProjectsModule,
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_FILTER, useClass: AllExceptionsFilter }],

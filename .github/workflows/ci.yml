@@ -63,8 +63,8 @@ jobs:
       - name: Typecheck
         run: pnpm --filter @nexora/api typecheck
 
-      - name: Unit tests
-        run: pnpm --filter @nexora/api test
+      - name: Unit tests (with coverage)
+        run: pnpm --filter @nexora/api test:cov
 
       # Creates a nexora_test database, applies the real migrations and runs the tenant
       # isolation and permission tests over HTTP.

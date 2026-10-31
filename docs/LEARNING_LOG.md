@@ -83,4 +83,20 @@ Bu dosya mülakat hazırlığında da ana kaynağın olacak.
 
 **Ders:** Test kodundaki hata bile yanıltabilir: varsayılan parametre `undefined`'ı yutup "kullanıcısız" senaryoyu hiç denemiyordu; testin başarısız olması koddaki değil testteki hatayı gösterdi.
 
-**Sonraki adım:** Hafta 5, projeler ve görevler (CRUD, sayfalama, filtreleme, soft delete).
+### 2026-10-31 · Hafta 5 · Projeler ve görevler
+
+**Ne yaptık:** Proje ve görev CRUD'u, alt görevler, filtreleme (durum, öncelik, atanan, etiket, arama, süresi geçenler), cursor sayfalaması, soft delete, 47 e2e test, CI'da kapsam raporu.
+**Kavramlar:**
+
+- _Cursor (keyset) sayfalama:_ "Şu kayıttan sonrakini ver" der. Offset ("ilk 20'yi atla") büyük tablolarda yavaşlar ve sayfalar arasında kayıt eklenince aynı kayıt tekrar görünür ya da atlanır; cursor kararlıdır. Sıralama değeri aynı olan kayıtlar için `id` ikinci anahtar olarak kullanılır.
+- _limit + 1 hilesi:_ Bir fazla satır çekilir; varsa sonraki sayfa vardır. Ayrı bir COUNT sorgusu gerekmez.
+- _Soft delete:_ Kayıt silinmez, `deletedAt` dolar. Geri alınabilir ve denetlenebilir; bedeli her okuma sorgusunda filtre unutmamak (bu yüzden testlerle korunuyor).
+- _PATCH ve null:_ Alan hiç gönderilmezse değişmez, `null` gönderilirse temizlenir.
+- _Savunmacı tasarım:_ Atanan kişi aynı şirketten olmalı; bir şirketin kimliğiyle başka şirketin rotasında kayıt aranırsa 404.
+- _Mass assignment:_ `createdById` gibi alanlar gövdede gönderilirse reddedilir.
+
+**Ders:** Testin yeşil olması yetmez; mutasyon testiyle üç korumayı (soft delete filtresi, cursor yönü, atanan kontrolü) bozdum ve testlerin başarısız olduğunu gördüm. Bir mutasyonum geçersizdi (derleme hatası verip testleri hiç çalıştırmadı), bunu "0 test" çıktısından fark edip doğru mutasyonla tekrarladım.
+
+**Dürüst not:** Birim test kapsamı ~%45; servis mantığı çoğunlukla e2e testlerle doğrulanıyor ve e2e kapsamı bu rakama dahil değil.
+
+**Sonraki adım:** Hafta 6, ileri görev özellikleri (görev bağımlılıkları ve döngü tespiti, değişiklik geçmişi, tekrarlayan görevler).

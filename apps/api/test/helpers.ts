@@ -24,6 +24,41 @@ export interface TestContext {
   mailToken: (email: string, subjectPart: string) => string;
 }
 
+export interface TestOrg {
+  id: string;
+  name: string;
+}
+
+// Short helpers for calling the API as a given user, and for setting up companies.
+export function apiFor(ctx: TestContext) {
+  const auth = (user: TestUser) => ({ Authorization: `Bearer ${user.token}` });
+  const url = (path: string) => `/api/v1${path}`;
+
+  const api = {
+    get: (user: TestUser, path: string) => ctx.http().get(url(path)).set(auth(user)),
+    post: (user: TestUser, path: string, body: object = {}) =>
+      ctx.http().post(url(path)).set(auth(user)).send(body),
+    patch: (user: TestUser, path: string, body: object) =>
+      ctx.http().patch(url(path)).set(auth(user)).send(body),
+    del: (user: TestUser, path: string) => ctx.http().delete(url(path)).set(auth(user)),
+
+    async createOrg(owner: TestUser, name: string): Promise<TestOrg> {
+      const res = await api.post(owner, '/organizations', { name }).expect(201);
+      return res.body as TestOrg;
+    },
+
+    // Invites `user` through the real flow (email link) and has them accept.
+    async join(owner: TestUser, org: TestOrg, user: TestUser, role: string): Promise<void> {
+      await api
+        .post(owner, `/organizations/${org.id}/invitations`, { email: user.email, role })
+        .expect(201);
+      const token = ctx.mailToken(user.email, 'invited you');
+      await api.post(user, '/invitations/accept', { token }).expect(200);
+    },
+  };
+  return api;
+}
+
 export async function createTestApp(): Promise<TestContext> {
   const mails: MailMessage[] = [];
   // Emails are captured instead of sent, so tests can follow the links like a user would.

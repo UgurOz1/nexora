@@ -8,6 +8,7 @@
     "start:dev": "nodemon --watch src --ext ts --exec ts-node src/main.ts",
     "typecheck": "tsc --noEmit",
     "test": "jest",
+    "test:cov": "jest --coverage",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
@@ -25,7 +26,16 @@
     "transform": {
       "^.+\\.ts$": "ts-jest"
     },
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "**/*.ts",
+      "!**/*.spec.ts",
+      "!**/*.module.ts",
+      "!**/*.dto.ts",
+      "!generated/**",
+      "!main.ts"
+    ],
+    "coverageDirectory": "../coverage"
   },
   "dependencies": {
     "@nestjs/common": "^11.2.8",
