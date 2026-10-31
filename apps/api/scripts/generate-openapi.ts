@@ -1,3 +1,5 @@
+// First import on purpose: see the comment in openapi-env.ts.
+import './openapi-env';
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { NestFactory } from '@nestjs/core';
@@ -7,17 +9,10 @@ import { configureApp, openApiConfig } from '../src/app.setup';
 
 // Writes the API's OpenAPI document to apps/api/openapi.json. The web app generates its typed
 // client from that file, and CI fails if it is out of date, so frontend and backend cannot drift
-// apart unnoticed.
-//
-// The app is created but never started: nothing connects to a database here. The variables only
-// have to pass validation, so harmless placeholders are used when none are set.
-process.env.DATABASE_URL ??= 'postgresql://openapi:openapi@localhost:5432/openapi';
-process.env.REDIS_URL ??= 'redis://localhost:6379';
-process.env.JWT_ACCESS_SECRET ??= 'openapi-generation-only-secret-0123456789';
-process.env.NODE_ENV ??= 'test';
-
+// apart unnoticed. The app is created but never started.
 async function main() {
-  const app = await NestFactory.create(AppModule, { logger: false });
+  // Errors must be visible: with the logger off and abortOnError on, Nest would exit silently.
+  const app = await NestFactory.create(AppModule, { logger: ['error'], abortOnError: false });
   configureApp(app);
 
   const document = SwaggerModule.createDocument(app, openApiConfig());
@@ -29,4 +24,7 @@ async function main() {
   process.exit(0);
 }
 
-void main();
+main().catch((error: unknown) => {
+  console.error(error);
+  process.exit(1);
+});
