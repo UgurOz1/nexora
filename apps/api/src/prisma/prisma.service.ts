@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaPg } from '@prisma/adapter-pg';
 import type { Env } from '../config/env';
 import { PrismaClient } from '../generated/prisma/client';
+import { forTenant } from './tenant-scope';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
@@ -19,5 +20,11 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
 
   async onModuleDestroy() {
     await this.$disconnect();
+  }
+
+  // A client that can only read and write rows of one organization. Use it for every query
+  // on tenant data (memberships, invitations, projects, tasks).
+  forTenant(organizationId: string) {
+    return forTenant(this, organizationId);
   }
 }

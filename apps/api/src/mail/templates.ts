@@ -15,7 +15,7 @@ function layout(name: string, intro: string, link: string, action: string, foote
   return {
     text: `Hi ${name},\n\n${intro}\n\n${link}\n\n${footer}`,
     html: `<p>Hi ${safeName},</p>
-<p>${intro}</p>
+<p>${escapeHtml(intro)}</p>
 <p><a href="${link}">${action}</a></p>
 <p style="color:#666;font-size:12px">${footer}</p>`,
   };
@@ -31,6 +31,25 @@ export function verificationEmail(to: string, name: string, link: string): MailM
       link,
       'Confirm email',
       'This link expires in 24 hours. If you did not create an account, you can ignore this email.',
+    ),
+  };
+}
+
+export function invitationEmail(
+  to: string,
+  inviterName: string,
+  organizationName: string,
+  link: string,
+): MailMessage {
+  return {
+    to,
+    subject: `${inviterName} invited you to ${organizationName} on NEXORA`,
+    ...layout(
+      'there',
+      `${inviterName} invited you to join ${organizationName}.`,
+      link,
+      'Accept invitation',
+      'This invitation expires in 7 days. Sign in or sign up with this email address to accept it.',
     ),
   };
 }

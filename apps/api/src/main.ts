@@ -1,10 +1,9 @@
-import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import cookieParser from 'cookie-parser';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
+import { configureApp } from './app.setup';
 import type { Env } from './config/env';
 
 async function bootstrap() {
@@ -13,16 +12,8 @@ async function bootstrap() {
   app.useLogger(app.get(Logger));
   const config = app.get<ConfigService<Env, true>>(ConfigService);
 
-  // Routes look like /api/v1/projects; a breaking change ships as v2 next to v1.
-  app.setGlobalPrefix('api');
-  app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
+  configureApp(app);
   app.enableShutdownHooks();
-  app.use(cookieParser());
-  // whitelist + forbidNonWhitelisted: unknown fields are rejected, so a client cannot sneak in
-  // e.g. `role: "OWNER"` on an endpoint that never meant to accept it (mass assignment).
-  app.useGlobalPipes(
-    new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }),
-  );
 
   const openApi = new DocumentBuilder()
     .setTitle('NEXORA API')

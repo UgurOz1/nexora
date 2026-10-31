@@ -54,4 +54,33 @@ Bu dosya mülakat hazırlığında da ana kaynağın olacak.
 
 **Ders:** "En yeni sürüm" her zaman doğru seçim değil: NestJS 12 (yalnız ESM), TypeScript 7 ve Prisma 8 RC araç zincirini bozdu; sürümler bilinçli seçilip sabitlendi (ADR-0003).
 
-**Sonraki adım:** Hafta 3, kimlik doğrulama (kayıt, giriş, JWT, refresh token).
+### 2026-10-31 · Hafta 3 · Kimlik doğrulama
+
+**Ne yaptık:** Kayıt/giriş (argon2id), kısa ömürlü JWT access token + dönen (rotating) refresh token, çıkış, e-posta doğrulama, şifre sıfırlama (Mailpit), Google ile giriş (OAuth code + PKCE).
+**Kavramlar:**
+
+- _Access / refresh token:_ Access token kısa ömürlü (15 dk) kimlik kanıtı; refresh token uzun ömürlü, `httpOnly` çerezde ve veritabanında sadece hash'i durur.
+- _Refresh token rotation:_ Her yenilemede eski token iptal edilir; iptal edilmiş token geri gelirse çalınmıştır, o girişin tüm oturumları kapatılır.
+- _Hash:_ Şifre ve token'lar veritabanında düz saklanmaz; sızıntı olsa bile kullanılamaz.
+- _Hesap sızdırmama:_ "Şifremi unuttum" ve yanlış giriş, kayıtlı/kayıtsız e-posta için aynı cevabı verir.
+- _OAuth + PKCE + state:_ Google'a yönlendirme güvenli rastgele değerlerle bağlanır; sahte callback'ler reddedilir.
+- _Pre-hijacking:_ Doğrulanmamış e-postayla açılmış şifreli hesap, aynı e-postayla Google'a bağlanınca şifresi silinir.
+
+**Ders:** Test geçmesi yetmez, gerçek servisle doğrula. Mail gönderimi ilk denemede çalışmadı: `localhost` bu ağda yerel ağ IP'sine çözülüyordu (`127.0.0.1` ile düzeldi). Google girişi de gerçek hesapla denenip veritabanından doğrulandıktan sonra merge edildi.
+
+### 2026-10-31 · Hafta 4 · Çok kiracılık ve yetkilendirme
+
+**Ne yaptık:** Organizasyonlar, 4 rol (OWNER > ADMIN > MANAGER > MEMBER), üye yönetimi, e-posta ile davet ve kabul, `OrganizationGuard`, tenant'a özel Prisma uzantısı, 22 izolasyon/yetki e2e testi, CI'da gerçek Postgres.
+**Kavramlar:**
+
+- _Multi-tenancy:_ Birçok şirket tek uygulamayı paylaşır; veriler `organizationId` ile ayrılır. Alternatifler: tenant başına DB, tenant başına şema, ortak şema (seçtik), RLS (ADR-0004).
+- _RBAC:_ Yetki kullanıcıya değil role bağlı; roller bir merdiven (rank) oluşturur, kimse kendi seviyesinin üstüne işlem yapamaz.
+- _Savunma derinliği:_ İki bağımsız katman (guard + Prisma uzantısı); biri hata yapsa diğeri yakalar.
+- _404 vs 403:_ Üye olmayana 404 dönülür; böylece bir şirketin var olduğu bile sızmaz.
+- _Mass assignment:_ Fazladan alanlar (`role: OWNER` gibi) reddedilir.
+- _Mutasyon testi:_ Korumayı bilerek bozup testlerin başarısız olduğunu görmek, testlerin gerçekten bir şey denetlediğini kanıtlar.
+- _Fail closed:_ Emin olunmayan durumda izin vermek yerine reddetmek (bilinmeyen Prisma işlemi, `:orgId` taşıyan public route).
+
+**Ders:** Test kodundaki hata bile yanıltabilir: varsayılan parametre `undefined`'ı yutup "kullanıcısız" senaryoyu hiç denemiyordu; testin başarısız olması koddaki değil testteki hatayı gösterdi.
+
+**Sonraki adım:** Hafta 5, projeler ve görevler (CRUD, sayfalama, filtreleme, soft delete).
