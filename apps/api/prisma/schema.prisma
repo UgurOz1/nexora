@@ -43,8 +43,31 @@ model User {
   sentInvitations Invitation[] @relation("InvitedBy")
   assignedTasks   Task[]       @relation("TaskAssignee")
   createdTasks    Task[]       @relation("TaskCreator")
+  refreshTokens   RefreshToken[]
 
   @@map("users")
+}
+
+// One row per issued refresh token. Tokens from one login share a familyId; each refresh
+// revokes the old token and issues a new one in the same family (rotation). If a revoked
+// token is presented again, it was stolen: the whole family is revoked.
+model RefreshToken {
+  id         String    @id @default(uuid())
+  userId     String
+  familyId   String
+  // SHA-256 of the token; the raw value only ever lives in the user's cookie.
+  tokenHash  String    @unique
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  userAgent  String?
+  ip         String?
+  createdAt  DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([familyId])
+  @@map("refresh_tokens")
 }
 
 model Organization {

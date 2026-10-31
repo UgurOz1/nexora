@@ -5,6 +5,7 @@ const validEnv = {
   API_PORT: '4000',
   DATABASE_URL: 'postgresql://user:pass@localhost:5433/db',
   REDIS_URL: 'redis://localhost:6380',
+  JWT_ACCESS_SECRET: 'x'.repeat(32),
 };
 
 describe('validateEnv', () => {

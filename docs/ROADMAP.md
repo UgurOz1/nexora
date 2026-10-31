@@ -87,13 +87,13 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 
 **Öğrenilecekler:** Şifre hashleme (argon2), JWT yapısı, access + refresh token, refresh token rotasyonu ve çalınma tespiti, httpOnly cookie ve CSRF, OAuth 2.0 / OpenID Connect akışı.
 
-- [ ] Kayıt ve giriş (e-posta + şifre)
-- [ ] Access token (kısa ömürlü) + refresh token (DB'de hash'li, rotasyonlu)
+- [x] Kayıt ve giriş (e-posta + şifre, argon2id)
+- [x] Access token (kısa ömürlü) + refresh token (DB'de hash'li, rotasyonlu, çalınma tespiti)
 - [ ] E-posta doğrulama (Mailpit ile)
 - [ ] Şifre sıfırlama (tek kullanımlık, süreli token)
 - [ ] Google ile giriş
-- [ ] Çıkış ve tüm oturumlardan çıkış
-- [ ] Auth için unit + e2e testler
+- [x] Çıkış ve tüm oturumlardan çıkış
+- [x] Auth için unit testler (e2e testler Hafta 5'te Testcontainers ile)
 
 **Çıktı:** Güvenli, test edilmiş bir auth modülü.
 **Mülakat soruları:** JWT'yi neden localStorage'da tutmuyoruz? Refresh token çalınırsa ne olur? Şifreyi neden şifrelemiyor da hashliyoruz?
