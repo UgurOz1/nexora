@@ -72,9 +72,10 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 - [x] NestJS uygulaması iskeleti (`apps/api`), ilk unit test, build (ADR-0003: NestJS 11 + TS 5.9)
 - [x] `ConfigModule` + env doğrulama (zod), fail fast
 - [ ] Global hata filtresi, standart hata formatı
-- [ ] `/api/v1` öneki ve API versiyonlama
-- [ ] Swagger (OpenAPI) dokümantasyonu
-- [ ] Health check endpoint'i (DB + Redis)
+- [x] `/api/v1` öneki ve API versiyonlama
+- [x] Swagger (OpenAPI) dokümantasyonu (`/api/docs`)
+- [x] Health check endpoint'i: Redis (`/api/health`)
+- [ ] Health check'e veritabanı kontrolü (Prisma ile birlikte)
 - [ ] ERD çizimi: User, Organization, Membership, Invitation, Project, Task
 - [ ] Prisma şeması + ilk migration + seed script
 - [ ] Yapılandırılmış loglama (pino) ve request ID
