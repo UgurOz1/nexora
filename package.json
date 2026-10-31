@@ -2,6 +2,7 @@
   "name": "nexora",
   "private": true,
   "version": "0.0.0",
+  "packageManager": "pnpm@12.16.1",
   "description": "Multi-tenant SaaS platform for team, project and task management",
   "engines": {
     "node": ">=22"
