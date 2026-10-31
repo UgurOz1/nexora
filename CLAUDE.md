@@ -62,7 +62,7 @@ Anlatımlar Türkçe; kod, değişken isimleri, commit mesajları ve kod içi yo
 | Cache / kuyruk altyapısı | Redis |
 | Arka plan işleri | BullMQ |
 | Realtime | Socket.IO (Redis adapter) |
-| Dosya depolama | S3 uyumlu (lokalde MinIO) |
+| Dosya depolama | S3 uyumlu (lokal sunucu Hafta 11'de ADR ile seçilecek; MinIO Docker image'ı artık yayınlanmıyor) |
 | E-posta (lokal) | Mailpit |
 | Frontend | Next.js (App Router) + TypeScript |
 | UI | Tailwind CSS + shadcn/ui |

@@ -35,7 +35,7 @@
               └──┬───────┬───┘     └──────────┘   (e-posta, bildirim,
                  │       │                         tekrarlayan görevler)
           ┌──────▼──┐ ┌──▼─────┐
-          │Postgres │ │ MinIO  │ (S3)
+          │Postgres │ │  S3    │ (S3 uyumlu)
           └─────────┘ └────────┘
 ```
 
@@ -55,7 +55,7 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 - [ ] Docker alıştırması: `hello-world`, bir Postgres container'ı açıp içine bağlanma, volume'un ne işe yaradığını görme
 - [ ] Git repo + GitHub repo, `main` için branch koruması
 - [ ] pnpm monorepo iskeleti: `apps/api`, `apps/web`, `packages/config`
-- [ ] `docker-compose.yml`: Postgres, Redis, Mailpit, MinIO
+- [ ] `docker-compose.yml`: Postgres, Redis, Mailpit (S3 uyumlu depolama Hafta 11'de eklenecek)
 - [ ] ESLint, Prettier, TypeScript strict, Husky + commitlint
 - [ ] İlk GitHub Actions iş akışı: lint + typecheck
 - [ ] `.env.example`, `README.md` (ilk hali)
@@ -193,7 +193,8 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 
 **Öğrenilecekler:** S3 ve presigned URL, Postgres full-text search (tsvector, GIN index), rate limiting algoritmaları (fixed window, token bucket), audit log tasarımı, OWASP Top 10 temelleri.
 
-- [ ] Görevlere dosya ekleme (presigned URL ile doğrudan MinIO'ya yükleme), boyut/tip sınırı
+- [ ] S3 uyumlu lokal depolama sunucusu seçimi (ADR; MinIO Docker image'ı artık yayınlanmıyor, RustFS / SeaweedFS / Garage değerlendirilecek)
+- [ ] Görevlere dosya ekleme (presigned URL ile doğrudan depolamaya yükleme), boyut/tip sınırı
 - [ ] Görev ve proje arama (full-text + index)
 - [ ] Redis tabanlı rate limiting (özellikle auth endpoint'leri)
 - [ ] Audit log: kim, ne zaman, neyi, hangi IP'den; Owner/Admin için görüntüleme

@@ -18,4 +18,3 @@ pnpm infra:up
 | PostgreSQL | `localhost:5433` |
 | Redis | `localhost:6380` |
 | Mailpit (web UI) | http://localhost:8025 |
-| MinIO console | http://localhost:9001 |
