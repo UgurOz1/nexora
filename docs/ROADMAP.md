@@ -75,9 +75,9 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 - [x] `/api/v1` öneki ve API versiyonlama
 - [x] Swagger (OpenAPI) dokümantasyonu (`/api/docs`)
 - [x] Health check endpoint'i: Redis (`/api/health`)
-- [ ] Health check'e veritabanı kontrolü (Prisma ile birlikte)
-- [ ] ERD çizimi: User, Organization, Membership, Invitation, Project, Task
-- [ ] Prisma şeması + ilk migration + seed script
+- [x] Health check'e veritabanı kontrolü
+- [x] ERD çizimi: User, Organization, Membership, Invitation, Project, Task ([docs/ERD.md](ERD.md))
+- [x] Prisma 7 şeması + ilk migration + seed script
 - [ ] Yapılandırılmış loglama (pino) ve request ID
 
 **Çıktı:** Swagger'da görünen, DB'ye bağlı, loglayan bir API iskeleti.

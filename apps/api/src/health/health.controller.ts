@@ -1,6 +1,7 @@
 import { Controller, Get, VERSION_NEUTRAL } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { HealthCheck, HealthCheckService } from '@nestjs/terminus';
+import { DatabaseHealthIndicator } from './database.health';
 import { RedisHealthIndicator } from './redis.health';
 
 // Version-neutral: load balancers and Docker probe /api/health, independent of API versions.
@@ -9,12 +10,13 @@ import { RedisHealthIndicator } from './redis.health';
 export class HealthController {
   constructor(
     private readonly health: HealthCheckService,
+    private readonly database: DatabaseHealthIndicator,
     private readonly redis: RedisHealthIndicator,
   ) {}
 
   @Get()
   @HealthCheck()
   check() {
-    return this.health.check([() => this.redis.isHealthy()]);
+    return this.health.check([() => this.database.isHealthy(), () => this.redis.isHealthy()]);
   }
 }

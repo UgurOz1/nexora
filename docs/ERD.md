@@ -1,0 +1,75 @@
+# Veri modeli (ERD)
+
+Kaynak: [apps/api/prisma/schema.prisma](../apps/api/prisma/schema.prisma). Şema değişirse bu diyagram da güncellenir.
+
+```mermaid
+erDiagram
+    users ||--o{ memberships : "üyesi"
+    organizations ||--o{ memberships : "üyeleri"
+    organizations ||--o{ invitations : "davetleri"
+    users ||--o{ invitations : "davet eden"
+    organizations ||--o{ projects : "projeleri"
+    organizations ||--o{ tasks : "görevleri"
+    projects ||--o{ tasks : "görevleri"
+    tasks ||--o{ tasks : "alt görevleri"
+    users ||--o{ tasks : "atanan"
+    users ||--o{ tasks : "oluşturan"
+
+    users {
+        uuid id PK
+        string email UK
+        string passwordHash "Google girişinde null"
+        string name
+        datetime emailVerifiedAt
+    }
+    organizations {
+        uuid id PK
+        string name
+        string slug UK
+    }
+    memberships {
+        uuid id PK
+        uuid userId FK
+        uuid organizationId FK
+        enum role "OWNER | ADMIN | MANAGER | MEMBER"
+    }
+    invitations {
+        uuid id PK
+        uuid organizationId FK
+        string email
+        enum role
+        string tokenHash UK
+        uuid invitedById FK
+        datetime expiresAt
+        datetime acceptedAt
+    }
+    projects {
+        uuid id PK
+        uuid organizationId FK
+        string name
+        datetime deletedAt "soft delete"
+    }
+    tasks {
+        uuid id PK
+        uuid organizationId FK
+        uuid projectId FK
+        uuid parentId FK "alt görev ise"
+        string title
+        enum status "TODO | IN_PROGRESS | IN_REVIEW | DONE"
+        enum priority "LOW | MEDIUM | HIGH | URGENT"
+        datetime dueDate
+        uuid assigneeId FK
+        uuid createdById FK
+        string position "Kanban sırası"
+        datetime deletedAt "soft delete"
+    }
+```
+
+## Tasarım kararları
+
+- **Çok kiracılık:** Tenant'a ait her tabloda `organizationId` var. `tasks` tablosunda da (projeden türetilebilse bile) tutuluyor, böylece her sorgu doğrudan tenant ile filtrelenebiliyor ve indekslenebiliyor.
+- **Membership ayrı tablo:** Bir kullanıcı birden fazla organizasyonda, her birinde farklı rolle olabilir (çoka çok ilişki + rol).
+- **Davet token'ı hash'li:** Veritabanı sızsa bile davet linkleri kullanılamaz.
+- **Soft delete:** Projeler ve görevler silinince `deletedAt` dolar; geri alma ve denetim kaydı mümkün olur.
+- **UUID kimlikler:** Sıralı sayılar URL'de tahmin edilebilir (`/tasks/1`, `/tasks/2`) ve kayıt sayısını açığa çıkarır.
+- **İndeksler:** Kanban ekranının ana sorgusu (`organizationId + projectId + status`) için birleşik indeks.
