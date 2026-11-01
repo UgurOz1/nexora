@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { ErrorState } from '@/components/app/query-state';
+import { CommentsSection } from '@/components/app/tasks/comments-section';
 import { FormError, FormField } from '@/components/form-field';
 import { Button } from '@/components/ui/button';
 import {
@@ -264,6 +265,7 @@ function TaskBody({
         <Subtasks orgId={orgId} projectId={projectId} task={task} onOpenTask={onOpenTask} />
       )}
       <Dependencies orgId={orgId} projectId={projectId} task={task} onOpenTask={onOpenTask} />
+      <CommentsSection orgId={orgId} projectId={projectId} taskId={task.id} role={role} />
       <History orgId={orgId} task={task} />
     </>
   );
