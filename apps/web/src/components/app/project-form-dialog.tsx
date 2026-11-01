@@ -108,7 +108,12 @@ export function ProjectFormDialog({ orgId, project, variant = 'default' }: Proje
               : 'Projects group the tasks of one piece of work.'}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={(event) => void onSubmit(event)} noValidate className="grid gap-4">
+        <form
+          method="post"
+          onSubmit={(event) => void onSubmit(event)}
+          noValidate
+          className="grid gap-4"
+        >
           <FormError message={formError} />
           <FormField id="project-name" label="Name" error={errors.name?.message}>
             <Input

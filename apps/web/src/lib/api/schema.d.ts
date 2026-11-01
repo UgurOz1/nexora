@@ -4,1848 +4,1848 @@
  */
 
 export interface paths {
-  '/api/v1': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AppController_getInfo_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['AppController_getInfo_v1'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/health': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["HealthController_check"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['HealthController_check'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/auth/register': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_register_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['AuthController_register_v1'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/auth/login': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_login_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['AuthController_login_v1'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/auth/refresh': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_refresh_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['AuthController_refresh_v1'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/auth/logout': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_logout_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['AuthController_logout_v1'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/auth/logout-all': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/logout-all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_logoutAll_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['AuthController_logoutAll_v1'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/auth/me': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AuthController_me_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['AuthController_me_v1'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/auth/verify-email': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/verify-email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_verifyEmail_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['AuthController_verifyEmail_v1'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/auth/resend-verification': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/resend-verification": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_resendVerification_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['AuthController_resendVerification_v1'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/auth/forgot-password': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/forgot-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_forgotPassword_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['AuthController_forgotPassword_v1'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/auth/reset-password': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/auth/reset-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuthController_resetPassword_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['AuthController_resetPassword_v1'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/organizations': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/organizations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["OrganizationsController_listMine_v1"];
+        put?: never;
+        post: operations["OrganizationsController_create_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['OrganizationsController_listMine_v1'];
-    put?: never;
-    post: operations['OrganizationsController_create_v1'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/organizations/{orgId}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/organizations/{orgId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["OrganizationsController_get_v1"];
+        put?: never;
+        post?: never;
+        delete: operations["OrganizationsController_remove_v1"];
+        options?: never;
+        head?: never;
+        patch: operations["OrganizationsController_rename_v1"];
+        trace?: never;
     };
-    get: operations['OrganizationsController_get_v1'];
-    put?: never;
-    post?: never;
-    delete: operations['OrganizationsController_remove_v1'];
-    options?: never;
-    head?: never;
-    patch: operations['OrganizationsController_rename_v1'];
-    trace?: never;
-  };
-  '/api/v1/organizations/{orgId}/members': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/organizations/{orgId}/members": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MembersController_list_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['MembersController_list_v1'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/organizations/{orgId}/members/{userId}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/organizations/{orgId}/members/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["MembersController_remove_v1"];
+        options?: never;
+        head?: never;
+        patch: operations["MembersController_changeRole_v1"];
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete: operations['MembersController_remove_v1'];
-    options?: never;
-    head?: never;
-    patch: operations['MembersController_changeRole_v1'];
-    trace?: never;
-  };
-  '/api/v1/organizations/{orgId}/invitations': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/organizations/{orgId}/invitations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["OrganizationInvitationsController_listPending_v1"];
+        put?: never;
+        post: operations["OrganizationInvitationsController_invite_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['OrganizationInvitationsController_listPending_v1'];
-    put?: never;
-    post: operations['OrganizationInvitationsController_invite_v1'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/organizations/{orgId}/invitations/{invitationId}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/organizations/{orgId}/invitations/{invitationId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["OrganizationInvitationsController_revoke_v1"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete: operations['OrganizationInvitationsController_revoke_v1'];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/invitations/accept': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/invitations/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["InvitationAcceptController_accept_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['InvitationAcceptController_accept_v1'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/organizations/{orgId}/projects': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/organizations/{orgId}/projects": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ProjectsController_list_v1"];
+        put?: never;
+        post: operations["ProjectsController_create_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['ProjectsController_list_v1'];
-    put?: never;
-    post: operations['ProjectsController_create_v1'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/organizations/{orgId}/projects/{projectId}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/organizations/{orgId}/projects/{projectId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ProjectsController_get_v1"];
+        put?: never;
+        post?: never;
+        delete: operations["ProjectsController_remove_v1"];
+        options?: never;
+        head?: never;
+        patch: operations["ProjectsController_update_v1"];
+        trace?: never;
     };
-    get: operations['ProjectsController_get_v1'];
-    put?: never;
-    post?: never;
-    delete: operations['ProjectsController_remove_v1'];
-    options?: never;
-    head?: never;
-    patch: operations['ProjectsController_update_v1'];
-    trace?: never;
-  };
-  '/api/v1/organizations/{orgId}/projects/{projectId}/tasks': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/organizations/{orgId}/projects/{projectId}/tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["TasksController_listInProject_v1"];
+        put?: never;
+        post: operations["TasksController_create_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['TasksController_listInProject_v1'];
-    put?: never;
-    post: operations['TasksController_create_v1'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/organizations/{orgId}/tasks': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/organizations/{orgId}/tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["TasksController_list_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['TasksController_list_v1'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/organizations/{orgId}/tasks/{taskId}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/organizations/{orgId}/tasks/{taskId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["TasksController_get_v1"];
+        put?: never;
+        post?: never;
+        delete: operations["TasksController_remove_v1"];
+        options?: never;
+        head?: never;
+        patch: operations["TasksController_update_v1"];
+        trace?: never;
     };
-    get: operations['TasksController_get_v1'];
-    put?: never;
-    post?: never;
-    delete: operations['TasksController_remove_v1'];
-    options?: never;
-    head?: never;
-    patch: operations['TasksController_update_v1'];
-    trace?: never;
-  };
-  '/api/v1/organizations/{orgId}/tasks/{taskId}/subtasks': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/organizations/{orgId}/tasks/{taskId}/subtasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["TasksController_createSubtask_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['TasksController_createSubtask_v1'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/organizations/{orgId}/tasks/{taskId}/dependencies': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/organizations/{orgId}/tasks/{taskId}/dependencies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["TaskDetailsController_addDependency_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['TaskDetailsController_addDependency_v1'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/organizations/{orgId}/tasks/{taskId}/dependencies/{dependsOnId}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/organizations/{orgId}/tasks/{taskId}/dependencies/{dependsOnId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["TaskDetailsController_removeDependency_v1"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete: operations['TaskDetailsController_removeDependency_v1'];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/organizations/{orgId}/tasks/{taskId}/history': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/organizations/{orgId}/tasks/{taskId}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["TaskDetailsController_listHistory_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['TaskDetailsController_listHistory_v1'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/organizations/{orgId}/tasks/{taskId}/history/compare': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/organizations/{orgId}/tasks/{taskId}/history/compare": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["TaskDetailsController_compareVersions_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['TaskDetailsController_compareVersions_v1'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/organizations/{orgId}/recurring-tasks': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/organizations/{orgId}/recurring-tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RecurringTasksController_list_v1"];
+        put?: never;
+        post: operations["RecurringTasksController_create_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['RecurringTasksController_list_v1'];
-    put?: never;
-    post: operations['RecurringTasksController_create_v1'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/organizations/{orgId}/recurring-tasks/{id}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/v1/organizations/{orgId}/recurring-tasks/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RecurringTasksController_get_v1"];
+        put?: never;
+        post?: never;
+        delete: operations["RecurringTasksController_remove_v1"];
+        options?: never;
+        head?: never;
+        patch: operations["RecurringTasksController_update_v1"];
+        trace?: never;
     };
-    get: operations['RecurringTasksController_get_v1'];
-    put?: never;
-    post?: never;
-    delete: operations['RecurringTasksController_remove_v1'];
-    options?: never;
-    head?: never;
-    patch: operations['RecurringTasksController_update_v1'];
-    trace?: never;
-  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-  schemas: {
-    RegisterDto: {
-      /** @example ada@example.com */
-      email: string;
-      password: string;
-      /** @example Ada Lovelace */
-      name: string;
+    schemas: {
+        RegisterDto: {
+            /** @example ada@example.com */
+            email: string;
+            password: string;
+            /** @example Ada Lovelace */
+            name: string;
+        };
+        AccessTokenResponseDto: {
+            accessToken: string;
+            /** @example Bearer */
+            tokenType: string;
+            /**
+             * @description Access token lifetime in seconds
+             * @example 900
+             */
+            expiresIn: number;
+        };
+        LoginDto: {
+            /** @example ada@example.com */
+            email: string;
+            password: string;
+        };
+        /** @enum {string} */
+        Role: "OWNER" | "ADMIN" | "MANAGER" | "MEMBER";
+        MeOrganizationDto: {
+            id: string;
+            name: string;
+            slug: string;
+        };
+        MeMembershipDto: {
+            role: components["schemas"]["Role"];
+            organization: components["schemas"]["MeOrganizationDto"];
+        };
+        MeResponseDto: {
+            id: string;
+            email: string;
+            name: string;
+            /** Format: date-time */
+            emailVerifiedAt: string | null;
+            memberships: components["schemas"]["MeMembershipDto"][];
+        };
+        TokenDto: {
+            /** @description Token from the link in the email */
+            token: string;
+        };
+        MessageResponseDto: {
+            message: string;
+        };
+        ForgotPasswordDto: {
+            /** @example ada@example.com */
+            email: string;
+        };
+        ResetPasswordDto: {
+            /** @description Token from the link in the email */
+            token: string;
+            password: string;
+        };
+        OrganizationNameDto: {
+            /** @example Acme Software */
+            name: string;
+        };
+        OrganizationResponseDto: {
+            id: string;
+            name: string;
+            slug: string;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        OrganizationWithRoleDto: {
+            id: string;
+            name: string;
+            slug: string;
+            role: components["schemas"]["Role"];
+        };
+        OrganizationDetailDto: {
+            id: string;
+            name: string;
+            slug: string;
+            /** Format: date-time */
+            createdAt: string;
+            memberCount: number;
+        };
+        OrganizationBriefDto: {
+            id: string;
+            name: string;
+            slug: string;
+        };
+        MemberUserDto: {
+            id: string;
+            name: string;
+            email: string;
+        };
+        MemberResponseDto: {
+            role: components["schemas"]["Role"];
+            /** Format: date-time */
+            createdAt: string;
+            user: components["schemas"]["MemberUserDto"];
+        };
+        ChangeRoleDto: {
+            /**
+             * @example MANAGER
+             * @enum {string}
+             */
+            role: "ADMIN" | "MANAGER" | "MEMBER";
+        };
+        MemberRoleChangeResponseDto: {
+            role: components["schemas"]["Role"];
+            user: components["schemas"]["MemberUserDto"];
+        };
+        InviteMemberDto: {
+            /** @example grace@example.com */
+            email: string;
+            /**
+             * @example MEMBER
+             * @enum {string}
+             */
+            role: "ADMIN" | "MANAGER" | "MEMBER";
+        };
+        InvitationResponseDto: {
+            id: string;
+            email: string;
+            role: components["schemas"]["Role"];
+            /** Format: date-time */
+            expiresAt: string;
+        };
+        PendingInvitationResponseDto: {
+            id: string;
+            email: string;
+            role: components["schemas"]["Role"];
+            /** Format: date-time */
+            expiresAt: string;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        AcceptInvitationDto: {
+            /** @description Token from the invitation email link */
+            token: string;
+        };
+        CreateProjectDto: {
+            /** @example Website Redesign */
+            name: string;
+            description?: string;
+            /** @example Marketing */
+            department?: string;
+        };
+        ProjectResponseDto: {
+            id: string;
+            name: string;
+            description: string | null;
+            department: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            /** @description Tasks that are not deleted */
+            taskCount: number;
+        };
+        UpdateProjectDto: {
+            name?: string;
+            description?: string | null;
+            department?: string | null;
+        };
+        CreateTaskDto: {
+            /** @example Design the homepage */
+            title: string;
+            description?: string;
+            /**
+             * @default TODO
+             * @enum {string}
+             */
+            status: "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE";
+            /**
+             * @default MEDIUM
+             * @enum {string}
+             */
+            priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+            /**
+             * Format: date-time
+             * @example 2026-12-31T00:00:00.000Z
+             */
+            dueDate?: string;
+            /** @description Must be a member of the organization */
+            assigneeId?: string;
+            labels?: string[];
+        };
+        UpdateTaskDto: {
+            title?: string;
+            description?: string | null;
+            /** @enum {string} */
+            status?: "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE";
+            /** @enum {string} */
+            priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+            /** Format: date-time */
+            dueDate?: string | null;
+            assigneeId?: string | null;
+            labels?: string[];
+        };
+        AddDependencyDto: {
+            /** @description The task that must be DONE before this one can start */
+            dependsOnId: string;
+        };
+        CreateRecurringTaskDto: {
+            projectId: string;
+            /** @example Weekly report */
+            title: string;
+            description?: string;
+            /**
+             * @default MEDIUM
+             * @enum {string}
+             */
+            priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+            labels?: string[];
+            /** @description Must be a member of the organization */
+            assigneeId?: string;
+            /**
+             * @description RFC 5545 recurrence rule, frequency DAILY or longer (UTC)
+             * @example FREQ=WEEKLY;BYDAY=MO
+             */
+            rrule: string;
+            /**
+             * Format: date-time
+             * @description No occurrence happens before this moment. Default: now
+             */
+            startsAt?: string;
+            /** @description Generated tasks are due this many days after the occurrence */
+            dueInDays?: number;
+        };
+        UpdateRecurringTaskDto: {
+            title?: string;
+            description?: string | null;
+            /** @enum {string} */
+            priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+            labels?: string[];
+            assigneeId?: string | null;
+            /** @example FREQ=MONTHLY;BYMONTHDAY=1 */
+            rrule?: string;
+            /** Format: date-time */
+            startsAt?: string;
+            dueInDays?: number | null;
+            /** @description Pause or resume. Resuming skips the occurrences missed meanwhile */
+            active?: boolean;
+        };
     };
-    AccessTokenResponseDto: {
-      accessToken: string;
-      /** @example Bearer */
-      tokenType: string;
-      /**
-       * @description Access token lifetime in seconds
-       * @example 900
-       */
-      expiresIn: number;
-    };
-    LoginDto: {
-      /** @example ada@example.com */
-      email: string;
-      password: string;
-    };
-    /** @enum {string} */
-    Role: 'OWNER' | 'ADMIN' | 'MANAGER' | 'MEMBER';
-    MeOrganizationDto: {
-      id: string;
-      name: string;
-      slug: string;
-    };
-    MeMembershipDto: {
-      role: components['schemas']['Role'];
-      organization: components['schemas']['MeOrganizationDto'];
-    };
-    MeResponseDto: {
-      id: string;
-      email: string;
-      name: string;
-      /** Format: date-time */
-      emailVerifiedAt: string | null;
-      memberships: components['schemas']['MeMembershipDto'][];
-    };
-    TokenDto: {
-      /** @description Token from the link in the email */
-      token: string;
-    };
-    MessageResponseDto: {
-      message: string;
-    };
-    ForgotPasswordDto: {
-      /** @example ada@example.com */
-      email: string;
-    };
-    ResetPasswordDto: {
-      /** @description Token from the link in the email */
-      token: string;
-      password: string;
-    };
-    OrganizationNameDto: {
-      /** @example Acme Software */
-      name: string;
-    };
-    OrganizationResponseDto: {
-      id: string;
-      name: string;
-      slug: string;
-      /** Format: date-time */
-      createdAt: string;
-    };
-    OrganizationWithRoleDto: {
-      id: string;
-      name: string;
-      slug: string;
-      role: components['schemas']['Role'];
-    };
-    OrganizationDetailDto: {
-      id: string;
-      name: string;
-      slug: string;
-      /** Format: date-time */
-      createdAt: string;
-      memberCount: number;
-    };
-    OrganizationBriefDto: {
-      id: string;
-      name: string;
-      slug: string;
-    };
-    MemberUserDto: {
-      id: string;
-      name: string;
-      email: string;
-    };
-    MemberResponseDto: {
-      role: components['schemas']['Role'];
-      /** Format: date-time */
-      createdAt: string;
-      user: components['schemas']['MemberUserDto'];
-    };
-    ChangeRoleDto: {
-      /**
-       * @example MANAGER
-       * @enum {string}
-       */
-      role: 'ADMIN' | 'MANAGER' | 'MEMBER';
-    };
-    MemberRoleChangeResponseDto: {
-      role: components['schemas']['Role'];
-      user: components['schemas']['MemberUserDto'];
-    };
-    InviteMemberDto: {
-      /** @example grace@example.com */
-      email: string;
-      /**
-       * @example MEMBER
-       * @enum {string}
-       */
-      role: 'ADMIN' | 'MANAGER' | 'MEMBER';
-    };
-    InvitationResponseDto: {
-      id: string;
-      email: string;
-      role: components['schemas']['Role'];
-      /** Format: date-time */
-      expiresAt: string;
-    };
-    PendingInvitationResponseDto: {
-      id: string;
-      email: string;
-      role: components['schemas']['Role'];
-      /** Format: date-time */
-      expiresAt: string;
-      /** Format: date-time */
-      createdAt: string;
-    };
-    AcceptInvitationDto: {
-      /** @description Token from the invitation email link */
-      token: string;
-    };
-    CreateProjectDto: {
-      /** @example Website Redesign */
-      name: string;
-      description?: string;
-      /** @example Marketing */
-      department?: string;
-    };
-    ProjectResponseDto: {
-      id: string;
-      name: string;
-      description: string | null;
-      department: string | null;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-      /** @description Tasks that are not deleted */
-      taskCount: number;
-    };
-    UpdateProjectDto: {
-      name?: string;
-      description?: string | null;
-      department?: string | null;
-    };
-    CreateTaskDto: {
-      /** @example Design the homepage */
-      title: string;
-      description?: string;
-      /**
-       * @default TODO
-       * @enum {string}
-       */
-      status: 'TODO' | 'IN_PROGRESS' | 'IN_REVIEW' | 'DONE';
-      /**
-       * @default MEDIUM
-       * @enum {string}
-       */
-      priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
-      /**
-       * Format: date-time
-       * @example 2026-12-31T00:00:00.000Z
-       */
-      dueDate?: string;
-      /** @description Must be a member of the organization */
-      assigneeId?: string;
-      labels?: string[];
-    };
-    UpdateTaskDto: {
-      title?: string;
-      description?: string | null;
-      /** @enum {string} */
-      status?: 'TODO' | 'IN_PROGRESS' | 'IN_REVIEW' | 'DONE';
-      /** @enum {string} */
-      priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
-      /** Format: date-time */
-      dueDate?: string | null;
-      assigneeId?: string | null;
-      labels?: string[];
-    };
-    AddDependencyDto: {
-      /** @description The task that must be DONE before this one can start */
-      dependsOnId: string;
-    };
-    CreateRecurringTaskDto: {
-      projectId: string;
-      /** @example Weekly report */
-      title: string;
-      description?: string;
-      /**
-       * @default MEDIUM
-       * @enum {string}
-       */
-      priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
-      labels?: string[];
-      /** @description Must be a member of the organization */
-      assigneeId?: string;
-      /**
-       * @description RFC 5545 recurrence rule, frequency DAILY or longer (UTC)
-       * @example FREQ=WEEKLY;BYDAY=MO
-       */
-      rrule: string;
-      /**
-       * Format: date-time
-       * @description No occurrence happens before this moment. Default: now
-       */
-      startsAt?: string;
-      /** @description Generated tasks are due this many days after the occurrence */
-      dueInDays?: number;
-    };
-    UpdateRecurringTaskDto: {
-      title?: string;
-      description?: string | null;
-      /** @enum {string} */
-      priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
-      labels?: string[];
-      assigneeId?: string | null;
-      /** @example FREQ=MONTHLY;BYMONTHDAY=1 */
-      rrule?: string;
-      /** Format: date-time */
-      startsAt?: string;
-      dueInDays?: number | null;
-      /** @description Pause or resume. Resuming skips the occurrences missed meanwhile */
-      active?: boolean;
-    };
-  };
-  responses: never;
-  parameters: never;
-  requestBodies: never;
-  headers: never;
-  pathItems: never;
+    responses: never;
+    parameters: never;
+    requestBodies: never;
+    headers: never;
+    pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-  AppController_getInfo_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+    AppController_getInfo_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content?: never;
-      };
-    };
-  };
-  HealthController_check: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description The Health Check is successful */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            /** @example ok */
-            status?: string;
-            /**
-             * @example {
-             *       "database": {
-             *         "status": "up"
-             *       }
-             *     }
-             */
-            info?: {
-              [key: string]: {
-                status: string;
-              } & {
-                [key: string]: unknown;
-              };
-            } | null;
-            /** @example {} */
-            error?: {
-              [key: string]: {
-                status: string;
-              } & {
-                [key: string]: unknown;
-              };
-            } | null;
-            /**
-             * @example {
-             *       "database": {
-             *         "status": "up"
-             *       }
-             *     }
-             */
-            details?: {
-              [key: string]: {
-                status: string;
-              } & {
-                [key: string]: unknown;
-              };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
-          };
         };
-      };
-      /** @description The Health Check is not successful */
-      503: {
-        headers: {
-          [name: string]: unknown;
+    };
+    HealthController_check: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          'application/json': {
-            /** @example error */
-            status?: string;
-            /**
-             * @example {
-             *       "database": {
-             *         "status": "up"
-             *       }
-             *     }
-             */
-            info?: {
-              [key: string]: {
-                status: string;
-              } & {
-                [key: string]: unknown;
-              };
-            } | null;
-            /**
-             * @example {
-             *       "redis": {
-             *         "status": "down",
-             *         "message": "Could not connect"
-             *       }
-             *     }
-             */
-            error?: {
-              [key: string]: {
-                status: string;
-              } & {
-                [key: string]: unknown;
-              };
-            } | null;
-            /**
-             * @example {
-             *       "database": {
-             *         "status": "up"
-             *       },
-             *       "redis": {
-             *         "status": "down",
-             *         "message": "Could not connect"
-             *       }
-             *     }
-             */
-            details?: {
-              [key: string]: {
-                status: string;
-              } & {
-                [key: string]: unknown;
-              };
+        requestBody?: never;
+        responses: {
+            /** @description The Health Check is successful */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example ok */
+                        status?: string;
+                        /**
+                         * @example {
+                         *       "database": {
+                         *         "status": "up"
+                         *       }
+                         *     }
+                         */
+                        info?: {
+                            [key: string]: {
+                                status: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        } | null;
+                        /** @example {} */
+                        error?: {
+                            [key: string]: {
+                                status: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        } | null;
+                        /**
+                         * @example {
+                         *       "database": {
+                         *         "status": "up"
+                         *       }
+                         *     }
+                         */
+                        details?: {
+                            [key: string]: {
+                                status: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
             };
-          };
+            /** @description The Health Check is not successful */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example error */
+                        status?: string;
+                        /**
+                         * @example {
+                         *       "database": {
+                         *         "status": "up"
+                         *       }
+                         *     }
+                         */
+                        info?: {
+                            [key: string]: {
+                                status: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        } | null;
+                        /**
+                         * @example {
+                         *       "redis": {
+                         *         "status": "down",
+                         *         "message": "Could not connect"
+                         *       }
+                         *     }
+                         */
+                        error?: {
+                            [key: string]: {
+                                status: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        } | null;
+                        /**
+                         * @example {
+                         *       "database": {
+                         *         "status": "up"
+                         *       },
+                         *       "redis": {
+                         *         "status": "down",
+                         *         "message": "Could not connect"
+                         *       }
+                         *     }
+                         */
+                        details?: {
+                            [key: string]: {
+                                status: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+            };
         };
-      };
     };
-  };
-  AuthController_register_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['RegisterDto'];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
+    AuthController_register_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          'application/json': components['schemas']['AccessTokenResponseDto'];
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RegisterDto"];
+            };
         };
-      };
-    };
-  };
-  AuthController_login_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['LoginDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccessTokenResponseDto"];
+                };
+            };
         };
-        content: {
-          'application/json': components['schemas']['AccessTokenResponseDto'];
+    };
+    AuthController_login_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-    };
-  };
-  AuthController_refresh_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoginDto"];
+            };
         };
-        content: {
-          'application/json': components['schemas']['AccessTokenResponseDto'];
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccessTokenResponseDto"];
+                };
+            };
         };
-      };
     };
-  };
-  AuthController_logout_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      204: {
-        headers: {
-          [name: string]: unknown;
+    AuthController_refresh_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content?: never;
-      };
-    };
-  };
-  AuthController_logoutAll_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      204: {
-        headers: {
-          [name: string]: unknown;
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccessTokenResponseDto"];
+                };
+            };
         };
-        content?: never;
-      };
     };
-  };
-  AuthController_me_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+    AuthController_logout_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          'application/json': components['schemas']['MeResponseDto'];
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
-      };
     };
-  };
-  AuthController_verifyEmail_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['TokenDto'];
-      };
-    };
-    responses: {
-      204: {
-        headers: {
-          [name: string]: unknown;
+    AuthController_logoutAll_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content?: never;
-      };
-    };
-  };
-  AuthController_resendVerification_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      202: {
-        headers: {
-          [name: string]: unknown;
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
-        content: {
-          'application/json': components['schemas']['MessageResponseDto'];
+    };
+    AuthController_me_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-    };
-  };
-  AuthController_forgotPassword_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ForgotPasswordDto'];
-      };
-    };
-    responses: {
-      202: {
-        headers: {
-          [name: string]: unknown;
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeResponseDto"];
+                };
+            };
         };
-        content: {
-          'application/json': components['schemas']['MessageResponseDto'];
+    };
+    AuthController_verifyEmail_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-    };
-  };
-  AuthController_resetPassword_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ResetPasswordDto'];
-      };
-    };
-    responses: {
-      204: {
-        headers: {
-          [name: string]: unknown;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TokenDto"];
+            };
         };
-        content?: never;
-      };
-    };
-  };
-  OrganizationsController_listMine_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
-        content: {
-          'application/json': components['schemas']['OrganizationWithRoleDto'][];
+    };
+    AuthController_resendVerification_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-    };
-  };
-  OrganizationsController_create_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['OrganizationNameDto'];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
+        requestBody?: never;
+        responses: {
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageResponseDto"];
+                };
+            };
         };
-        content: {
-          'application/json': components['schemas']['OrganizationResponseDto'];
+    };
+    AuthController_forgotPassword_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-    };
-  };
-  OrganizationsController_get_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orgId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ForgotPasswordDto"];
+            };
         };
-        content: {
-          'application/json': components['schemas']['OrganizationDetailDto'];
+        responses: {
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageResponseDto"];
+                };
+            };
         };
-      };
     };
-  };
-  OrganizationsController_remove_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orgId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      204: {
-        headers: {
-          [name: string]: unknown;
+    AuthController_resetPassword_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content?: never;
-      };
-    };
-  };
-  OrganizationsController_rename_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orgId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['OrganizationNameDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResetPasswordDto"];
+            };
         };
-        content: {
-          'application/json': components['schemas']['OrganizationBriefDto'];
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
-      };
     };
-  };
-  MembersController_list_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orgId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+    OrganizationsController_listMine_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          'application/json': components['schemas']['MemberResponseDto'][];
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationWithRoleDto"][];
+                };
+            };
         };
-      };
     };
-  };
-  MembersController_remove_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        userId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      204: {
-        headers: {
-          [name: string]: unknown;
+    OrganizationsController_create_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content?: never;
-      };
-    };
-  };
-  MembersController_changeRole_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        userId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ChangeRoleDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OrganizationNameDto"];
+            };
         };
-        content: {
-          'application/json': components['schemas']['MemberRoleChangeResponseDto'];
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationResponseDto"];
+                };
+            };
         };
-      };
     };
-  };
-  OrganizationInvitationsController_listPending_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orgId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+    OrganizationsController_get_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+            };
+            cookie?: never;
         };
-        content: {
-          'application/json': components['schemas']['PendingInvitationResponseDto'][];
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationDetailDto"];
+                };
+            };
         };
-      };
     };
-  };
-  OrganizationInvitationsController_invite_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['InviteMemberDto'];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
+    OrganizationsController_remove_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+            };
+            cookie?: never;
         };
-        content: {
-          'application/json': components['schemas']['InvitationResponseDto'];
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
-      };
     };
-  };
-  OrganizationInvitationsController_revoke_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orgId: string;
-        invitationId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      204: {
-        headers: {
-          [name: string]: unknown;
+    OrganizationsController_rename_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+            };
+            cookie?: never;
         };
-        content?: never;
-      };
-    };
-  };
-  InvitationAcceptController_accept_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['AcceptInvitationDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OrganizationNameDto"];
+            };
         };
-        content: {
-          'application/json': components['schemas']['OrganizationWithRoleDto'];
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationBriefDto"];
+                };
+            };
         };
-      };
     };
-  };
-  ProjectsController_list_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orgId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+    MembersController_list_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+            };
+            cookie?: never;
         };
-        content: {
-          'application/json': components['schemas']['ProjectResponseDto'][];
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberResponseDto"][];
+                };
+            };
         };
-      };
     };
-  };
-  ProjectsController_create_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orgId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateProjectDto'];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
+    MembersController_remove_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: string;
+            };
+            cookie?: never;
         };
-        content: {
-          'application/json': components['schemas']['ProjectResponseDto'];
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
-      };
     };
-  };
-  ProjectsController_get_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orgId: string;
-        projectId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+    MembersController_changeRole_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: string;
+            };
+            cookie?: never;
         };
-        content: {
-          'application/json': components['schemas']['ProjectResponseDto'];
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeRoleDto"];
+            };
         };
-      };
-    };
-  };
-  ProjectsController_remove_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orgId: string;
-        projectId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      204: {
-        headers: {
-          [name: string]: unknown;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberRoleChangeResponseDto"];
+                };
+            };
         };
-        content?: never;
-      };
     };
-  };
-  ProjectsController_update_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orgId: string;
-        projectId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['UpdateProjectDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+    OrganizationInvitationsController_listPending_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+            };
+            cookie?: never;
         };
-        content: {
-          'application/json': components['schemas']['ProjectResponseDto'];
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PendingInvitationResponseDto"][];
+                };
+            };
         };
-      };
     };
-  };
-  TasksController_listInProject_v1: {
-    parameters: {
-      query?: {
-        limit?: number;
-        /** @description nextCursor from the previous page */
-        cursor?: string;
-        status?: 'TODO' | 'IN_PROGRESS' | 'IN_REVIEW' | 'DONE';
-        priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
-        /** @description A user id, or "me" */
-        assigneeId?: string;
-        /** @description Case-insensitive search in the title */
-        q?: string;
-        /** @description Only tasks that carry this label */
-        label?: string;
-        /** @description Only tasks due before this moment */
-        dueBefore?: string;
-        /** @description Only tasks that are past due and not DONE */
-        overdue?: boolean;
-        /** @description Also list subtasks (by default only top-level tasks) */
-        includeSubtasks?: boolean;
-        sort?: 'createdAt' | 'updatedAt';
-        order?: 'asc' | 'desc';
-      };
-      header?: never;
-      path: {
-        orgId: string;
-        projectId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+    OrganizationInvitationsController_invite_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content?: never;
-      };
-    };
-  };
-  TasksController_create_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        projectId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateTaskDto'];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InviteMemberDto"];
+            };
         };
-        content?: never;
-      };
-    };
-  };
-  TasksController_list_v1: {
-    parameters: {
-      query?: {
-        limit?: number;
-        /** @description nextCursor from the previous page */
-        cursor?: string;
-        status?: 'TODO' | 'IN_PROGRESS' | 'IN_REVIEW' | 'DONE';
-        priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
-        /** @description A user id, or "me" */
-        assigneeId?: string;
-        /** @description Case-insensitive search in the title */
-        q?: string;
-        /** @description Only tasks that carry this label */
-        label?: string;
-        /** @description Only tasks due before this moment */
-        dueBefore?: string;
-        /** @description Only tasks that are past due and not DONE */
-        overdue?: boolean;
-        /** @description Also list subtasks (by default only top-level tasks) */
-        includeSubtasks?: boolean;
-        sort?: 'createdAt' | 'updatedAt';
-        order?: 'asc' | 'desc';
-      };
-      header?: never;
-      path: {
-        orgId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvitationResponseDto"];
+                };
+            };
         };
-        content?: never;
-      };
     };
-  };
-  TasksController_get_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orgId: string;
-        taskId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+    OrganizationInvitationsController_revoke_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+                invitationId: string;
+            };
+            cookie?: never;
         };
-        content?: never;
-      };
-    };
-  };
-  TasksController_remove_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        taskId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      204: {
-        headers: {
-          [name: string]: unknown;
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
-        content?: never;
-      };
     };
-  };
-  TasksController_update_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        taskId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['UpdateTaskDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+    InvitationAcceptController_accept_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content?: never;
-      };
-    };
-  };
-  TasksController_createSubtask_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        taskId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateTaskDto'];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AcceptInvitationDto"];
+            };
         };
-        content?: never;
-      };
-    };
-  };
-  TaskDetailsController_addDependency_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        taskId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['AddDependencyDto'];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganizationWithRoleDto"];
+                };
+            };
         };
-        content?: never;
-      };
     };
-  };
-  TaskDetailsController_removeDependency_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        taskId: string;
-        dependsOnId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      204: {
-        headers: {
-          [name: string]: unknown;
+    ProjectsController_list_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+            };
+            cookie?: never;
         };
-        content?: never;
-      };
-    };
-  };
-  TaskDetailsController_listHistory_v1: {
-    parameters: {
-      query?: {
-        limit?: number;
-        /** @description nextCursor from the previous page */
-        cursor?: string;
-      };
-      header?: never;
-      path: {
-        orgId: string;
-        taskId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectResponseDto"][];
+                };
+            };
         };
-        content?: never;
-      };
     };
-  };
-  TaskDetailsController_compareVersions_v1: {
-    parameters: {
-      query: {
-        /** @description History entry id of the older version */
-        from: string;
-        /** @description History entry id of the newer version */
-        to: string;
-      };
-      header?: never;
-      path: {
-        orgId: string;
-        taskId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+    ProjectsController_create_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+            };
+            cookie?: never;
         };
-        content?: never;
-      };
-    };
-  };
-  RecurringTasksController_list_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orgId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateProjectDto"];
+            };
         };
-        content?: never;
-      };
-    };
-  };
-  RecurringTasksController_create_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRecurringTaskDto'];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectResponseDto"];
+                };
+            };
         };
-        content?: never;
-      };
     };
-  };
-  RecurringTasksController_get_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orgId: string;
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+    ProjectsController_get_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+                projectId: string;
+            };
+            cookie?: never;
         };
-        content?: never;
-      };
-    };
-  };
-  RecurringTasksController_remove_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orgId: string;
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      204: {
-        headers: {
-          [name: string]: unknown;
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectResponseDto"];
+                };
+            };
         };
-        content?: never;
-      };
     };
-  };
-  RecurringTasksController_update_v1: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        orgId: string;
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['UpdateRecurringTaskDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+    ProjectsController_remove_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+                projectId: string;
+            };
+            cookie?: never;
         };
-        content?: never;
-      };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
     };
-  };
+    ProjectsController_update_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+                projectId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateProjectDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectResponseDto"];
+                };
+            };
+        };
+    };
+    TasksController_listInProject_v1: {
+        parameters: {
+            query?: {
+                limit?: number;
+                /** @description nextCursor from the previous page */
+                cursor?: string;
+                status?: "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE";
+                priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+                /** @description A user id, or "me" */
+                assigneeId?: string;
+                /** @description Case-insensitive search in the title */
+                q?: string;
+                /** @description Only tasks that carry this label */
+                label?: string;
+                /** @description Only tasks due before this moment */
+                dueBefore?: string;
+                /** @description Only tasks that are past due and not DONE */
+                overdue?: boolean;
+                /** @description Also list subtasks (by default only top-level tasks) */
+                includeSubtasks?: boolean;
+                sort?: "createdAt" | "updatedAt";
+                order?: "asc" | "desc";
+            };
+            header?: never;
+            path: {
+                orgId: string;
+                projectId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    TasksController_create_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projectId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateTaskDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    TasksController_list_v1: {
+        parameters: {
+            query?: {
+                limit?: number;
+                /** @description nextCursor from the previous page */
+                cursor?: string;
+                status?: "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE";
+                priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+                /** @description A user id, or "me" */
+                assigneeId?: string;
+                /** @description Case-insensitive search in the title */
+                q?: string;
+                /** @description Only tasks that carry this label */
+                label?: string;
+                /** @description Only tasks due before this moment */
+                dueBefore?: string;
+                /** @description Only tasks that are past due and not DONE */
+                overdue?: boolean;
+                /** @description Also list subtasks (by default only top-level tasks) */
+                includeSubtasks?: boolean;
+                sort?: "createdAt" | "updatedAt";
+                order?: "asc" | "desc";
+            };
+            header?: never;
+            path: {
+                orgId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    TasksController_get_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    TasksController_remove_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    TasksController_update_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateTaskDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    TasksController_createSubtask_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateTaskDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    TaskDetailsController_addDependency_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddDependencyDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    TaskDetailsController_removeDependency_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskId: string;
+                dependsOnId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    TaskDetailsController_listHistory_v1: {
+        parameters: {
+            query?: {
+                limit?: number;
+                /** @description nextCursor from the previous page */
+                cursor?: string;
+            };
+            header?: never;
+            path: {
+                orgId: string;
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    TaskDetailsController_compareVersions_v1: {
+        parameters: {
+            query: {
+                /** @description History entry id of the older version */
+                from: string;
+                /** @description History entry id of the newer version */
+                to: string;
+            };
+            header?: never;
+            path: {
+                orgId: string;
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RecurringTasksController_list_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RecurringTasksController_create_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateRecurringTaskDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RecurringTasksController_get_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RecurringTasksController_remove_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    RecurringTasksController_update_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateRecurringTaskDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
 }

@@ -59,7 +59,12 @@ export function ForgotPasswordForm() {
       description="Enter your email and we will send you a link."
       footer={footer}
     >
-      <form onSubmit={(event) => void onSubmit(event)} noValidate className="grid gap-4">
+      <form
+        method="post"
+        onSubmit={(event) => void onSubmit(event)}
+        noValidate
+        className="grid gap-4"
+      >
         <FormError message={formError} />
         <FormField id="email" label="Email" error={errors.email?.message}>
           <Input

@@ -59,7 +59,12 @@ export function CreateOrganizationDialog({ label = 'New organization' }: { label
             An organization is a company or team. You become its owner and can invite the others.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={(event) => void onSubmit(event)} noValidate className="grid gap-4">
+        <form
+          method="post"
+          onSubmit={(event) => void onSubmit(event)}
+          noValidate
+          className="grid gap-4"
+        >
           <FormError message={formError} />
           <FormField id="org-name" label="Name" error={errors.name?.message}>
             <Input

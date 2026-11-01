@@ -67,7 +67,12 @@ export function ResetPasswordForm() {
 
   return (
     <AuthCard title="Choose a new password">
-      <form onSubmit={(event) => void onSubmit(event)} noValidate className="grid gap-4">
+      <form
+        method="post"
+        onSubmit={(event) => void onSubmit(event)}
+        noValidate
+        className="grid gap-4"
+      >
         <FormError message={formError} />
         <FormField
           id="password"

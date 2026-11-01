@@ -51,7 +51,12 @@ export function RegisterForm() {
         </span>
       }
     >
-      <form onSubmit={(event) => void onSubmit(event)} noValidate className="grid gap-4">
+      <form
+        method="post"
+        onSubmit={(event) => void onSubmit(event)}
+        noValidate
+        className="grid gap-4"
+      >
         <FormError message={formError} />
         <FormField id="name" label="Name" error={errors.name?.message}>
           <Input
