@@ -41,15 +41,18 @@ model User {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
-  memberships       Membership[]
-  sentInvitations   Invitation[]    @relation("InvitedBy")
-  assignedTasks     Task[]          @relation("TaskAssignee")
-  createdTasks      Task[]          @relation("TaskCreator")
-  refreshTokens     RefreshToken[]
-  userTokens        UserToken[]
-  taskEvents        TaskEvent[]
-  assignedRecurring RecurringTask[] @relation("RecurringAssignee")
-  createdRecurring  RecurringTask[] @relation("RecurringCreator")
+  memberships         Membership[]
+  sentInvitations     Invitation[]    @relation("InvitedBy")
+  assignedTasks       Task[]          @relation("TaskAssignee")
+  createdTasks        Task[]          @relation("TaskCreator")
+  refreshTokens       RefreshToken[]
+  userTokens          UserToken[]
+  taskEvents          TaskEvent[]
+  assignedRecurring   RecurringTask[] @relation("RecurringAssignee")
+  createdRecurring    RecurringTask[] @relation("RecurringCreator")
+  comments            Comment[]       @relation("CommentAuthor")
+  notifications       Notification[]  @relation("NotificationRecipient")
+  causedNotifications Notification[]  @relation("NotificationActor")
 
   @@map("users")
 }
@@ -111,6 +114,8 @@ model Organization {
   taskDependencies TaskDependency[]
   taskEvents       TaskEvent[]
   recurringTasks   RecurringTask[]
+  comments         Comment[]
+  notifications    Notification[]
 
   @@map("organizations")
 }
@@ -205,6 +210,8 @@ model Task {
   dependencies  TaskDependency[] @relation("Blocked")
   dependents    TaskDependency[] @relation("Blocker")
   events        TaskEvent[]
+  comments      Comment[]
+  notifications Notification[]
 
   @@unique([recurringTaskId, occurrenceAt])
   @@index([organizationId, projectId, status])
@@ -239,6 +246,7 @@ enum TaskEventType {
   DELETED
   DEPENDENCY_ADDED
   DEPENDENCY_REMOVED
+  COMMENT_ADDED
 }
 
 // Append-only history of a task. `changes` says what this event changed, `snapshot` holds the
@@ -295,4 +303,55 @@ model RecurringTask {
   @@index([organizationId])
   @@index([active, nextRunAt])
   @@map("recurring_tasks")
+}
+
+// A comment on a task. Mentions are written into the text as @[Name](userId); they are parsed when
+// the comment is saved, not stored separately. Deleting is soft, like tasks.
+model Comment {
+  id             String    @id @default(uuid())
+  organizationId String
+  taskId         String
+  authorId       String
+  body           String
+  createdAt      DateTime  @default(now())
+  // Set when the text was changed after it was posted.
+  editedAt       DateTime?
+  deletedAt      DateTime?
+
+  organization  Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  task          Task           @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  author        User           @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  notifications Notification[]
+
+  @@index([taskId, createdAt])
+  @@index([organizationId])
+  @@map("comments")
+}
+
+enum NotificationType {
+  MENTION
+  ASSIGNED
+}
+
+// Something that happened which one user should know about. `userId` is the recipient.
+model Notification {
+  id             String           @id @default(uuid())
+  organizationId String
+  userId         String
+  type           NotificationType
+  actorId        String
+  taskId         String
+  commentId      String?
+  readAt         DateTime?
+  createdAt      DateTime         @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation("NotificationRecipient", fields: [userId], references: [id], onDelete: Cascade)
+  actor        User         @relation("NotificationActor", fields: [actorId], references: [id], onDelete: Cascade)
+  task         Task         @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  comment      Comment?     @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@index([userId, organizationId, readAt])
+  @@index([userId, organizationId, createdAt])
+  @@map("notifications")
 }

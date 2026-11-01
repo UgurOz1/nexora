@@ -172,10 +172,11 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 
 **Öğrenilecekler:** Yorum ve mention ayrıştırma, aktivite akışı tasarımı, domain event'leri (NestJS EventEmitter), audit log ile aktivite akışı farkı.
 
-- [ ] Görevlere yorum (düzenleme, silme)
-- [ ] `@mention` ve mention edilen kişiye bildirim kaydı
-- [ ] Proje ve organizasyon aktivite akışı
-- [ ] Domain event altyapısı (`task.created`, `task.status_changed` …)
+- [x] Görevlere yorum (düzenleme, silme)
+- [x] `@mention` ve mention edilen kişiye bildirim kaydı (atama bildirimi de) ([ADR-0008](adr/0008-collaboration-events.md))
+- [x] Proje ve organizasyon aktivite akışı
+- [x] Domain event altyapısı (`task.created`, `task.status_changed` …)
+- [ ] Arayüz: görev penceresinde yorumlar, bildirim zili, aktivite akışı
 
 **Çıktı:** Ekip içi işbirliği özellikleri.
 **Mülakat soruları:** Neden servisleri doğrudan birbirine çağırtmak yerine event kullandın?

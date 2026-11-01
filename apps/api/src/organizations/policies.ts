@@ -29,6 +29,20 @@ export function canDeleteTask(actor: Role, task: { createdById: string }, userId
   return task.createdById === userId || hasAtLeast(actor, Role.MANAGER);
 }
 
+// Only the author edits a comment (nobody speaks in someone else's name); moderating, i.e.
+// deleting someone else's comment, is for MANAGER and above.
+export function canEditComment(comment: { authorId: string }, userId: string): boolean {
+  return comment.authorId === userId;
+}
+
+export function canDeleteComment(
+  actor: Role,
+  comment: { authorId: string },
+  userId: string,
+): boolean {
+  return comment.authorId === userId || hasAtLeast(actor, Role.MANAGER);
+}
+
 // Anyone can leave (except the OWNER, who must delete the organization instead).
 // Removing someone else needs at least ADMIN and a higher rank than theirs.
 export function canRemove(actor: Role, target: { role: Role; isSelf: boolean }): boolean {

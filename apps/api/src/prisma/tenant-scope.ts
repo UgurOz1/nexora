@@ -10,6 +10,8 @@ const TENANT_MODELS = new Set([
   'TaskDependency',
   'TaskEvent',
   'RecurringTask',
+  'Comment',
+  'Notification',
 ]);
 
 const WHERE_OPERATIONS = new Set([

@@ -8,6 +8,7 @@ import {
 import type { OrgMembership } from '../common/auth/current-user.decorator';
 import { decodeCursor, toPage } from '../common/pagination/cursor';
 import { Prisma, TaskEventType, TaskStatus } from '../generated/prisma/client';
+import { DomainEvents } from '../events/domain-events';
 import { canDeleteTask } from '../organizations/policies';
 import { PrismaService } from '../prisma/prisma.service';
 import type { TenantTx } from '../prisma/tenant-scope';
@@ -74,7 +75,10 @@ function present<T extends { _count: { subtasks: number; dependencies: number } 
 
 @Injectable()
 export class TasksService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly events: DomainEvents,
+  ) {}
 
   async create(
     organizationId: string,
@@ -124,7 +128,7 @@ export class TasksService {
     await this.assertAssigneeIsMember(organizationId, data.assigneeId);
 
     // The task and its first history entry are saved together.
-    return this.prisma.forTenant(organizationId).$transaction(async (tx) => {
+    const created = await this.prisma.forTenant(organizationId).$transaction(async (tx) => {
       // New tasks go to the bottom of their column.
       const position = await endPosition(tx, {
         projectId: data.projectId,
@@ -147,6 +151,15 @@ export class TasksService {
       });
       return present(task);
     });
+
+    await this.events.publish('task.created', {
+      organizationId,
+      actorId: actor.userId,
+      taskId: created.id,
+      projectId: created.projectId,
+    });
+    await this.announceAssignee(organizationId, actor.userId, created.id, null, created.assigneeId);
+    return created;
   }
 
   async list(organizationId: string, userId: string, query: ListTasksQueryDto, projectId?: string) {
@@ -211,45 +224,50 @@ export class TasksService {
   async update(organizationId: string, actor: OrgMembership, taskId: string, dto: UpdateTaskDto) {
     await this.assertAssigneeIsMember(organizationId, dto.assigneeId);
 
-    return this.prisma.forTenant(organizationId).$transaction(async (tx) => {
-      const before = await this.lockAndLoad(tx, organizationId, taskId);
+    const { before, task: updated } = await this.prisma
+      .forTenant(organizationId)
+      .$transaction(async (tx) => {
+        const before = await this.lockAndLoad(tx, organizationId, taskId);
 
-      // A task that waits for unfinished work cannot move forward. Going back to TODO is always fine.
-      const statusChanged = dto.status !== undefined && dto.status !== before.status;
-      if (statusChanged && dto.status !== TaskStatus.TODO) {
-        await this.assertNotBlocked(tx, taskId);
-      }
+        // A task that waits for unfinished work cannot move forward. Going back to TODO is always fine.
+        const statusChanged = dto.status !== undefined && dto.status !== before.status;
+        if (statusChanged && dto.status !== TaskStatus.TODO) {
+          await this.assertNotBlocked(tx, taskId);
+        }
 
-      const task = await tx.task.update({
-        where: { id: taskId, deletedAt: null },
-        data: {
-          ...dto,
-          // Changing the status through the edit form puts the task at the bottom of the new column.
-          ...(statusChanged && {
-            position: await endPosition(tx, {
-              projectId: before.projectId,
-              status: dto.status!,
-              parentId: before.parentId,
+        const task = await tx.task.update({
+          where: { id: taskId, deletedAt: null },
+          data: {
+            ...dto,
+            // Changing the status through the edit form puts the task at the bottom of the new column.
+            ...(statusChanged && {
+              position: await endPosition(tx, {
+                projectId: before.projectId,
+                status: dto.status!,
+                parentId: before.parentId,
+              }),
             }),
-          }),
-        },
-        select: taskSelect,
+          },
+          select: taskSelect,
+        });
+
+        const snapshot = snapshotOf(task);
+        const changes = diffSnapshots(snapshotOf(before), snapshot);
+        if (Object.keys(changes).length > 0) {
+          await recordEvent(tx, {
+            organizationId,
+            taskId,
+            actorId: actor.userId,
+            type: TaskEventType.UPDATED,
+            changes,
+            snapshot,
+          });
+        }
+        return { before, task: present(task) };
       });
 
-      const snapshot = snapshotOf(task);
-      const changes = diffSnapshots(snapshotOf(before), snapshot);
-      if (Object.keys(changes).length > 0) {
-        await recordEvent(tx, {
-          organizationId,
-          taskId,
-          actorId: actor.userId,
-          type: TaskEventType.UPDATED,
-          changes,
-          snapshot,
-        });
-      }
-      return present(task);
-    });
+    await this.announceChanges(organizationId, actor.userId, before, updated);
+    return updated;
   }
 
   // Everything the Kanban board needs in one request: the top-level tasks of the project, split
@@ -290,40 +308,89 @@ export class TasksService {
       throw new BadRequestException('A task cannot be placed after itself');
     }
 
-    return this.prisma.forTenant(organizationId).$transaction(async (tx) => {
-      const before = await this.lockAndLoad(tx, organizationId, taskId);
+    const { before, task: moved } = await this.prisma
+      .forTenant(organizationId)
+      .$transaction(async (tx) => {
+        const before = await this.lockAndLoad(tx, organizationId, taskId);
 
-      const statusChanged = dto.status !== before.status;
-      if (statusChanged && dto.status !== TaskStatus.TODO) {
-        await this.assertNotBlocked(tx, taskId);
-      }
+        const statusChanged = dto.status !== before.status;
+        if (statusChanged && dto.status !== TaskStatus.TODO) {
+          await this.assertNotBlocked(tx, taskId);
+        }
 
-      const position = await positionAfter(
-        tx,
-        { projectId: before.projectId, status: dto.status, parentId: before.parentId },
-        taskId,
-        dto.afterId ?? null,
-      );
-      const task = await tx.task.update({
-        where: { id: taskId, deletedAt: null },
-        data: { status: dto.status, position },
-        select: taskSelect,
+        const position = await positionAfter(
+          tx,
+          { projectId: before.projectId, status: dto.status, parentId: before.parentId },
+          taskId,
+          dto.afterId ?? null,
+        );
+        const task = await tx.task.update({
+          where: { id: taskId, deletedAt: null },
+          data: { status: dto.status, position },
+          select: taskSelect,
+        });
+
+        // Reordering inside a column is not part of a task's history; a status change is.
+        if (statusChanged) {
+          const snapshot = snapshotOf(task);
+          await recordEvent(tx, {
+            organizationId,
+            taskId,
+            actorId: actor.userId,
+            type: TaskEventType.UPDATED,
+            changes: diffSnapshots(snapshotOf(before), snapshot),
+            snapshot,
+          });
+        }
+        return { before, task: present(task) };
       });
 
-      // Reordering inside a column is not part of a task's history; a status change is.
-      if (statusChanged) {
-        const snapshot = snapshotOf(task);
-        await recordEvent(tx, {
-          organizationId,
-          taskId,
-          actorId: actor.userId,
-          type: TaskEventType.UPDATED,
-          changes: diffSnapshots(snapshotOf(before), snapshot),
-          snapshot,
-        });
-      }
-      return present(task);
-    });
+    await this.announceChanges(organizationId, actor.userId, before, moved);
+    return moved;
+  }
+
+  // Tells the rest of the system what an edit changed, after the change is committed.
+  private async announceChanges(
+    organizationId: string,
+    actorId: string,
+    before: { status: TaskStatus; assigneeId: string | null },
+    after: { id: string; projectId: string; status: TaskStatus; assigneeId: string | null },
+  ) {
+    if (before.status !== after.status) {
+      await this.events.publish('task.status_changed', {
+        organizationId,
+        actorId,
+        taskId: after.id,
+        projectId: after.projectId,
+        from: before.status,
+        to: after.status,
+      });
+    }
+    await this.announceAssignee(
+      organizationId,
+      actorId,
+      after.id,
+      before.assigneeId,
+      after.assigneeId,
+    );
+  }
+
+  // Assigning a task to yourself is not news to anyone.
+  private async announceAssignee(
+    organizationId: string,
+    actorId: string,
+    taskId: string,
+    from: string | null,
+    to: string | null,
+  ) {
+    if (to && to !== from && to !== actorId) {
+      await this.events.publish('task.assigned', {
+        organizationId,
+        actorId,
+        taskId,
+        assigneeId: to,
+      });
+    }
   }
 
   // Lock the row until the transaction ends. Two people changing the same task at the same moment
