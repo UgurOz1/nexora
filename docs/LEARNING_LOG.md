@@ -145,3 +145,25 @@ Bu dosya mülakat hazırlığında da ana kaynağın olacak.
 **Dürüst notlar:** Tarayıcı uçtan uca testi (Playwright) yok, akışlar elle denendi. Görev yanıtları henüz sözleşmede yok (Hafta 8).
 
 **Sonraki adım:** Hafta 8, Kanban panosu ve görev arayüzü (sürükle-bırak, fractional indexing, optimistic update).
+
+### 2026-11-01 · Hafta 8 · Kanban ve görev arayüzü (M2)
+
+**Ne yaptık:** API: pano (`GET .../board`) ve taşıma (`POST .../move`) uç noktaları, fractional index ile kalıcı sıralama, görev yanıt şemalarının sözleşmeye eklenmesi. Web: sürükle-bırak Kanban panosu (klavyeyle de çalışır), optimistic taşıma + hata olunca geri alma, görev detay penceresi (alanlar, alt görevler, bağımlılıklar, geçmiş, silme), filtreli liste görünümü. Karar kaydı: ADR-0007.
+**Kavramlar:**
+
+- _Fractional indexing:_ Sırayı 1, 2, 3 yerine iki komşunun arasında kalan bir metin anahtarıyla tutmak. Araya koymak tek satır güncellemesi; tam sayıda altındaki herkes kayardı ve iki kişi çakışırdı. Anahtar uzarsa sütun yeniden numaralandırılır.
+- _Konumu sunucu hesaplar:_ İstemci sadece "şu kartın arkasına" der (`afterId`); eski bir pano görüntüsü bozuk anahtar üretemez.
+- _Optimistic update:_ Kart hemen yer değiştirir, istek arkadan gider. `onMutate`'te önceki hâl saklanır, `onError`'da geri konur, `onSettled`'da sunucunun gerçeğiyle yenilenir.
+- _dnd-kit erişilebilirliği:_ Sürükleme için ayrı bir tutamak (kartın kendisi "aç" düğmesi kalır), Boşluk ile al, ok tuşlarıyla taşı, Boşluk ile bırak; ekran okuyucuya duyuru yapılır.
+- _Sözleşme tamamlama:_ Swagger yalnızca `@Param` ile okunan yol parametrelerini belgeliyordu; `orgId`'yi okumayan rotalarda eksikti. Üretim betiği yoldaki her `{param}`'ı tamamlıyor.
+
+**Dersler:**
+
+- Birim test gerçek bir hatayı yakaladı: bilinmeyen `afterId` ile taşıma, kartı kaynak sütundan silip hedefe koymuyordu (kart kayboluyordu). Doğrulama başa alındı.
+- Mutasyon testi: bağımlılık kapısı, yeniden numaralandırma ve `afterId`'nin sütunla sınırlanması tek tek kaldırıldı, her seferinde bir test kırıldı.
+- Tarayıcıdaki otomasyon aracı gerçek sürükle-bırak olaylarını güvenilir üretemedi. Bunun yerine mantığı saf fonksiyona (`moveInBoard`, `placementFor`) ve hook'a ayırıp ayrı ayrı test ettim; detay penceresi, alt görev, bağımlılık ve 409 hata gösterimi ise tarayıcıda elle denendi.
+- `openapi-typescript` varsayılan değerli alanları istekte zorunlu gösteriyordu; `--default-non-nullable false` ile düzeldi.
+
+**Dürüst notlar:** Gerçek fare/klavye sürükleme akışı bu oturumda otomasyonla uçtan uca doğrulanamadı (parçaları test edildi); Playwright ile Hafta 13'te kapatılacak. Panoya gerçek zamanlı güncelleme yok (Hafta 10).
+
+**Sonraki adım:** Hafta 9, işbirliği (yorumlar, bahsetmeler, bildirimler).

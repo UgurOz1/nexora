@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { DeleteProjectDialog } from '@/components/app/delete-project-dialog';
 import { ProjectFormDialog } from '@/components/app/project-form-dialog';
 import { ErrorState } from '@/components/app/query-state';
+import { TasksSection } from '@/components/app/tasks/tasks-section';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -90,14 +91,7 @@ export function ProjectView({ orgId, projectId }: { orgId: string; projectId: st
         </Card>
       )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Tasks</CardTitle>
-        </CardHeader>
-        <CardContent className="text-sm text-muted-foreground">
-          The task board is coming soon.
-        </CardContent>
-      </Card>
+      <TasksSection orgId={orgId} projectId={projectId} role={role} />
     </div>
   );
 }

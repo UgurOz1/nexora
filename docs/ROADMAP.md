@@ -158,12 +158,12 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 
 **Öğrenilecekler:** Sürükle-bırak (dnd-kit), sıralama için fractional indexing (LexoRank benzeri), optimistic update ve hata durumunda geri alma, erişilebilirlik (klavye ile sürükleme).
 
-- [ ] Kanban panosu: sütunlar = durumlar
+- [x] Kanban panosu: sütunlar = durumlar
 - [x] API: pano uç noktası, taşıma uç noktası, fractional index sıralama ([ADR-0007](adr/0007-kanban-ordering.md))
-- [ ] Sürükle-bırak, sıralamanın kalıcı olması (fractional index)
-- [ ] Optimistic update
-- [ ] Görev detay paneli: alt görevler, bağımlılıklar, geçmiş
-- [ ] Liste görünümü + filtreler
+- [x] Sürükle-bırak (dnd-kit, klavye desteği), sıralamanın kalıcı olması (fractional index)
+- [x] Optimistic update ve hata olunca geri alma (birim testli)
+- [x] Görev detay penceresi: alanlar, alt görevler, bağımlılıklar, geçmiş
+- [x] Liste görünümü + filtreler (arama, durum, öncelik, atanan)
 
 **Çıktı:** M2. Uçtan uca kullanılabilir ürün.
 **Mülakat soruları:** Görev sırasını neden 1, 2, 3 gibi tam sayılarla tutmadın? Optimistic update başarısız olursa ne olur?

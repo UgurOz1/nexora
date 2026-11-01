@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
-import { configureApp, openApiConfig } from './app.setup';
+import { completePathParameters, configureApp, openApiConfig } from './app.setup';
 import type { Env } from './config/env';
 
 async function bootstrap() {
@@ -15,7 +15,9 @@ async function bootstrap() {
   configureApp(app);
   app.enableShutdownHooks();
 
-  SwaggerModule.setup('api/docs', app, () => SwaggerModule.createDocument(app, openApiConfig()));
+  SwaggerModule.setup('api/docs', app, () =>
+    completePathParameters(SwaggerModule.createDocument(app, openApiConfig())),
+  );
 
   await app.listen(config.get('API_PORT', { infer: true }));
 }
