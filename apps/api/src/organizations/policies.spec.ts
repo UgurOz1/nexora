@@ -1,5 +1,12 @@
 import { Role } from '../generated/prisma/client';
-import { canChangeRole, canDeleteTask, canInvite, canRemove } from './policies';
+import {
+  canChangeRole,
+  canDeleteComment,
+  canDeleteTask,
+  canEditComment,
+  canInvite,
+  canRemove,
+} from './policies';
 import { hasAtLeast, outranks } from './roles';
 
 const { OWNER, ADMIN, MANAGER, MEMBER } = Role;
@@ -62,6 +69,20 @@ describe('canDeleteTask', () => {
     expect(canDeleteTask(MANAGER, { createdById: 'u2' }, 'u1')).toBe(true);
     expect(canDeleteTask(ADMIN, { createdById: 'u2' }, 'u1')).toBe(true);
     expect(canDeleteTask(MEMBER, { createdById: 'u2' }, 'u1')).toBe(false);
+  });
+});
+
+describe('comment policies', () => {
+  it('lets only the author edit, whatever their role', () => {
+    expect(canEditComment({ authorId: 'u1' }, 'u1')).toBe(true);
+    expect(canEditComment({ authorId: 'u1' }, 'u2')).toBe(false);
+  });
+
+  it("lets authors delete their own comments and managers and above delete anyone's", () => {
+    expect(canDeleteComment(MEMBER, { authorId: 'u1' }, 'u1')).toBe(true);
+    expect(canDeleteComment(MANAGER, { authorId: 'u2' }, 'u1')).toBe(true);
+    expect(canDeleteComment(OWNER, { authorId: 'u2' }, 'u1')).toBe(true);
+    expect(canDeleteComment(MEMBER, { authorId: 'u2' }, 'u1')).toBe(false);
   });
 });
 

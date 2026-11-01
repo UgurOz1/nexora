@@ -532,6 +532,134 @@ export interface paths {
         patch: operations["RecurringTasksController_update_v1"];
         trace?: never;
     };
+    "/api/v1/organizations/{orgId}/tasks/{taskId}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CommentsController_list_v1"];
+        put?: never;
+        post: operations["CommentsController_create_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/organizations/{orgId}/tasks/{taskId}/comments/{commentId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["CommentsController_remove_v1"];
+        options?: never;
+        head?: never;
+        patch: operations["CommentsController_update_v1"];
+        trace?: never;
+    };
+    "/api/v1/organizations/{orgId}/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NotificationsController_list_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/organizations/{orgId}/notifications/unread-count": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NotificationsController_unreadCount_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/organizations/{orgId}/notifications/read-all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["NotificationsController_readAll_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/organizations/{orgId}/notifications/{id}/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["NotificationsController_read_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/organizations/{orgId}/activity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ActivityController_organization_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/organizations/{orgId}/projects/{projectId}/activity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ActivityController_project_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -828,7 +956,7 @@ export interface components {
             dependsOn: components["schemas"]["TaskSummaryDto"];
         };
         /** @enum {string} */
-        TaskEventType: "CREATED" | "UPDATED" | "DELETED" | "DEPENDENCY_ADDED" | "DEPENDENCY_REMOVED";
+        TaskEventType: "CREATED" | "UPDATED" | "DELETED" | "DEPENDENCY_ADDED" | "DEPENDENCY_REMOVED" | "COMMENT_ADDED";
         HistoryEventResponseDto: {
             id: string;
             type: components["schemas"]["TaskEventType"];
@@ -881,6 +1009,71 @@ export interface components {
             dueInDays?: number | null;
             /** @description Pause or resume. Resuming skips the occurrences missed meanwhile */
             active?: boolean;
+        };
+        CommentResponseDto: {
+            id: string;
+            taskId: string;
+            body: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            editedAt: string | null;
+            author: components["schemas"]["UserSummaryDto"];
+        };
+        CommentPageResponseDto: {
+            items: components["schemas"]["CommentResponseDto"][];
+            nextCursor: string | null;
+        };
+        CommentBodyDto: {
+            /** @description Plain text. Mention a member with @[Name](userId). */
+            body: string;
+        };
+        /** @enum {string} */
+        NotificationType: "MENTION" | "ASSIGNED";
+        NotificationTaskDto: {
+            id: string;
+            title: string;
+            projectId: string;
+        };
+        NotificationResponseDto: {
+            id: string;
+            type: components["schemas"]["NotificationType"];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            readAt: string | null;
+            /** @description Who caused it */
+            actor: components["schemas"]["UserSummaryDto"];
+            task: components["schemas"]["NotificationTaskDto"];
+            commentId: string | null;
+        };
+        NotificationPageResponseDto: {
+            items: components["schemas"]["NotificationResponseDto"][];
+            nextCursor: string | null;
+        };
+        UnreadCountResponseDto: {
+            count: number;
+        };
+        ReadAllResponseDto: {
+            /** @description How many notifications were marked as read */
+            updated: number;
+        };
+        ActivityItemResponseDto: {
+            id: string;
+            type: components["schemas"]["TaskEventType"];
+            /** @description What this entry changed: { field: { from, to } } */
+            changes: {
+                [key: string]: unknown;
+            };
+            /** Format: date-time */
+            createdAt: string;
+            /** @description null when the system acted */
+            actor: components["schemas"]["UserSummaryDto"] | null;
+            task: components["schemas"]["NotificationTaskDto"];
+        };
+        ActivityPageResponseDto: {
+            items: components["schemas"]["ActivityItemResponseDto"][];
+            nextCursor: string | null;
         };
     };
     responses: never;
@@ -2057,6 +2250,246 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    CommentsController_list_v1: {
+        parameters: {
+            query?: {
+                limit?: number;
+                /** @description nextCursor from the previous page */
+                cursor?: string;
+            };
+            header?: never;
+            path: {
+                orgId: string;
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentPageResponseDto"];
+                };
+            };
+        };
+    };
+    CommentsController_create_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentBodyDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentResponseDto"];
+                };
+            };
+        };
+    };
+    CommentsController_remove_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+                taskId: string;
+                commentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CommentsController_update_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+                taskId: string;
+                commentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentBodyDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentResponseDto"];
+                };
+            };
+        };
+    };
+    NotificationsController_list_v1: {
+        parameters: {
+            query?: {
+                limit?: number;
+                /** @description nextCursor from the previous page */
+                cursor?: string;
+                /** @description Only notifications that have not been read yet */
+                unreadOnly?: boolean;
+            };
+            header?: never;
+            path: {
+                orgId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationPageResponseDto"];
+                };
+            };
+        };
+    };
+    NotificationsController_unreadCount_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UnreadCountResponseDto"];
+                };
+            };
+        };
+    };
+    NotificationsController_readAll_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReadAllResponseDto"];
+                };
+            };
+        };
+    };
+    NotificationsController_read_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ActivityController_organization_v1: {
+        parameters: {
+            query?: {
+                limit?: number;
+                /** @description nextCursor from the previous page */
+                cursor?: string;
+            };
+            header?: never;
+            path: {
+                orgId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActivityPageResponseDto"];
+                };
+            };
+        };
+    };
+    ActivityController_project_v1: {
+        parameters: {
+            query?: {
+                limit?: number;
+                /** @description nextCursor from the previous page */
+                cursor?: string;
+            };
+            header?: never;
+            path: {
+                orgId: string;
+                projectId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActivityPageResponseDto"];
+                };
             };
         };
     };
