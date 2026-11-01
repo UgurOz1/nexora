@@ -16,6 +16,7 @@ pnpm --filter @nexora/api prisma:generate
 pnpm --filter @nexora/api prisma:migrate
 pnpm --filter @nexora/api db:seed
 pnpm --filter @nexora/api start:dev
+pnpm --filter @nexora/web dev      # web app on http://localhost:3000 (forwards /api to the API)
 ```
 
 | Service          | URL / Port                       |

@@ -121,4 +121,27 @@ Bu dosya mülakat hazırlığında da ana kaynağın olacak.
 
 **Dürüst notlar:** Birim test kapsamı ~%39'a düştü (yeni servisler ağırlıklı olarak e2e testlerle doğrulanıyor). Proje silinince görevlerin silinmesi için tek tek olay yazılmıyor; kuruluş geneli denetim kaydı Hafta 11'de.
 
-**Sonraki adım:** Hafta 7, frontend temeli (Next.js, Tailwind, shadcn/ui, giriş sayfaları).
+### 2026-11-01 · Hafta 7 · Frontend temeli
+
+**Ne yaptık:** Next.js 16 + Tailwind 4 + shadcn/ui; giriş, kayıt, şifre sıfırlama, e-posta doğrulama, Google dönüşü; korumalı alan; organizasyon seçici; proje listesi, ayrıntı, düzenleme, silme; davet kabul sayfası; API sözleşmesinden üretilen tipli istemci; 40 web testi. Tüm akışlar tarayıcıda gerçek API ve e-posta ile denendi. Karar kaydı: ADR-0006.
+**Kavramlar:**
+
+- _Sunucu ve istemci bileşeni:_ Sunucu bileşeni tarayıcıya JavaScript göndermez (başlık, statik içerik); tıklama, form ve tarayıcı durumu gereken kısım `'use client'` olur. Sayfa sunucuda, form istemcide.
+- _TanStack Query:_ Sunucu verisi için önbellek. Aynı anahtarı isteyen iki bileşen tek istek paylaşır; değişiklikten sonra ilgili anahtarlar geçersiz kılınınca ekranlar kendini günceller. `useEffect` + `fetch` ile bunların hepsini elle yazmak gerekir (yükleme durumu, yarış, önbellek, yeniden deneme).
+- _Token bellekte, refresh çerezde:_ XSS çerezi okuyamaz; sayfa yenilenince token çerezle geri alınır.
+- _Refresh rotation tuzağı:_ Aynı anda iki yenileme isteği, çalınma alarmını yanlışlıkla tetikler. Çözüm: tek çağrı + Web Locks ile sekme sırası.
+- _Açık yönlendirme (open redirect):_ `?next=` değeri URL'den geldiği için yalnızca site içi yollar kabul edilir.
+- _Tipli istemci:_ OpenAPI'den üretilen tipler yanlış yolu ve gövdeyi derleme hatası yapar.
+- _Rol bazlı arayüz:_ Düğmeleri gizlemek güvenlik değil, kullanım kolaylığıdır; yetkiyi API denetler.
+
+**Dersler:**
+
+- Tipli istemci sözleşmedeki gerçek bir hatayı yakaladı: `string | null` alanları API belgesinde "nesne" görünüyordu (Swagger birleşim tipini okuyamıyor, `type` açıkça yazılmalı).
+- CI'da çalışıp yerelde çalışmayan şey çoğunlukla yerelde zaten var olan bir şeyle maskelenir: üretim betiği yerel `.env` sayesinde çalışıyordu, CI'da `app.module` yüklenirken ortam doğrulaması patladı. CI koşullarını yerelde yeniden üretmek (`.env` olmadan) sorunu gösterdi.
+- Bir araç (shadcn CLI) kendi başına yeni bir bağımlılık (`cn`) ekledi; sahibini doğrulayamadığım için almadım, 3 satırlık kendi yardımcımı tuttum.
+- Gizli tarayıcı paneli animasyonları dondurur ve tıklamalar başarısız olur; paneli görünür yapınca düzeldi (uygulama hatası değildi).
+- Elle denerken görülen şüpheli durum (form `GET`): sayfa hazır olmadan gönderilirse bilgiler adrese düşer. Formlar `method="post"` yapıldı.
+
+**Dürüst notlar:** Tarayıcı uçtan uca testi (Playwright) yok, akışlar elle denendi. Görev yanıtları henüz sözleşmede yok (Hafta 8).
+
+**Sonraki adım:** Hafta 8, Kanban panosu ve görev arayüzü (sürükle-bırak, fractional indexing, optimistic update).

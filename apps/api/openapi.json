@@ -2485,12 +2485,12 @@
             "maxLength": 100
           },
           "description": {
-            "type": "object",
+            "type": "string",
             "maxLength": 2000,
             "nullable": true
           },
           "department": {
-            "type": "object",
+            "type": "string",
             "maxLength": 100,
             "nullable": true
           }
@@ -2557,7 +2557,7 @@
             "maxLength": 200
           },
           "description": {
-            "type": "object",
+            "type": "string",
             "maxLength": 5000,
             "nullable": true
           },
@@ -2580,11 +2580,12 @@
             ]
           },
           "dueDate": {
-            "type": "object",
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           },
           "assigneeId": {
-            "type": "object",
+            "type": "string",
             "nullable": true
           },
           "labels": {
@@ -2673,7 +2674,7 @@
             "maxLength": 200
           },
           "description": {
-            "type": "object",
+            "type": "string",
             "maxLength": 5000,
             "nullable": true
           },
@@ -2694,7 +2695,7 @@
             }
           },
           "assigneeId": {
-            "type": "object",
+            "type": "string",
             "nullable": true
           },
           "rrule": {
@@ -2706,7 +2707,7 @@
             "type": "string"
           },
           "dueInDays": {
-            "type": "object",
+            "type": "number",
             "nullable": true
           },
           "active": {

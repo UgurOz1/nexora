@@ -67,11 +67,22 @@ jobs:
             exit 1
           }
 
+      # The web client's types are generated from openapi.json; a stale file fails here.
+      - name: Web API types are up to date
+        run: |
+          pnpm --filter @nexora/web generate:api
+          git diff --exit-code -- apps/web/src/lib/api/schema.d.ts || {
+            echo "::error::apps/web/src/lib/api/schema.d.ts is out of date. Run: pnpm --filter @nexora/web generate:api"
+            exit 1
+          }
+
       - name: Lint
         run: pnpm lint
 
       - name: Typecheck
-        run: pnpm --filter @nexora/api typecheck
+        run: |
+          pnpm --filter @nexora/api typecheck
+          pnpm --filter @nexora/web typecheck
 
       - name: Unit tests (with coverage)
         run: pnpm --filter @nexora/api test:cov
@@ -80,3 +91,10 @@ jobs:
       # isolation and permission tests over HTTP.
       - name: Integration tests
         run: pnpm --filter @nexora/api test:e2e
+
+      - name: Web tests
+        run: pnpm --filter @nexora/web test
+
+      # Catches errors that only show up when Next.js compiles and prerenders every page.
+      - name: Web build
+        run: pnpm --filter @nexora/web build

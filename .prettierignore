@@ -4,3 +4,4 @@ dist
 .next
 coverage
 apps/api/openapi.json
+apps/web/src/lib/api/schema.d.ts

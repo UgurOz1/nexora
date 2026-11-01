@@ -144,12 +144,12 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 
 **Öğrenilecekler:** Next.js App Router (server/client component, layout, route group, middleware), Tailwind, shadcn/ui, TanStack Query (cache, invalidation), react-hook-form + zod, OpenAPI'den tipli API client üretme.
 
-- [ ] Next.js uygulaması, Tailwind + shadcn/ui kurulumu, tema
-- [ ] OpenAPI'den tipli API client
-- [ ] Giriş, kayıt, şifre sıfırlama, Google ile giriş sayfaları
-- [ ] Korumalı route'lar, token yenileme akışı
-- [ ] Organizasyon seçici, organizasyon oluşturma, davet kabul sayfası
-- [ ] Proje listesi ve proje detay sayfası
+- [x] Next.js 16 uygulaması, Tailwind 4 + shadcn/ui kurulumu, açık/koyu tema
+- [x] OpenAPI'den tipli API client (`apps/api/openapi.json` → `schema.d.ts`; CI'da güncel mi kontrolü). Görev/geçmiş/tekrarlayan görev yanıtları Hafta 8'de sözleşmeye eklenecek
+- [x] Giriş, kayıt, şifre sıfırlama, e-posta doğrulama, Google ile giriş sayfaları
+- [x] Korumalı route'lar, token yenileme akışı (bellekte token, tek çağrılı yenileme, sekmeler arası kilit)
+- [x] Organizasyon seçici, organizasyon oluşturma, davet kabul sayfası
+- [x] Proje listesi, ayrıntı, düzenleme ve silme (rol bazlı butonlar)
 
 **Çıktı:** Uygulamaya tarayıcıdan girilip organizasyon ve proje yönetilebiliyor.
 **Mülakat soruları:** Server component ile client component farkı ne? TanStack Query neden var, `useEffect` + `fetch` ile ne farkı var?
