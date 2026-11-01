@@ -167,3 +167,25 @@ Bu dosya mülakat hazırlığında da ana kaynağın olacak.
 **Dürüst notlar:** Gerçek fare/klavye sürükleme akışı bu oturumda otomasyonla uçtan uca doğrulanamadı (parçaları test edildi); Playwright ile Hafta 13'te kapatılacak. Panoya gerçek zamanlı güncelleme yok (Hafta 10).
 
 **Sonraki adım:** Hafta 9, işbirliği (yorumlar, bahsetmeler, bildirimler).
+
+### 2026-11-01 · Hafta 9 · İşbirliği
+
+**Ne yaptık:** API: görev yorumları (düzenleme, silme), `@mention`, kişiye özel bildirimler (mention, atama), proje ve organizasyon aktivite akışı, domain event altyapısı. Web: görev penceresinde yorumlar ve mention seçici, başlıkta bildirim zili (okunmamış sayacı, "tümünü okundu yap", tıklayınca ilgili görev açılır), "Activity" sekmesi. Karar kaydı: ADR-0008.
+**Kavramlar:**
+
+- _Domain event:_ Servis "görev atandı" der; bildirimi kimin üreteceğini bilmez. Yeni tepki (canlı güncelleme, e-posta) eklemek olayı üreten servisi değiştirmez. Olaylar commit'ten **sonra** yayınlanır; dinleyici hatası isteği bozmaz, loglanır.
+- _Aktivite akışı ≠ audit log:_ Akış "ekip ne yapıyor?" sorusunun cevabı (görev geçmişinin proje geneli); audit log güvenlik açısından önemli her eylemin kanıtıdır (Hafta 11).
+- _Mention biçimi `@[Ad](id)`:_ Kimlik esas, ad sadece görüntü. Sadece şirket üyeleri bildirim alır; yabancı ya da uydurma kimlik düz metin olur ve kişinin var olup olmadığı sızmaz.
+- _Yetki "rol" değil "sahiplik" olabilir:_ Yorumu yalnızca yazarı düzenler (OWNER bile edemez); silmeyi yazar ya da MANAGER+ yapar.
+- _Bildirimler kişiye özel:_ Her sorgu şirket + alıcıya göre süzülür; başkasının bildirimi 404.
+- _Türetilmiş state:_ Bildirimden gelen `?task=` bağlantısını state'e kopyalayan `useEffect` yerine, açık görevi iki state'ten hesapladım (lint kuralı `set-state-in-effect` doğru yöne itti).
+
+**Dersler:**
+
+- Mutasyon testinde iki mutant hayatta kaldı: biri testin yanlış şirkette arama yapması, diğeri mutantın derleme hatası vermesi yüzünden hiç çalışmamasıydı. "0 test çalıştı" bir geçiş değildir. Ayrıca toplu eklemedeki tek bir geçersiz kimlik (FK) bütün satırları düşürüp gerçek hatayı maskeledi; testi ayırdım.
+- `@nestjs/event-emitter` 12 de yalnızca ESM çıktı; Nest 11 için 3.x sabitlendi (ADR-0003'teki kural).
+- Gerçek bir hata değil ama öğretici: `heredoc` içinde tek tırnaklı Türkçe/İngilizce metin kabuğu bozabiliyor; dosya yazmak için Write aracı daha güvenli.
+
+**Dürüst notlar:** Olaylar bellekte yaşar: commit ile dinleyici arasında süreç çökerse bildirim kaybolur. Hafta 10'da BullMQ ile kalıcı hale gelecek (ADR-0008'de yazılı). Zil şimdilik 30 saniyede bir sorgular; canlı itme Hafta 10'da (Socket.IO). Yorum listesi tek sayfa (100); sonsuz kaydırma yok.
+
+**Sonraki adım:** Hafta 10, arka plan işleri (BullMQ) ve gerçek zamanlı güncelleme (Socket.IO).

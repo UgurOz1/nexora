@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { DeleteProjectDialog } from '@/components/app/delete-project-dialog';
 import { ProjectFormDialog } from '@/components/app/project-form-dialog';
 import { ErrorState } from '@/components/app/query-state';
@@ -91,7 +92,10 @@ export function ProjectView({ orgId, projectId }: { orgId: string; projectId: st
         </Card>
       )}
 
-      <TasksSection orgId={orgId} projectId={projectId} role={role} />
+      {/* useSearchParams (the ?task= link from a notification) needs a Suspense boundary. */}
+      <Suspense>
+        <TasksSection orgId={orgId} projectId={projectId} role={role} />
+      </Suspense>
     </div>
   );
 }

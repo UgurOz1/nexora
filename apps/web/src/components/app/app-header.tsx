@@ -3,6 +3,7 @@
 import { ChevronsUpDown } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { NotificationBell } from '@/components/app/notification-bell';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -56,6 +57,7 @@ export function AppHeader() {
         )}
 
         <div className="ml-auto flex items-center gap-1">
+          {orgId && <NotificationBell orgId={orgId} />}
           <ThemeToggle />
           <DropdownMenu>
             <DropdownMenuTrigger render={<Button variant="ghost" size="sm" />}>

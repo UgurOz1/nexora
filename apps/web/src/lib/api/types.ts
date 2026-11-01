@@ -24,3 +24,7 @@ export type UpdateTaskInput = Schemas['UpdateTaskDto'];
 export type HistoryEvent = Schemas['HistoryEventResponseDto'];
 export type HistoryPage = Schemas['HistoryPageResponseDto'];
 export type Member = Schemas['MemberResponseDto'];
+
+export type Comment = Schemas['CommentResponseDto'];
+export type Notification = Schemas['NotificationResponseDto'];
+export type ActivityItem = Schemas['ActivityItemResponseDto'];

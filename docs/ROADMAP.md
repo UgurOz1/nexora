@@ -176,7 +176,7 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 - [x] `@mention` ve mention edilen kişiye bildirim kaydı (atama bildirimi de) ([ADR-0008](adr/0008-collaboration-events.md))
 - [x] Proje ve organizasyon aktivite akışı
 - [x] Domain event altyapısı (`task.created`, `task.status_changed` …)
-- [ ] Arayüz: görev penceresinde yorumlar, bildirim zili, aktivite akışı
+- [x] Arayüz: görev penceresinde yorumlar, bildirim zili, aktivite akışı
 
 **Çıktı:** Ekip içi işbirliği özellikleri.
 **Mülakat soruları:** Neden servisleri doğrudan birbirine çağırtmak yerine event kullandın?
