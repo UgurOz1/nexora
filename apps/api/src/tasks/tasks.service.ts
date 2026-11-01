@@ -11,10 +11,19 @@ import { Prisma, TaskEventType, TaskStatus } from '../generated/prisma/client';
 import { canDeleteTask } from '../organizations/policies';
 import { PrismaService } from '../prisma/prisma.service';
 import type { TenantTx } from '../prisma/tenant-scope';
-import type { CreateTaskDto, ListTasksQueryDto, UpdateTaskDto } from './dto/tasks.dto';
+import type { CreateTaskDto, ListTasksQueryDto, MoveTaskDto, UpdateTaskDto } from './dto/tasks.dto';
 import { recordEvent, recordEvents } from './task-events';
-import { newPosition } from './task-position';
+import { endPosition, positionAfter } from './task-ordering';
 import { diffSnapshots, snapshotOf } from './task-snapshot';
+
+// A board column shows at most this many tasks; "hasMore" tells the client there are more.
+const BOARD_COLUMN_LIMIT = 100;
+const BOARD_STATUSES = [
+  TaskStatus.TODO,
+  TaskStatus.IN_PROGRESS,
+  TaskStatus.IN_REVIEW,
+  TaskStatus.DONE,
+] as const;
 
 const userSummary = { select: { id: true, name: true } } as const;
 const taskSummary = { select: { id: true, title: true, status: true } } as const;
@@ -116,8 +125,15 @@ export class TasksService {
 
     // The task and its first history entry are saved together.
     return this.prisma.forTenant(organizationId).$transaction(async (tx) => {
+      // New tasks go to the bottom of their column.
+      const position = await endPosition(tx, {
+        projectId: data.projectId,
+        status: data.status ?? TaskStatus.TODO,
+        parentId: data.parentId ?? null,
+      });
       const task = await tx.task.create({
-        data: { organizationId, createdById: actor.userId, position: newPosition(), ...data },
+        // The computed values come last: a DTO field that was not sent can be present as `undefined`.
+        data: { ...data, organizationId, createdById: actor.userId, position },
         select: taskSelect,
       });
       const snapshot = snapshotOf(task);
@@ -196,30 +212,27 @@ export class TasksService {
     await this.assertAssigneeIsMember(organizationId, dto.assigneeId);
 
     return this.prisma.forTenant(organizationId).$transaction(async (tx) => {
-      // Lock the row until this transaction ends. Two people editing the same task at the same
-      // moment queue up here: the second one reads the result of the first, so every history
-      // entry describes exactly one change and nothing is silently overwritten or mislabelled.
-      const locked = await tx.$queryRaw<{ id: string }[]>`
-        SELECT id FROM tasks
-        WHERE id = ${taskId} AND "organizationId" = ${organizationId} AND "deletedAt" IS NULL
-        FOR UPDATE`;
-      if (locked.length === 0) {
-        throw new NotFoundException('Task not found');
-      }
-
-      const before = await tx.task.findFirstOrThrow({
-        where: { id: taskId, deletedAt: null },
-        select: taskSelect,
-      });
+      const before = await this.lockAndLoad(tx, organizationId, taskId);
 
       // A task that waits for unfinished work cannot move forward. Going back to TODO is always fine.
-      if (dto.status && dto.status !== before.status && dto.status !== TaskStatus.TODO) {
+      const statusChanged = dto.status !== undefined && dto.status !== before.status;
+      if (statusChanged && dto.status !== TaskStatus.TODO) {
         await this.assertNotBlocked(tx, taskId);
       }
 
       const task = await tx.task.update({
         where: { id: taskId, deletedAt: null },
-        data: dto,
+        data: {
+          ...dto,
+          // Changing the status through the edit form puts the task at the bottom of the new column.
+          ...(statusChanged && {
+            position: await endPosition(tx, {
+              projectId: before.projectId,
+              status: dto.status!,
+              parentId: before.parentId,
+            }),
+          }),
+        },
         select: taskSelect,
       });
 
@@ -236,6 +249,97 @@ export class TasksService {
         });
       }
       return present(task);
+    });
+  }
+
+  // Everything the Kanban board needs in one request: the top-level tasks of the project, split
+  // into one column per status and ordered by their position.
+  async board(organizationId: string, projectId: string) {
+    const tenant = this.prisma.forTenant(organizationId);
+    const project = await tenant.project.findFirst({
+      where: { id: projectId, deletedAt: null },
+      select: { id: true },
+    });
+    if (!project) {
+      throw new NotFoundException('Project not found');
+    }
+
+    const columns = await Promise.all(
+      BOARD_STATUSES.map(async (status) => {
+        const rows = await tenant.task.findMany({
+          where: { projectId, status, parentId: null, deletedAt: null },
+          orderBy: [{ position: 'asc' }, { id: 'asc' }],
+          take: BOARD_COLUMN_LIMIT + 1,
+          select: taskSelect,
+        });
+        return {
+          status,
+          tasks: rows.slice(0, BOARD_COLUMN_LIMIT).map(present),
+          hasMore: rows.length > BOARD_COLUMN_LIMIT,
+        };
+      }),
+    );
+    return { columns };
+  }
+
+  // Drag and drop: put the task into a column, right after `afterId` (or at the top). Moving to
+  // another column changes the status, so the rules of a status change apply (a task that waits
+  // for unfinished work cannot leave TODO) and the change is recorded in the task's history.
+  async move(organizationId: string, actor: OrgMembership, taskId: string, dto: MoveTaskDto) {
+    if (dto.afterId === taskId) {
+      throw new BadRequestException('A task cannot be placed after itself');
+    }
+
+    return this.prisma.forTenant(organizationId).$transaction(async (tx) => {
+      const before = await this.lockAndLoad(tx, organizationId, taskId);
+
+      const statusChanged = dto.status !== before.status;
+      if (statusChanged && dto.status !== TaskStatus.TODO) {
+        await this.assertNotBlocked(tx, taskId);
+      }
+
+      const position = await positionAfter(
+        tx,
+        { projectId: before.projectId, status: dto.status, parentId: before.parentId },
+        taskId,
+        dto.afterId ?? null,
+      );
+      const task = await tx.task.update({
+        where: { id: taskId, deletedAt: null },
+        data: { status: dto.status, position },
+        select: taskSelect,
+      });
+
+      // Reordering inside a column is not part of a task's history; a status change is.
+      if (statusChanged) {
+        const snapshot = snapshotOf(task);
+        await recordEvent(tx, {
+          organizationId,
+          taskId,
+          actorId: actor.userId,
+          type: TaskEventType.UPDATED,
+          changes: diffSnapshots(snapshotOf(before), snapshot),
+          snapshot,
+        });
+      }
+      return present(task);
+    });
+  }
+
+  // Lock the row until the transaction ends. Two people changing the same task at the same moment
+  // queue up here: the second one reads the result of the first, so every history entry describes
+  // exactly one change and nothing is silently overwritten or mislabelled.
+  private async lockAndLoad(tx: TenantTx, organizationId: string, taskId: string) {
+    const locked = await tx.$queryRaw<{ id: string }[]>`
+      SELECT id FROM tasks
+      WHERE id = ${taskId} AND "organizationId" = ${organizationId} AND "deletedAt" IS NULL
+      FOR UPDATE`;
+    if (locked.length === 0) {
+      throw new NotFoundException('Task not found');
+    }
+    return tx.task.findFirstOrThrow({
+      where: { id: taskId, deletedAt: null },
+      select: taskSelect,
     });
   }
 

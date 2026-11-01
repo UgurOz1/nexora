@@ -42,12 +42,16 @@ export class CreateTaskDto {
   @MaxLength(5000)
   description?: string;
 
-  @ApiPropertyOptional({ enum: TaskStatus, default: TaskStatus.TODO })
+  @ApiPropertyOptional({ enum: TaskStatus, enumName: 'TaskStatus', default: TaskStatus.TODO })
   @IsOptional()
   @IsEnum(TaskStatus)
   status?: TaskStatus;
 
-  @ApiPropertyOptional({ enum: TaskPriority, default: TaskPriority.MEDIUM })
+  @ApiPropertyOptional({
+    enum: TaskPriority,
+    enumName: 'TaskPriority',
+    default: TaskPriority.MEDIUM,
+  })
   @IsOptional()
   @IsEnum(TaskPriority)
   priority?: TaskPriority;
@@ -90,12 +94,12 @@ export class UpdateTaskDto {
   @MaxLength(5000)
   description?: string | null;
 
-  @ApiPropertyOptional({ enum: TaskStatus })
+  @ApiPropertyOptional({ enum: TaskStatus, enumName: 'TaskStatus' })
   @IsOptional()
   @IsEnum(TaskStatus)
   status?: TaskStatus;
 
-  @ApiPropertyOptional({ enum: TaskPriority })
+  @ApiPropertyOptional({ enum: TaskPriority, enumName: 'TaskPriority' })
   @IsOptional()
   @IsEnum(TaskPriority)
   priority?: TaskPriority;
@@ -122,16 +126,32 @@ export class UpdateTaskDto {
   labels?: string[];
 }
 
+// Drag and drop: "put this task in this column, right after that task".
+export class MoveTaskDto {
+  @ApiProperty({ enum: TaskStatus, enumName: 'TaskStatus', description: 'The target column' })
+  @IsEnum(TaskStatus)
+  status!: TaskStatus;
+
+  @ApiPropertyOptional({
+    type: String,
+    nullable: true,
+    description: 'The task that will be directly above; null or missing = top of the column',
+  })
+  @IsOptional()
+  @IsUUID()
+  afterId?: string | null;
+}
+
 export const TASK_SORT_FIELDS = ['createdAt', 'updatedAt'] as const;
 export type TaskSortField = (typeof TASK_SORT_FIELDS)[number];
 
 export class ListTasksQueryDto extends PaginationQueryDto {
-  @ApiPropertyOptional({ enum: TaskStatus })
+  @ApiPropertyOptional({ enum: TaskStatus, enumName: 'TaskStatus' })
   @IsOptional()
   @IsEnum(TaskStatus)
   status?: TaskStatus;
 
-  @ApiPropertyOptional({ enum: TaskPriority })
+  @ApiPropertyOptional({ enum: TaskPriority, enumName: 'TaskPriority' })
   @IsOptional()
   @IsEnum(TaskPriority)
   priority?: TaskPriority;

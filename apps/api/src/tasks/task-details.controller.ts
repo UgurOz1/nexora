@@ -10,11 +10,18 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CurrentMembership } from '../common/auth/current-membership.decorator';
 import type { OrgMembership } from '../common/auth/current-user.decorator';
 import { DependenciesService } from './dependencies.service';
 import { AddDependencyDto, CompareVersionsQueryDto, HistoryQueryDto } from './dto/dependencies.dto';
+import { DependencyAddedResponseDto, HistoryPageResponseDto } from './dto/tasks.response';
 import { HistoryService } from './history.service';
 
 // Dependencies and history of one task. Every member can use them, like the task itself.
@@ -28,6 +35,7 @@ export class TaskDetailsController {
   ) {}
 
   @Post('dependencies')
+  @ApiCreatedResponse({ type: DependencyAddedResponseDto })
   addDependency(
     @CurrentMembership() actor: OrgMembership,
     @Param('taskId', ParseUUIDPipe) taskId: string,
@@ -38,6 +46,7 @@ export class TaskDetailsController {
 
   @Delete('dependencies/:dependsOnId')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse()
   removeDependency(
     @CurrentMembership() actor: OrgMembership,
     @Param('taskId', ParseUUIDPipe) taskId: string,
@@ -47,6 +56,7 @@ export class TaskDetailsController {
   }
 
   @Get('history')
+  @ApiOkResponse({ type: HistoryPageResponseDto })
   listHistory(
     @Param('orgId') orgId: string,
     @Param('taskId', ParseUUIDPipe) taskId: string,

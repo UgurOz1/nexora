@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import type { OrgMembership } from '../common/auth/current-user.decorator';
-import { Prisma, TaskEventType } from '../generated/prisma/client';
+import { Prisma, TaskEventType, TaskStatus } from '../generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { recordEvent } from '../tasks/task-events';
-import { newPosition } from '../tasks/task-position';
+import { endPosition } from '../tasks/task-ordering';
 import { diffSnapshots, snapshotOf } from '../tasks/task-snapshot';
 import type { CreateRecurringTaskDto, UpdateRecurringTaskDto } from './dto/recurring-tasks.dto';
 import {
@@ -186,7 +186,11 @@ export class RecurringTasksService {
               template.dueInDays === null
                 ? null
                 : new Date(occurrence.getTime() + template.dueInDays * DAY_MS),
-            position: newPosition(),
+            position: await endPosition(tx, {
+              projectId: template.projectId,
+              status: TaskStatus.TODO,
+              parentId: null,
+            }),
             // Together these make the occurrence unique in the database itself.
             recurringTaskId: template.id,
             occurrenceAt: occurrence,

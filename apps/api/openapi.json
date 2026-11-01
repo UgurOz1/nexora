@@ -1089,7 +1089,14 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1145,13 +1152,7 @@
             "required": false,
             "in": "query",
             "schema": {
-              "type": "string",
-              "enum": [
-                "TODO",
-                "IN_PROGRESS",
-                "IN_REVIEW",
-                "DONE"
-              ]
+              "$ref": "#/components/schemas/TaskStatus"
             }
           },
           {
@@ -1159,13 +1160,7 @@
             "required": false,
             "in": "query",
             "schema": {
-              "type": "string",
-              "enum": [
-                "LOW",
-                "MEDIUM",
-                "HIGH",
-                "URGENT"
-              ]
+              "$ref": "#/components/schemas/TaskPriority"
             }
           },
           {
@@ -1253,7 +1248,57 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskPageResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "tasks"
+        ]
+      }
+    },
+    "/api/v1/organizations/{orgId}/projects/{projectId}/board": {
+      "get": {
+        "operationId": "TasksController_board_v1",
+        "parameters": [
+          {
+            "name": "orgId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "projectId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoardResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1303,13 +1348,7 @@
             "required": false,
             "in": "query",
             "schema": {
-              "type": "string",
-              "enum": [
-                "TODO",
-                "IN_PROGRESS",
-                "IN_REVIEW",
-                "DONE"
-              ]
+              "$ref": "#/components/schemas/TaskStatus"
             }
           },
           {
@@ -1317,13 +1356,7 @@
             "required": false,
             "in": "query",
             "schema": {
-              "type": "string",
-              "enum": [
-                "LOW",
-                "MEDIUM",
-                "HIGH",
-                "URGENT"
-              ]
+              "$ref": "#/components/schemas/TaskPriority"
             }
           },
           {
@@ -1411,7 +1444,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskPageResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1447,7 +1487,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskDetailResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1483,7 +1530,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1522,6 +1576,51 @@
         ]
       }
     },
+    "/api/v1/organizations/{orgId}/tasks/{taskId}/move": {
+      "post": {
+        "operationId": "TasksController_move_v1",
+        "parameters": [
+          {
+            "name": "taskId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoveTaskDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "tasks"
+        ]
+      }
+    },
     "/api/v1/organizations/{orgId}/tasks/{taskId}/subtasks": {
       "post": {
         "operationId": "TasksController_createSubtask_v1",
@@ -1547,7 +1646,14 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1585,7 +1691,14 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DependencyAddedResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1677,7 +1790,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HistoryPageResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2496,6 +2616,24 @@
           }
         }
       },
+      "TaskStatus": {
+        "type": "string",
+        "enum": [
+          "TODO",
+          "IN_PROGRESS",
+          "IN_REVIEW",
+          "DONE"
+        ]
+      },
+      "TaskPriority": {
+        "type": "string",
+        "enum": [
+          "LOW",
+          "MEDIUM",
+          "HIGH",
+          "URGENT"
+        ]
+      },
       "CreateTaskDto": {
         "type": "object",
         "properties": {
@@ -2509,24 +2647,20 @@
             "maxLength": 5000
           },
           "status": {
-            "type": "string",
-            "enum": [
-              "TODO",
-              "IN_PROGRESS",
-              "IN_REVIEW",
-              "DONE"
-            ],
-            "default": "TODO"
+            "default": "TODO",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskStatus"
+              }
+            ]
           },
           "priority": {
-            "type": "string",
-            "enum": [
-              "LOW",
-              "MEDIUM",
-              "HIGH",
-              "URGENT"
-            ],
-            "default": "MEDIUM"
+            "default": "MEDIUM",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskPriority"
+              }
+            ]
           },
           "dueDate": {
             "format": "date-time",
@@ -2549,6 +2683,346 @@
           "title"
         ]
       },
+      "UserSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "TaskResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "projectId": {
+            "type": "string"
+          },
+          "parentId": {
+            "type": "string",
+            "nullable": true,
+            "description": "Set for subtasks"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskStatus"
+              }
+            ]
+          },
+          "priority": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskPriority"
+              }
+            ]
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "assigneeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "position": {
+            "type": "string",
+            "description": "Sort key inside its column; opaque to clients"
+          },
+          "recurringTaskId": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "assignee": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserSummaryDto"
+              }
+            ]
+          },
+          "createdBy": {
+            "$ref": "#/components/schemas/UserSummaryDto"
+          },
+          "subtaskCount": {
+            "type": "number",
+            "description": "Subtasks that are not deleted"
+          },
+          "isBlocked": {
+            "type": "boolean",
+            "description": "True while it waits for a task that is not DONE yet"
+          }
+        },
+        "required": [
+          "id",
+          "projectId",
+          "parentId",
+          "title",
+          "description",
+          "status",
+          "priority",
+          "dueDate",
+          "labels",
+          "assigneeId",
+          "position",
+          "recurringTaskId",
+          "createdAt",
+          "updatedAt",
+          "assignee",
+          "createdBy",
+          "subtaskCount",
+          "isBlocked"
+        ]
+      },
+      "TaskPageResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaskResponseDto"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Pass back as `cursor`; null on the last page"
+          }
+        },
+        "required": [
+          "items",
+          "nextCursor"
+        ]
+      },
+      "BoardColumnResponseDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskStatus"
+              }
+            ]
+          },
+          "tasks": {
+            "description": "Ordered top to bottom",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaskResponseDto"
+            }
+          },
+          "hasMore": {
+            "type": "boolean",
+            "description": "True when the column has more tasks than were returned"
+          }
+        },
+        "required": [
+          "status",
+          "tasks",
+          "hasMore"
+        ]
+      },
+      "BoardResponseDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "One column per status, in workflow order",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoardColumnResponseDto"
+            }
+          }
+        },
+        "required": [
+          "columns"
+        ]
+      },
+      "TaskSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskStatus"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "status"
+        ]
+      },
+      "TaskDetailResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "projectId": {
+            "type": "string"
+          },
+          "parentId": {
+            "type": "string",
+            "nullable": true,
+            "description": "Set for subtasks"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskStatus"
+              }
+            ]
+          },
+          "priority": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskPriority"
+              }
+            ]
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "assigneeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "position": {
+            "type": "string",
+            "description": "Sort key inside its column; opaque to clients"
+          },
+          "recurringTaskId": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "assignee": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserSummaryDto"
+              }
+            ]
+          },
+          "createdBy": {
+            "$ref": "#/components/schemas/UserSummaryDto"
+          },
+          "subtaskCount": {
+            "type": "number",
+            "description": "Subtasks that are not deleted"
+          },
+          "isBlocked": {
+            "type": "boolean",
+            "description": "True while it waits for a task that is not DONE yet"
+          },
+          "subtasks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaskResponseDto"
+            }
+          },
+          "blockedBy": {
+            "description": "Tasks this one waits for",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaskSummaryDto"
+            }
+          },
+          "blocks": {
+            "description": "Tasks that wait for this one",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaskSummaryDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "projectId",
+          "parentId",
+          "title",
+          "description",
+          "status",
+          "priority",
+          "dueDate",
+          "labels",
+          "assigneeId",
+          "position",
+          "recurringTaskId",
+          "createdAt",
+          "updatedAt",
+          "assignee",
+          "createdBy",
+          "subtaskCount",
+          "isBlocked",
+          "subtasks",
+          "blockedBy",
+          "blocks"
+        ]
+      },
       "UpdateTaskDto": {
         "type": "object",
         "properties": {
@@ -2562,21 +3036,17 @@
             "nullable": true
           },
           "status": {
-            "type": "string",
-            "enum": [
-              "TODO",
-              "IN_PROGRESS",
-              "IN_REVIEW",
-              "DONE"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskStatus"
+              }
             ]
           },
           "priority": {
-            "type": "string",
-            "enum": [
-              "LOW",
-              "MEDIUM",
-              "HIGH",
-              "URGENT"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskPriority"
+              }
             ]
           },
           "dueDate": {
@@ -2597,6 +3067,27 @@
           }
         }
       },
+      "MoveTaskDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "description": "The target column",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskStatus"
+              }
+            ]
+          },
+          "afterId": {
+            "type": "string",
+            "nullable": true,
+            "description": "The task that will be directly above; null or missing = top of the column"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
       "AddDependencyDto": {
         "type": "object",
         "properties": {
@@ -2607,6 +3098,91 @@
         },
         "required": [
           "dependsOnId"
+        ]
+      },
+      "DependencyAddedResponseDto": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string"
+          },
+          "dependsOn": {
+            "$ref": "#/components/schemas/TaskSummaryDto"
+          }
+        },
+        "required": [
+          "taskId",
+          "dependsOn"
+        ]
+      },
+      "TaskEventType": {
+        "type": "string",
+        "enum": [
+          "CREATED",
+          "UPDATED",
+          "DELETED",
+          "DEPENDENCY_ADDED",
+          "DEPENDENCY_REMOVED"
+        ]
+      },
+      "HistoryEventResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskEventType"
+              }
+            ]
+          },
+          "changes": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "What this entry changed: { field: { from, to } }"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "actor": {
+            "nullable": true,
+            "description": "null when the system acted",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserSummaryDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "changes",
+          "createdAt",
+          "actor"
+        ]
+      },
+      "HistoryPageResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HistoryEventResponseDto"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "items",
+          "nextCursor"
         ]
       },
       "CreateRecurringTaskDto": {
@@ -2625,14 +3201,12 @@
             "maxLength": 5000
           },
           "priority": {
-            "type": "string",
-            "enum": [
-              "LOW",
-              "MEDIUM",
-              "HIGH",
-              "URGENT"
-            ],
-            "default": "MEDIUM"
+            "default": "MEDIUM",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskPriority"
+              }
+            ]
           },
           "labels": {
             "maxItems": 10,
@@ -2679,12 +3253,10 @@
             "nullable": true
           },
           "priority": {
-            "type": "string",
-            "enum": [
-              "LOW",
-              "MEDIUM",
-              "HIGH",
-              "URGENT"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskPriority"
+              }
             ]
           },
           "labels": {
