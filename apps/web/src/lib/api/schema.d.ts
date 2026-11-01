@@ -707,9 +707,9 @@ export interface components {
             title: string;
             description?: string;
             /** @default TODO */
-            status: components["schemas"]["TaskStatus"];
+            status?: components["schemas"]["TaskStatus"];
             /** @default MEDIUM */
-            priority: components["schemas"]["TaskPriority"];
+            priority?: components["schemas"]["TaskPriority"];
             /**
              * Format: date-time
              * @example 2026-12-31T00:00:00.000Z
@@ -851,7 +851,7 @@ export interface components {
             title: string;
             description?: string;
             /** @default MEDIUM */
-            priority: components["schemas"]["TaskPriority"];
+            priority?: components["schemas"]["TaskPriority"];
             labels?: string[];
             /** @description Must be a member of the organization */
             assigneeId?: string;
@@ -1361,6 +1361,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                orgId: string;
                 userId: string;
             };
             cookie?: never;
@@ -1380,6 +1381,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                orgId: string;
                 userId: string;
             };
             cookie?: never;
@@ -1425,7 +1427,9 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                orgId: string;
+            };
             cookie?: never;
         };
         requestBody: {
@@ -1648,6 +1652,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                orgId: string;
                 projectId: string;
             };
             cookie?: never;
@@ -1758,6 +1763,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                orgId: string;
                 taskId: string;
             };
             cookie?: never;
@@ -1777,6 +1783,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                orgId: string;
                 taskId: string;
             };
             cookie?: never;
@@ -1802,6 +1809,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                orgId: string;
                 taskId: string;
             };
             cookie?: never;
@@ -1827,6 +1835,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                orgId: string;
                 taskId: string;
             };
             cookie?: never;
@@ -1852,6 +1861,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                orgId: string;
                 taskId: string;
             };
             cookie?: never;
@@ -1877,6 +1887,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                orgId: string;
                 taskId: string;
                 dependsOnId: string;
             };
@@ -1966,7 +1977,9 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                orgId: string;
+            };
             cookie?: never;
         };
         requestBody: {

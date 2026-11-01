@@ -645,6 +645,14 @@
         "operationId": "MembersController_changeRole_v1",
         "parameters": [
           {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "userId",
             "required": true,
             "in": "path",
@@ -688,6 +696,14 @@
         "operationId": "MembersController_remove_v1",
         "parameters": [
           {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "userId",
             "required": true,
             "in": "path",
@@ -714,7 +730,16 @@
     "/api/v1/organizations/{orgId}/invitations": {
       "post": {
         "operationId": "OrganizationInvitationsController_invite_v1",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -1068,6 +1093,14 @@
       "post": {
         "operationId": "TasksController_create_v1",
         "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "projectId",
             "required": true,
@@ -1510,6 +1543,14 @@
         "operationId": "TasksController_update_v1",
         "parameters": [
           {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "taskId",
             "required": true,
             "in": "path",
@@ -1553,6 +1594,14 @@
         "operationId": "TasksController_remove_v1",
         "parameters": [
           {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "taskId",
             "required": true,
             "in": "path",
@@ -1580,6 +1629,14 @@
       "post": {
         "operationId": "TasksController_move_v1",
         "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "taskId",
             "required": true,
@@ -1626,6 +1683,14 @@
         "operationId": "TasksController_createSubtask_v1",
         "parameters": [
           {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "taskId",
             "required": true,
             "in": "path",
@@ -1671,6 +1736,14 @@
         "operationId": "TaskDetailsController_addDependency_v1",
         "parameters": [
           {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "taskId",
             "required": true,
             "in": "path",
@@ -1715,6 +1788,14 @@
       "delete": {
         "operationId": "TaskDetailsController_removeDependency_v1",
         "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "taskId",
             "required": true,
@@ -1867,7 +1948,16 @@
     "/api/v1/organizations/{orgId}/recurring-tasks": {
       "post": {
         "operationId": "RecurringTasksController_create_v1",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
