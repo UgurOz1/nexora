@@ -1,5 +1,6 @@
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient, Role, TaskPriority, TaskStatus } from '../src/generated/prisma/client';
+import { freshKeys } from '../src/tasks/order-key';
 
 // Demo data for local development. Safe to run repeatedly: everything is upserted by a fixed key.
 const prisma = new PrismaClient({
@@ -57,6 +58,8 @@ async function main() {
     { title: 'Set up CMS', status: TaskStatus.TODO, priority: TaskPriority.MEDIUM },
     { title: 'Write launch blog post', status: TaskStatus.TODO, priority: TaskPriority.LOW },
   ];
+  // Valid sort keys for the Kanban board (see src/tasks/order-key.ts).
+  const positions = freshKeys(tasks.length);
   for (const [index, task] of tasks.entries()) {
     await prisma.task.create({
       data: {
@@ -65,7 +68,7 @@ async function main() {
         projectId: project.id,
         createdById: owner.id,
         assigneeId: index % 2 === 0 ? owner.id : member.id,
-        position: `a${index}`,
+        position: positions[index],
       },
     });
   }

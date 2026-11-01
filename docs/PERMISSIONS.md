@@ -34,6 +34,7 @@ Roller bir merdiven oluşturur: **OWNER > ADMIN > MANAGER > MEMBER**. Bir şirke
 | -------------------------------------------------------- | :---: | :---: | :-----: | :----: |
 | Görev bağımlılığı eklemek, kaldırmak                     |   ✓   |   ✓   |    ✓    |   ✓    |
 | Görev geçmişini görmek, iki sürümü karşılaştırmak        |   ✓   |   ✓   |    ✓    |   ✓    |
+| Panoyu görmek, kartı taşımak / sıralamak                 |   ✓   |   ✓   |    ✓    |   ✓    |
 | Tekrarlayan görev şablonlarını görmek                    |   ✓   |   ✓   |    ✓    |   ✓    |
 | Tekrarlayan görev şablonu oluşturmak, düzenlemek, silmek |   ✓   |   ✓   |    ✓    |        |
 

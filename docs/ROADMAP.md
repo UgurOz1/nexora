@@ -159,6 +159,7 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 **Öğrenilecekler:** Sürükle-bırak (dnd-kit), sıralama için fractional indexing (LexoRank benzeri), optimistic update ve hata durumunda geri alma, erişilebilirlik (klavye ile sürükleme).
 
 - [ ] Kanban panosu: sütunlar = durumlar
+- [x] API: pano uç noktası, taşıma uç noktası, fractional index sıralama ([ADR-0007](adr/0007-kanban-ordering.md))
 - [ ] Sürükle-bırak, sıralamanın kalıcı olması (fractional index)
 - [ ] Optimistic update
 - [ ] Görev detay paneli: alt görevler, bağımlılıklar, geçmiş

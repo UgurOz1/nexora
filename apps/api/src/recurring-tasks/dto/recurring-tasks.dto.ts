@@ -41,7 +41,11 @@ export class CreateRecurringTaskDto {
   @MaxLength(5000)
   description?: string;
 
-  @ApiPropertyOptional({ enum: TaskPriority, default: TaskPriority.MEDIUM })
+  @ApiPropertyOptional({
+    enum: TaskPriority,
+    enumName: 'TaskPriority',
+    default: TaskPriority.MEDIUM,
+  })
   @IsOptional()
   @IsEnum(TaskPriority)
   priority?: TaskPriority;
@@ -102,7 +106,7 @@ export class UpdateRecurringTaskDto {
   @MaxLength(5000)
   description?: string | null;
 
-  @ApiPropertyOptional({ enum: TaskPriority })
+  @ApiPropertyOptional({ enum: TaskPriority, enumName: 'TaskPriority' })
   @IsOptional()
   @IsEnum(TaskPriority)
   priority?: TaskPriority;

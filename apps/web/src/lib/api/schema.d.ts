@@ -356,6 +356,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/organizations/{orgId}/projects/{projectId}/board": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["TasksController_board_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/organizations/{orgId}/tasks": {
         parameters: {
             query?: never;
@@ -386,6 +402,22 @@ export interface paths {
         options?: never;
         head?: never;
         patch: operations["TasksController_update_v1"];
+        trace?: never;
+    };
+    "/api/v1/organizations/{orgId}/tasks/{taskId}/move": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["TasksController_move_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/organizations/{orgId}/tasks/{taskId}/subtasks": {
@@ -666,20 +698,18 @@ export interface components {
             description?: string | null;
             department?: string | null;
         };
+        /** @enum {string} */
+        TaskStatus: "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE";
+        /** @enum {string} */
+        TaskPriority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
         CreateTaskDto: {
             /** @example Design the homepage */
             title: string;
             description?: string;
-            /**
-             * @default TODO
-             * @enum {string}
-             */
-            status: "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE";
-            /**
-             * @default MEDIUM
-             * @enum {string}
-             */
-            priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+            /** @default TODO */
+            status: components["schemas"]["TaskStatus"];
+            /** @default MEDIUM */
+            priority: components["schemas"]["TaskPriority"];
             /**
              * Format: date-time
              * @example 2026-12-31T00:00:00.000Z
@@ -689,32 +719,139 @@ export interface components {
             assigneeId?: string;
             labels?: string[];
         };
+        UserSummaryDto: {
+            id: string;
+            name: string;
+        };
+        TaskResponseDto: {
+            id: string;
+            projectId: string;
+            /** @description Set for subtasks */
+            parentId: string | null;
+            title: string;
+            description: string | null;
+            status: components["schemas"]["TaskStatus"];
+            priority: components["schemas"]["TaskPriority"];
+            /** Format: date-time */
+            dueDate: string | null;
+            labels: string[];
+            assigneeId: string | null;
+            /** @description Sort key inside its column; opaque to clients */
+            position: string;
+            recurringTaskId: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            assignee: components["schemas"]["UserSummaryDto"] | null;
+            createdBy: components["schemas"]["UserSummaryDto"];
+            /** @description Subtasks that are not deleted */
+            subtaskCount: number;
+            /** @description True while it waits for a task that is not DONE yet */
+            isBlocked: boolean;
+        };
+        TaskPageResponseDto: {
+            items: components["schemas"]["TaskResponseDto"][];
+            /** @description Pass back as `cursor`; null on the last page */
+            nextCursor: string | null;
+        };
+        BoardColumnResponseDto: {
+            status: components["schemas"]["TaskStatus"];
+            /** @description Ordered top to bottom */
+            tasks: components["schemas"]["TaskResponseDto"][];
+            /** @description True when the column has more tasks than were returned */
+            hasMore: boolean;
+        };
+        BoardResponseDto: {
+            /** @description One column per status, in workflow order */
+            columns: components["schemas"]["BoardColumnResponseDto"][];
+        };
+        TaskSummaryDto: {
+            id: string;
+            title: string;
+            status: components["schemas"]["TaskStatus"];
+        };
+        TaskDetailResponseDto: {
+            id: string;
+            projectId: string;
+            /** @description Set for subtasks */
+            parentId: string | null;
+            title: string;
+            description: string | null;
+            status: components["schemas"]["TaskStatus"];
+            priority: components["schemas"]["TaskPriority"];
+            /** Format: date-time */
+            dueDate: string | null;
+            labels: string[];
+            assigneeId: string | null;
+            /** @description Sort key inside its column; opaque to clients */
+            position: string;
+            recurringTaskId: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            assignee: components["schemas"]["UserSummaryDto"] | null;
+            createdBy: components["schemas"]["UserSummaryDto"];
+            /** @description Subtasks that are not deleted */
+            subtaskCount: number;
+            /** @description True while it waits for a task that is not DONE yet */
+            isBlocked: boolean;
+            subtasks: components["schemas"]["TaskResponseDto"][];
+            /** @description Tasks this one waits for */
+            blockedBy: components["schemas"]["TaskSummaryDto"][];
+            /** @description Tasks that wait for this one */
+            blocks: components["schemas"]["TaskSummaryDto"][];
+        };
         UpdateTaskDto: {
             title?: string;
             description?: string | null;
-            /** @enum {string} */
-            status?: "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE";
-            /** @enum {string} */
-            priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+            status?: components["schemas"]["TaskStatus"];
+            priority?: components["schemas"]["TaskPriority"];
             /** Format: date-time */
             dueDate?: string | null;
             assigneeId?: string | null;
             labels?: string[];
         };
+        MoveTaskDto: {
+            /** @description The target column */
+            status: components["schemas"]["TaskStatus"];
+            /** @description The task that will be directly above; null or missing = top of the column */
+            afterId?: string | null;
+        };
         AddDependencyDto: {
             /** @description The task that must be DONE before this one can start */
             dependsOnId: string;
+        };
+        DependencyAddedResponseDto: {
+            taskId: string;
+            dependsOn: components["schemas"]["TaskSummaryDto"];
+        };
+        /** @enum {string} */
+        TaskEventType: "CREATED" | "UPDATED" | "DELETED" | "DEPENDENCY_ADDED" | "DEPENDENCY_REMOVED";
+        HistoryEventResponseDto: {
+            id: string;
+            type: components["schemas"]["TaskEventType"];
+            /** @description What this entry changed: { field: { from, to } } */
+            changes: {
+                [key: string]: unknown;
+            };
+            /** Format: date-time */
+            createdAt: string;
+            /** @description null when the system acted */
+            actor: components["schemas"]["UserSummaryDto"] | null;
+        };
+        HistoryPageResponseDto: {
+            items: components["schemas"]["HistoryEventResponseDto"][];
+            nextCursor: string | null;
         };
         CreateRecurringTaskDto: {
             projectId: string;
             /** @example Weekly report */
             title: string;
             description?: string;
-            /**
-             * @default MEDIUM
-             * @enum {string}
-             */
-            priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+            /** @default MEDIUM */
+            priority: components["schemas"]["TaskPriority"];
             labels?: string[];
             /** @description Must be a member of the organization */
             assigneeId?: string;
@@ -734,8 +871,7 @@ export interface components {
         UpdateRecurringTaskDto: {
             title?: string;
             description?: string | null;
-            /** @enum {string} */
-            priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+            priority?: components["schemas"]["TaskPriority"];
             labels?: string[];
             assigneeId?: string | null;
             /** @example FREQ=MONTHLY;BYMONTHDAY=1 */
@@ -1471,8 +1607,8 @@ export interface operations {
                 limit?: number;
                 /** @description nextCursor from the previous page */
                 cursor?: string;
-                status?: "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE";
-                priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+                status?: components["schemas"]["TaskStatus"];
+                priority?: components["schemas"]["TaskPriority"];
                 /** @description A user id, or "me" */
                 assigneeId?: string;
                 /** @description Case-insensitive search in the title */
@@ -1501,7 +1637,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["TaskPageResponseDto"];
+                };
             };
         };
     };
@@ -1524,7 +1662,31 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["TaskResponseDto"];
+                };
+            };
+        };
+    };
+    TasksController_board_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+                projectId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BoardResponseDto"];
+                };
             };
         };
     };
@@ -1534,8 +1696,8 @@ export interface operations {
                 limit?: number;
                 /** @description nextCursor from the previous page */
                 cursor?: string;
-                status?: "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE";
-                priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+                status?: components["schemas"]["TaskStatus"];
+                priority?: components["schemas"]["TaskPriority"];
                 /** @description A user id, or "me" */
                 assigneeId?: string;
                 /** @description Case-insensitive search in the title */
@@ -1563,7 +1725,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["TaskPageResponseDto"];
+                };
             };
         };
     };
@@ -1583,7 +1747,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["TaskDetailResponseDto"];
+                };
             };
         };
     };
@@ -1625,7 +1791,34 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["TaskResponseDto"];
+                };
+            };
+        };
+    };
+    TasksController_move_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MoveTaskDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskResponseDto"];
+                };
             };
         };
     };
@@ -1648,7 +1841,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["TaskResponseDto"];
+                };
             };
         };
     };
@@ -1671,7 +1866,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["DependencyAddedResponseDto"];
+                };
             };
         };
     };
@@ -1715,7 +1912,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["HistoryPageResponseDto"];
+                };
             };
         };
     };
