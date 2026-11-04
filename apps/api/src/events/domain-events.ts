@@ -5,7 +5,8 @@ import type { TaskStatus } from '../generated/prisma/client';
 // Things that happened in the domain, named in the past tense. A service says "this happened" and
 // does not know or care who reacts (notifications today, live updates and e-mail queues later), so
 // adding a reaction never means editing the service that caused the event.
-export type TaskChangeKind = 'created' | 'updated' | 'moved' | 'deleted' | 'comment' | 'dependency';
+export type TaskChangeKind =
+  'created' | 'updated' | 'moved' | 'deleted' | 'comment' | 'dependency' | 'attachment';
 
 export interface DomainEventMap {
   'task.created': {

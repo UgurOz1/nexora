@@ -48,23 +48,23 @@ Uğur'un yapması gereken tek şeyler, Claude'un teknik olarak yapamadıkları: 
 
 ## Teknoloji yığını
 
-| Katman                   | Teknoloji                                                                                        |
-| ------------------------ | ------------------------------------------------------------------------------------------------ |
-| Monorepo                 | pnpm workspaces (`apps/api`, `apps/web`, `packages/*`)                                           |
-| Backend                  | NestJS + TypeScript, REST, `/api/v1` versiyonlama                                                |
-| Veritabanı               | PostgreSQL 16                                                                                    |
-| ORM                      | Prisma                                                                                           |
-| Cache / kuyruk altyapısı | Redis                                                                                            |
-| Arka plan işleri         | BullMQ                                                                                           |
-| Realtime                 | Socket.IO (Redis adapter)                                                                        |
-| Dosya depolama           | S3 uyumlu (lokal sunucu Hafta 11'de ADR ile seçilecek; MinIO Docker image'ı artık yayınlanmıyor) |
-| E-posta (lokal)          | Mailpit                                                                                          |
-| Frontend                 | Next.js (App Router) + TypeScript                                                                |
-| UI                       | Tailwind CSS + shadcn/ui                                                                         |
-| Frontend veri            | TanStack Query, react-hook-form + zod                                                            |
-| Test                     | Jest, Supertest, Testcontainers                                                                  |
-| Container                | Docker, Docker Compose                                                                           |
-| CI/CD                    | GitHub Actions                                                                                   |
+| Katman                   | Teknoloji                                                                                  |
+| ------------------------ | ------------------------------------------------------------------------------------------ |
+| Monorepo                 | pnpm workspaces (`apps/api`, `apps/web`, `packages/*`)                                     |
+| Backend                  | NestJS + TypeScript, REST, `/api/v1` versiyonlama                                          |
+| Veritabanı               | PostgreSQL 16                                                                              |
+| ORM                      | Prisma                                                                                     |
+| Cache / kuyruk altyapısı | Redis                                                                                      |
+| Arka plan işleri         | BullMQ                                                                                     |
+| Realtime                 | Socket.IO (Redis adapter)                                                                  |
+| Dosya depolama           | S3 uyumlu; lokalde SeaweedFS ([ADR-0012](docs/adr/0012-object-storage-and-attachments.md)) |
+| E-posta (lokal)          | Mailpit                                                                                    |
+| Frontend                 | Next.js (App Router) + TypeScript                                                          |
+| UI                       | Tailwind CSS + shadcn/ui                                                                   |
+| Frontend veri            | TanStack Query, react-hook-form + zod                                                      |
+| Test                     | Jest, Supertest, Testcontainers                                                            |
+| Container                | Docker, Docker Compose                                                                     |
+| CI/CD                    | GitHub Actions                                                                             |
 
 Bir teknolojiyi değiştirmek veya eklemek = yeni ADR.
 

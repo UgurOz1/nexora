@@ -6,6 +6,8 @@ const validEnv = {
   DATABASE_URL: 'postgresql://user:pass@localhost:5433/db',
   REDIS_URL: 'redis://localhost:6380',
   JWT_ACCESS_SECRET: 'x'.repeat(32),
+  S3_ACCESS_KEY_ID: 'access-key',
+  S3_SECRET_ACCESS_KEY: 'secret-key',
 };
 
 describe('validateEnv', () => {
@@ -40,6 +42,14 @@ describe('validateEnv', () => {
   it('reports every invalid variable at once', () => {
     expect(() => validateEnv({ ...validEnv, DATABASE_URL: 'x', REDIS_URL: 'y' })).toThrow(
       /DATABASE_URL[\s\S]*REDIS_URL/,
+    );
+  });
+
+  it('has no built-in storage keys: a secret never has a default value', () => {
+    const { S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY, ...without } = validEnv;
+    expect(() => validateEnv(without)).toThrow(/S3_ACCESS_KEY_ID/);
+    expect(() => validateEnv({ ...validEnv, S3_SECRET_ACCESS_KEY: '' })).toThrow(
+      /S3_SECRET_ACCESS_KEY/,
     );
   });
 });

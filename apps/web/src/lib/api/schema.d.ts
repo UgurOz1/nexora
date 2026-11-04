@@ -340,6 +340,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/organizations/{orgId}/tasks/{taskId}/attachments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AttachmentsController_list_v1"];
+        put?: never;
+        post: operations["AttachmentsController_create_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/organizations/{orgId}/attachments/{id}/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AttachmentsController_complete_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/organizations/{orgId}/attachments/{id}/download": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AttachmentsController_download_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/organizations/{orgId}/attachments/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["AttachmentsController_remove_v1"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/organizations/{orgId}/projects": {
         parameters: {
             query?: never;
@@ -841,7 +905,7 @@ export interface components {
         AuditLogResponseDto: {
             id: string;
             /** @enum {string} */
-            action: "auth.login" | "auth.login_failed" | "auth.registered" | "auth.logout_all" | "auth.password_reset_requested" | "auth.password_reset_completed" | "organization.created" | "organization.deleted" | "member.invited" | "invitation.revoked" | "invitation.accepted" | "member.role_changed" | "member.removed" | "project.deleted";
+            action: "auth.login" | "auth.login_failed" | "auth.registered" | "auth.logout_all" | "auth.password_reset_requested" | "auth.password_reset_completed" | "organization.created" | "organization.deleted" | "member.invited" | "invitation.revoked" | "invitation.accepted" | "member.role_changed" | "member.removed" | "project.deleted" | "attachment.added" | "attachment.deleted";
             /** Format: date-time */
             createdAt: string;
             /** @description null when nobody was signed in */
@@ -880,6 +944,50 @@ export interface components {
         SearchResponseDto: {
             tasks: components["schemas"]["TaskSearchResultDto"][];
             projects: components["schemas"]["ProjectSearchResultDto"][];
+        };
+        AttachmentResponseDto: {
+            id: string;
+            fileName: string;
+            /** @enum {string} */
+            contentType: "image/png" | "image/jpeg" | "image/gif" | "image/webp" | "application/pdf" | "text/plain" | "text/csv" | "application/json" | "application/zip" | "application/vnd.openxmlformats-officedocument.wordprocessingml.document" | "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            /** @description Bytes */
+            size: number;
+            /** Format: date-time */
+            createdAt: string;
+            uploadedBy: components["schemas"]["UserSummaryDto"];
+        };
+        CreateAttachmentDto: {
+            /** @example report.pdf */
+            fileName: string;
+            /**
+             * @description The type of the file; checked again on upload
+             * @enum {string}
+             */
+            contentType: "image/png" | "image/jpeg" | "image/gif" | "image/webp" | "application/pdf" | "text/plain" | "text/csv" | "application/json" | "application/zip" | "application/vnd.openxmlformats-officedocument.wordprocessingml.document" | "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            /** @description Exact size in bytes */
+            size: number;
+        };
+        UploadInstructionsDto: {
+            /** @description Send the file here with PUT, within 5 minutes */
+            url: string;
+            /** @enum {string} */
+            method: "PUT";
+            /** @description Headers the upload must carry, exactly as given */
+            headers: {
+                [key: string]: string;
+            };
+            /** Format: date-time */
+            expiresAt: string;
+        };
+        CreatedAttachmentResponseDto: {
+            attachment: components["schemas"]["AttachmentResponseDto"];
+            upload: components["schemas"]["UploadInstructionsDto"];
+        };
+        DownloadLinkResponseDto: {
+            /** @description Open this within one minute to download the file */
+            url: string;
+            /** Format: date-time */
+            expiresAt: string;
         };
         CreateProjectDto: {
             /** @example Website Redesign */
@@ -1762,7 +1870,7 @@ export interface operations {
                 /** @description nextCursor from the previous page */
                 cursor?: string;
                 /** @description Only entries of this action */
-                action?: "auth.login" | "auth.login_failed" | "auth.registered" | "auth.logout_all" | "auth.password_reset_requested" | "auth.password_reset_completed" | "organization.created" | "organization.deleted" | "member.invited" | "invitation.revoked" | "invitation.accepted" | "member.role_changed" | "member.removed" | "project.deleted";
+                action?: "auth.login" | "auth.login_failed" | "auth.registered" | "auth.logout_all" | "auth.password_reset_requested" | "auth.password_reset_completed" | "organization.created" | "organization.deleted" | "member.invited" | "invitation.revoked" | "invitation.accepted" | "member.role_changed" | "member.removed" | "project.deleted" | "attachment.added" | "attachment.deleted";
                 /** @description Only entries caused by this user */
                 actorId?: string;
             };
@@ -1808,6 +1916,118 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["SearchResponseDto"];
                 };
+            };
+        };
+    };
+    AttachmentsController_list_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttachmentResponseDto"][];
+                };
+            };
+        };
+    };
+    AttachmentsController_create_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+                taskId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateAttachmentDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreatedAttachmentResponseDto"];
+                };
+            };
+        };
+    };
+    AttachmentsController_complete_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttachmentResponseDto"];
+                };
+            };
+        };
+    };
+    AttachmentsController_download_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DownloadLinkResponseDto"];
+                };
+            };
+        };
+    };
+    AttachmentsController_remove_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orgId: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

@@ -35,7 +35,7 @@ Bu belge, [OWASP Top 10](https://owasp.org/Top10/) listesini NEXORA'nın bugünk
 
 - Tüm veritabanı erişimi Prisma ile, parametreli. Ham SQL yalnızca üç yerde: sağlık kontrolü (`SELECT 1`), advisory lock ve satır kilidi (`FOR UPDATE`). Değerler etiketli şablonla bağlanır (`$executeRaw\`...${x}\``), `Unsafe` varyantı hiçbir yerde kullanılmaz.
 - Girdi: `class-validator` ile tip, uzunluk, enum sınırı. Yorumlar React'te düz metin olarak çizilir (`dangerouslySetInnerHTML` yok), mention işaretlemesi HTML değil.
-- Arama (Hafta 11) tsvector ile, kullanıcı metni `plainto_tsquery`/parametre; `LIKE` birleştirme yok.
+- Arama tsvector ile; kullanıcı metni tsquery sözdizimine hiç geçmez (yalnızca harf/rakam), sorgu bağlanmış parametre ([ADR-0011](adr/0011-full-text-search.md)). Dosya yolu sunucuda üretilir; kullanıcının yazdığı ad yol olmaz.
 
 ## A04 · Güvensiz tasarım
 
@@ -76,7 +76,17 @@ Bu belge, [OWASP Top 10](https://owasp.org/Top10/) listesini NEXORA'nın bugünk
 
 ## A10 · SSRF
 
-- Sunucu, kullanıcının verdiği bir URL'ye istek atmıyor. Giden istekler sabit: SMTP, Google OAuth uçları. **Dosya yükleme (Hafta 11)** presigned URL'yi _istemci_ kullanır; sunucu kullanıcı URL'sini çekmez. Webhook/URL içe aktarma eklenirse bu madde yeniden açılır.
+- Sunucu, kullanıcının verdiği bir URL'ye istek atmıyor. Giden istekler sabit: SMTP, Google OAuth, yapılandırılmış depolama adresi. **Dosya yükleme** imzalı URL'yi _istemci_ kullanır; sunucu kullanıcı URL'sini çekmez. Webhook/URL içe aktarma eklenirse bu madde yeniden açılır.
+
+## Dosya yükleme (OWASP dosya yükleme listesine göre)
+
+Ayrıntı: [ADR-0012](adr/0012-object-storage-and-attachments.md). Özet:
+
+- **Tür izin listesi** (HTML, SVG, betik yok) + **tamamlarken ilk bayt doğrulaması**: uzantıya/başlığa güvenilmez.
+- **Boyut ve tür imzaya bağlı**; depolama farklısını 403 ile reddeder; tamamlarken boyut yeniden kontrol edilir.
+- **İndirme her zaman `attachment`** ve bizim doğruladığımız türle: depolama adresinde sayfa olarak çizilmez (saklı XSS yok). Dosya adı başlık enjeksiyonuna karşı temizlenir.
+- **Yol sunucuda üretilir** (path traversal yok), görev başına 25, dosya başına 10 MiB, hız sınırı.
+- **Açık:** virüs taraması yok; yarım yüklemeler en çok 1 saat depolamada durabilir (kota denetimi yok); depolama CORS kökenleri API başlarken ayarlanır.
 
 ## Öncelikli açıklar
 

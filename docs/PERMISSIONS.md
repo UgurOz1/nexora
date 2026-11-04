@@ -44,15 +44,18 @@ Bir göreve yalnızca aynı şirketin üyesi atanabilir. Silme "soft delete"tir:
 
 ### Yorumlar, bildirimler, aktivite
 
-| İşlem                                           | OWNER | ADMIN | MANAGER | MEMBER |
-| ----------------------------------------------- | :---: | :---: | :-----: | :----: |
-| Yorumları görmek, yorum yazmak                  |   ✓   |   ✓   |    ✓    |   ✓    |
-| Yorumu düzenlemek (yalnızca yazarı)             |   ✓   |   ✓   |    ✓    |   ✓    |
-| Kendi yorumunu silmek                           |   ✓   |   ✓   |    ✓    |   ✓    |
-| Başkasının yorumunu silmek                      |   ✓   |   ✓   |    ✓    |        |
-| Kendi bildirimlerini görmek, okundu işaretlemek |   ✓   |   ✓   |    ✓    |   ✓    |
-| Proje ve organizasyon aktivite akışını görmek   |   ✓   |   ✓   |    ✓    |   ✓    |
-| Denetim kaydını (audit log) görmek              |   ✓   |   ✓   |         |        |
+| İşlem                                              | OWNER | ADMIN | MANAGER | MEMBER |
+| -------------------------------------------------- | :---: | :---: | :-----: | :----: |
+| Yorumları görmek, yorum yazmak                     |   ✓   |   ✓   |    ✓    |   ✓    |
+| Yorumu düzenlemek (yalnızca yazarı)                |   ✓   |   ✓   |    ✓    |   ✓    |
+| Kendi yorumunu silmek                              |   ✓   |   ✓   |    ✓    |   ✓    |
+| Başkasının yorumunu silmek                         |   ✓   |   ✓   |    ✓    |        |
+| Kendi bildirimlerini görmek, okundu işaretlemek    |   ✓   |   ✓   |    ✓    |   ✓    |
+| Proje ve organizasyon aktivite akışını görmek      |   ✓   |   ✓   |    ✓    |   ✓    |
+| Göreve dosya eklemek, dosyaları görmek ve indirmek |   ✓   |   ✓   |    ✓    |   ✓    |
+| Kendi eklediği dosyayı silmek                      |   ✓   |   ✓   |    ✓    |   ✓    |
+| Başkasının eklediği dosyayı silmek                 |   ✓   |   ✓   |    ✓    |        |
+| Denetim kaydını (audit log) görmek                 |   ✓   |   ✓   |         |        |
 
 Bildirimler kişiye özeldir: başkasının bildirimi (rolü ne olursa olsun) 404 döner. Yorum düzenleme "yazar" kuralıdır, rol kuralı değil: OWNER bile başkasının yorumunu düzenleyemez.
 

@@ -15,6 +15,8 @@ export const AuditAction = {
   MemberRoleChanged: 'member.role_changed',
   MemberRemoved: 'member.removed',
   ProjectDeleted: 'project.deleted',
+  AttachmentAdded: 'attachment.added',
+  AttachmentDeleted: 'attachment.deleted',
 } as const;
 
 export type AuditActionName = (typeof AuditAction)[keyof typeof AuditAction];

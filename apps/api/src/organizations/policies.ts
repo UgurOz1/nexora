@@ -43,6 +43,15 @@ export function canDeleteComment(
   return comment.authorId === userId || hasAtLeast(actor, Role.MANAGER);
 }
 
+// Whoever attached a file may remove it, and so may MANAGER and above (moderation).
+export function canDeleteAttachment(
+  actor: Role,
+  attachment: { uploadedById: string },
+  userId: string,
+): boolean {
+  return attachment.uploadedById === userId || hasAtLeast(actor, Role.MANAGER);
+}
+
 // Anyone can leave (except the OWNER, who must delete the organization instead).
 // Removing someone else needs at least ADMIN and a higher rank than theirs.
 export function canRemove(actor: Role, target: { role: Role; isSelf: boolean }): boolean {

@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Logger,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -19,6 +20,7 @@ import {
 } from '@nestjs/swagger';
 import { AuditAction } from '../audit/audit-actions';
 import { Audited } from '../audit/audited.decorator';
+import { StorageService } from '../storage/storage.service';
 import { AuthUser, CurrentUser, OrgMembership } from '../common/auth/current-user.decorator';
 import { CurrentMembership } from '../common/auth/current-membership.decorator';
 import { Role } from '../generated/prisma/client';
@@ -49,7 +51,12 @@ import { MinRole } from './roles';
 @ApiBearerAuth()
 @Controller('organizations')
 export class OrganizationsController {
-  constructor(private readonly organizations: OrganizationsService) {}
+  private readonly logger = new Logger(OrganizationsController.name);
+
+  constructor(
+    private readonly organizations: OrganizationsService,
+    private readonly storage: StorageService,
+  ) {}
 
   @Post()
   @Audited({
@@ -92,8 +99,16 @@ export class OrganizationsController {
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiNoContentResponse()
-  remove(@Param('orgId') orgId: string): Promise<void> {
-    return this.organizations.remove(orgId);
+  async remove(@Param('orgId') orgId: string): Promise<void> {
+    await this.organizations.remove(orgId);
+    // The rows went with the organization; its files must not stay behind in storage. If storage
+    // is unreachable right now the deletion still succeeds and the leftover is logged.
+    await this.storage.deletePrefix(`orgs/${orgId}/`).catch((error: unknown) => {
+      this.logger.error(
+        { err: error, orgId },
+        'Could not delete the files of a deleted organization',
+      );
+    });
   }
 }
 
