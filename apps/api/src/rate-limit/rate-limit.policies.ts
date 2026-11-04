@@ -19,6 +19,9 @@ export const POLICIES = {
   email: { capacity: 3, refillPerSecond: perHour(3) },
   // Single-use token endpoints (verify e-mail, reset password).
   token: { capacity: 10, refillPerSecond: perHour(10) },
+  // Search runs a query per request and the web app searches as people type: a burst of 30, then
+  // one a second.
+  search: { capacity: 30, refillPerSecond: 1 },
   // The Google redirect dance.
   oauth: { capacity: 20, refillPerSecond: perMinute(20) },
 } as const satisfies Record<string, Bucket>;

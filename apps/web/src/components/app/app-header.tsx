@@ -3,6 +3,7 @@
 import { ChevronsUpDown } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { HeaderSearch } from '@/components/app/header-search';
 import { NotificationBell } from '@/components/app/notification-bell';
 import { Button } from '@/components/ui/button';
 import {
@@ -55,6 +56,8 @@ export function AppHeader() {
             </DropdownMenuContent>
           </DropdownMenu>
         )}
+
+        {orgId && <HeaderSearch orgId={orgId} />}
 
         <div className="ml-auto flex items-center gap-1">
           {orgId && <NotificationBell orgId={orgId} />}

@@ -200,7 +200,7 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 
 - [ ] S3 uyumlu lokal depolama sunucusu seçimi (ADR; MinIO Docker image'ı artık yayınlanmıyor, RustFS / SeaweedFS / Garage değerlendirilecek)
 - [ ] Görevlere dosya ekleme (presigned URL ile doğrudan depolamaya yükleme), boyut/tip sınırı
-- [ ] Görev ve proje arama (full-text + index)
+- [x] Görev ve proje arama: tsvector + GIN, önek eşleşmesi, sıralama, arayüz ([ADR-0011](adr/0011-full-text-search.md))
 - [x] Redis tabanlı rate limiting: token bucket, Lua ile atomik, IP + hesap bazlı ([ADR-0010](adr/0010-rate-limiting-audit-headers.md))
 - [x] Audit log: kim, ne zaman, neyi, hangi IP'den; Owner/Admin için görüntüleme (arayüz dahil)
 - [x] Güvenlik kontrolü: helmet, CORS, girdi doğrulama, OWASP listesi üzerinden gözden geçirme ([SECURITY.md](SECURITY.md))

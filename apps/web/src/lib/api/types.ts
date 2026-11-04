@@ -30,3 +30,5 @@ export type Notification = Schemas['NotificationResponseDto'];
 export type ActivityItem = Schemas['ActivityItemResponseDto'];
 
 export type AuditLogEntry = Schemas['AuditLogResponseDto'];
+
+export type SearchResults = Schemas['SearchResponseDto'];
