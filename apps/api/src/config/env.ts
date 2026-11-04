@@ -23,6 +23,17 @@ export const envSchema = z.object({
   SMTP_HOST: z.string().default('127.0.0.1'),
   SMTP_PORT: z.coerce.number().int().min(1).max(65535).default(1025),
   MAIL_FROM: z.string().default('NEXORA <no-reply@nexora.test>'),
+  // Object storage for file attachments: any S3-compatible server (SeaweedFS locally, S3 or R2 in
+  // production). No defaults for the keys: a secret should never have a built-in value.
+  S3_ENDPOINT: z.url().default('http://localhost:8333'),
+  // The address BROWSERS use for the upload and download links. It is part of what a link is
+  // signed with, so it must be the address the browser really calls (it can differ from the one
+  // the API uses inside a private network). Defaults to S3_ENDPOINT.
+  S3_PUBLIC_ENDPOINT: z.preprocess((v) => (v === '' ? undefined : v), z.url().optional()),
+  S3_REGION: z.string().min(1).default('us-east-1'),
+  S3_BUCKET: z.string().min(3).default('nexora'),
+  S3_ACCESS_KEY_ID: z.string().min(1),
+  S3_SECRET_ACCESS_KEY: z.string().min(1),
   // Every BullMQ key in Redis starts with this, so several apps (or test runs) can share one Redis.
   QUEUE_PREFIX: z.string().min(1).default('nexora'),
   // The recurring-task job is added to its queue on startup. Turn it off where it must not run

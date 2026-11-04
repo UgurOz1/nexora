@@ -214,3 +214,27 @@ Bu dosya mülakat hazırlığında da ana kaynağın olacak.
 **Dürüst notlar:** Üyelikten çıkarılan kişi, soketi yeniden bağlanana kadar (en çok 15 dk) eski odaları dinleyebilir. Commit ile Redis'e `add` arasındaki an hâlâ kapsanmıyor (tam çözüm transactional outbox). İşçiler API sürecinin içinde çalışıyor; ayrı sürece alınabilir. Sürükle-bırağın gerçek fare/klavye akışı hâlâ elle denenmedi (Playwright Hafta 13).
 
 **Sonraki adım:** Hafta 11, dosya yükleme (S3), tam metin arama, rate limiting, audit log.
+
+### 2026-11-04 · Hafta 11 · Dosyalar, arama, güvenlik
+
+**Ne yaptık:** Üç parça, üç PR. (1) Güvenlik: Redis'te Lua ile atomik token bucket hız sınırı (giriş için IP ve hesap bazlı), audit log (`@Audited` dekoratörü + interceptor, OWNER/ADMIN okur, arayüzü var), helmet ve web güvenlik başlıkları, OWASP gözden geçirmesi (`docs/SECURITY.md`). (2) Arama: Postgres `tsvector` (veritabanının ürettiği sütun) + GIN indeks, önek eşleşmesi, sıralama, arama sayfası. (3) Dosya ekleri: SeaweedFS (S3), imzalı URL ile tarayıcıdan doğrudan yükleme, tür izin listesi, ilk bayt doğrulaması, `attachment` olarak indirme, yarım yüklemeleri temizleyen zamanlanmış iş. Kararlar: ADR-0010, 0011, 0012.
+**Kavramlar:**
+
+- _Token bucket vs sabit pencere:_ Sabit pencerede sınırda 2 kat patlama geçer; token bucket'ta uçurum yok, kısa patlamaya izin verip ortalamayı sınırlar. Oku-yenile-harca tek Lua betiği olduğu için iki istek aynı jetonu harcayamaz (25 eşzamanlı istek, kapasite 5 → tam 5 geçti). Redis çökerse "açık geçiş" (bilinçli).
+- _Audit log ≠ aktivite akışı:_ Akış "ne üzerinde çalışılıyor", audit "kim neyi yaptı, kanıtla". Yalnızca eklenir; şirket silinince "silindi" kaydı şirketsiz (`organizationId = null`) kalır.
+- _`LIKE '%x%'` neden yavaş:_ Joker ile başlayan desen sıradan indeksi kullanamaz, her satırı okur. GIN indeksi kelime → satır eşler. Üretilmiş `tsvector` sütunu uygulamanın güncellemeyi unutmasını imkânsız kılar; bir test sorgu planında indeksin kullanıldığını kanıtlar.
+- _Dosyayı neden API'den geçirmiyoruz:_ Bellek/bant genişliği/işçi tutar. İmzalı URL: sunucu kısa ömürlü bir izin verir, tarayıcı dosyayı depolamaya kendisi yollar. Karşılığında içeriği API görmez, bu yüzden tamamlarken kendisi bakar.
+- _Yüklenen dosyaya güvenme:_ Tür başlığı ve uzantı yükleyenin seçimi. İzin listesi + imzaya bağlı tür/boyut + ilk bayt (magic number) + `Content-Disposition: attachment` + sunucuda üretilen yol.
+- _Ham SQL ve tenant izolasyonu:_ `forTenant` yalnızca Prisma model metotlarını sarar; ham sorguda `organizationId` filtresi elle yazılır ve testle korunur.
+
+**Dersler:**
+
+- İki kez dosyayı yanlış yere yazdım: bir betiğin çalışma dizini yüzünden denetim sayfası `apps/web/src/src/...` altına gitti, PR'a girdi ve rota 404 verdi. Tarayıcıda açmadan "bitti" demiştim; arama PR'ında fark edip düzelttim. Ders: arayüz değişikliğini her zaman çalışırken aç.
+- Depolama sunucusunu varsaymadan önce yoklama betiği yazdım: SDK'nın yeni sağlama toplamı davranışı (400), imzanın tür/boyutu varsayılan olarak zorlamaması (ama `signableHeaders` ile zorluyor) ve `localhost` → IPv6 sağlık kontrolü sorunu ancak denenince çıktı.
+- Mutasyon testi yine eksik testleri buldu: "silinmiş projenin görevleri" filtresi, proje silme görevleri de sildiği için hiç sınanmıyordu (doğrudan veritabanı güncellemesiyle test eklendi). Kayıt dışı kalan iki mutant gerekçeleriyle açıklandı (derleme hatası; çift katmanlı korumanın ilki).
+- `eslint . --fix` kökten çalışınca üretilmiş `schema.d.ts`'yi yeniden biçimlendiriyor; her seferinde yeniden üretmek gerekti.
+- Bash heredoc'ta ters eğik çizgiler (regex) bozulabiliyor; regex içeren dosyaları Write aracıyla yazmak daha güvenli.
+
+**Dürüst notlar:** CSP yok (Next.js nonce gerekir), bağımlılık taraması yok, Swagger üretimde açık: hepsi `docs/SECURITY.md`'de öncelik listesinde. Etiketler aranmıyor, yorumlar aranmıyor. Virüs taraması yok. Gerçek tarayıcıda dosya yükleme (CORS dahil) elle denendi ve çalıştı; Playwright ile Hafta 13'te otomatiğe bağlanacak.
+
+**Sonraki adım:** Hafta 12, analitik ve gözlemlenebilirlik (esnek hafta).

@@ -22,6 +22,8 @@ export const POLICIES = {
   // Search runs a query per request and the web app searches as people type: a burst of 30, then
   // one a second.
   search: { capacity: 30, refillPerSecond: 1 },
+  // Announcing an upload hands out a signed link and creates a row: 20, then one every 3 s.
+  upload: { capacity: 20, refillPerSecond: 1 / 3 },
   // The Google redirect dance.
   oauth: { capacity: 20, refillPerSecond: perMinute(20) },
 } as const satisfies Record<string, Bucket>;

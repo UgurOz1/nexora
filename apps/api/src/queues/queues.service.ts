@@ -11,6 +11,8 @@ export const QueueName = {
   Mail: 'mail',
   Notifications: 'notifications',
   Recurring: 'recurring',
+  // Housekeeping that has no user waiting for it (clearing uploads that were never finished).
+  Maintenance: 'maintenance',
   // Jobs that failed every attempt are copied here so they stay visible instead of vanishing.
   DeadLetter: 'dead-letter',
 } as const;

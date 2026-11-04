@@ -198,8 +198,8 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 
 **Öğrenilecekler:** S3 ve presigned URL, Postgres full-text search (tsvector, GIN index), rate limiting algoritmaları (fixed window, token bucket), audit log tasarımı, OWASP Top 10 temelleri.
 
-- [ ] S3 uyumlu lokal depolama sunucusu seçimi (ADR; MinIO Docker image'ı artık yayınlanmıyor, RustFS / SeaweedFS / Garage değerlendirilecek)
-- [ ] Görevlere dosya ekleme (presigned URL ile doğrudan depolamaya yükleme), boyut/tip sınırı
+- [x] S3 uyumlu lokal depolama sunucusu seçimi: SeaweedFS ([ADR-0012](adr/0012-object-storage-and-attachments.md))
+- [x] Görevlere dosya ekleme: presigned URL ile doğrudan depolamaya yükleme, tür izin listesi, boyut sınırı, içerik doğrulama, arayüz
 - [x] Görev ve proje arama: tsvector + GIN, önek eşleşmesi, sıralama, arayüz ([ADR-0011](adr/0011-full-text-search.md))
 - [x] Redis tabanlı rate limiting: token bucket, Lua ile atomik, IP + hesap bazlı ([ADR-0010](adr/0010-rate-limiting-audit-headers.md))
 - [x] Audit log: kim, ne zaman, neyi, hangi IP'den; Owner/Admin için görüntüleme (arayüz dahil)

@@ -32,3 +32,9 @@ export type ActivityItem = Schemas['ActivityItemResponseDto'];
 export type AuditLogEntry = Schemas['AuditLogResponseDto'];
 
 export type SearchResults = Schemas['SearchResponseDto'];
+
+export type Attachment = Schemas['AttachmentResponseDto'];
+export type CreatedAttachment = Schemas['CreatedAttachmentResponseDto'];
+
+// The types the API accepts for an attachment (the client checks the same list first).
+export type AllowedContentType = Schemas['CreateAttachmentDto']['contentType'];

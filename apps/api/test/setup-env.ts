@@ -15,3 +15,8 @@ process.env.QUEUE_SCHEDULER_ENABLED = 'false';
 // The rate limits would trip over the many sign-ins the tests make from one address. The rate
 // limit tests switch the limiter on for themselves.
 process.env.RATE_LIMIT_ENABLED = 'false';
+// Object storage for the attachment tests (a real S3-compatible server: docker compose up).
+process.env.S3_ENDPOINT = process.env.S3_ENDPOINT ?? 'http://localhost:8333';
+process.env.S3_BUCKET = 'nexora-test';
+process.env.S3_ACCESS_KEY_ID = process.env.S3_ACCESS_KEY_ID ?? 'nexora-dev';
+process.env.S3_SECRET_ACCESS_KEY = process.env.S3_SECRET_ACCESS_KEY ?? 'nexora-dev-secret';

@@ -7,4 +7,6 @@
 process.env.DATABASE_URL ??= 'postgresql://openapi:openapi@localhost:5432/openapi';
 process.env.REDIS_URL ??= 'redis://localhost:6379';
 process.env.JWT_ACCESS_SECRET ??= 'openapi-generation-only-secret-0123456789';
+process.env.S3_ACCESS_KEY_ID ??= 'openapi-generation-only';
+process.env.S3_SECRET_ACCESS_KEY ??= 'openapi-generation-only';
 process.env.NODE_ENV ??= 'test';

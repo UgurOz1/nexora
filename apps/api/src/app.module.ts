@@ -6,6 +6,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ActivityModule } from './activity/activity.module';
+import { AttachmentsModule } from './attachments/attachments.module';
 import { AuditModule } from './audit/audit.module';
 import { AuthModule } from './auth/auth.module';
 import { CommentsModule } from './comments/comments.module';
@@ -19,6 +20,7 @@ import { OrganizationsModule } from './organizations/organizations.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { RateLimitModule } from './rate-limit/rate-limit.module';
 import { SearchModule } from './search/search.module';
+import { StorageModule } from './storage/storage.module';
 import { QueuesModule } from './queues/queues.module';
 import { RealtimeModule } from './realtime/realtime.module';
 import { ProjectsModule } from './projects/projects.module';
@@ -64,6 +66,8 @@ import { TasksModule } from './tasks/tasks.module';
     RateLimitModule,
     AuditModule,
     SearchModule,
+    StorageModule,
+    AttachmentsModule,
     ProjectsModule,
     TasksModule,
     RecurringTasksModule,

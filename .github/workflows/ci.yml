@@ -39,8 +39,26 @@ jobs:
     env:
       DATABASE_URL: postgresql://nexora:ci-password@localhost:5432/nexora
       REDIS_URL: redis://localhost:6379
+      S3_ENDPOINT: http://localhost:8333
+      S3_ACCESS_KEY_ID: ci-access-key
+      S3_SECRET_ACCESS_KEY: ci-secret-key
     steps:
       - uses: actions/checkout@v4
+
+      # Object storage for the attachment tests: a real S3-compatible server. (A job `services:`
+      # entry cannot pass the start command this image needs, so it is started here.)
+      - name: Start object storage
+        run: |
+          docker run -d --name storage -p 8333:8333 \
+            -e AWS_ACCESS_KEY_ID=$S3_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$S3_SECRET_ACCESS_KEY \
+            chrislusf/seaweedfs:4.50 server -s3 -dir=/data
+          for i in $(seq 1 40); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8333/ || true)
+            [ "$code" = "403" ] && exit 0
+            sleep 2
+          done
+          docker logs storage
+          echo "Object storage did not start"; exit 1
 
       - uses: pnpm/action-setup@v4
 
