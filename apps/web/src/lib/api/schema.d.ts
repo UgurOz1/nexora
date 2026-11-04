@@ -324,6 +324,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/organizations/{orgId}/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["SearchController_find_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/organizations/{orgId}/projects": {
         parameters: {
             query?: never;
@@ -842,6 +858,29 @@ export interface components {
             items: components["schemas"]["AuditLogResponseDto"][];
             nextCursor: string | null;
         };
+        /** @enum {string} */
+        TaskStatus: "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE";
+        /** @enum {string} */
+        TaskPriority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+        TaskSearchResultDto: {
+            id: string;
+            title: string;
+            status: components["schemas"]["TaskStatus"];
+            priority: components["schemas"]["TaskPriority"];
+            projectId: string;
+            projectName: string;
+            /** @description Set for subtasks */
+            parentId: string | null;
+        };
+        ProjectSearchResultDto: {
+            id: string;
+            name: string;
+            department: string | null;
+        };
+        SearchResponseDto: {
+            tasks: components["schemas"]["TaskSearchResultDto"][];
+            projects: components["schemas"]["ProjectSearchResultDto"][];
+        };
         CreateProjectDto: {
             /** @example Website Redesign */
             name: string;
@@ -866,10 +905,6 @@ export interface components {
             description?: string | null;
             department?: string | null;
         };
-        /** @enum {string} */
-        TaskStatus: "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE";
-        /** @enum {string} */
-        TaskPriority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
         CreateTaskDto: {
             /** @example Design the homepage */
             title: string;
@@ -1745,6 +1780,33 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AuditLogPageResponseDto"];
+                };
+            };
+        };
+    };
+    SearchController_find_v1: {
+        parameters: {
+            query: {
+                /** @description Words to look for; each is matched as a prefix */
+                q: string;
+                /** @description Only tasks of this project (projects are not searched) */
+                projectId?: string;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                orgId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchResponseDto"];
                 };
             };
         };

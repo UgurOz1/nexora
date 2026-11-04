@@ -18,6 +18,7 @@ import { HealthModule } from './health/health.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { RateLimitModule } from './rate-limit/rate-limit.module';
+import { SearchModule } from './search/search.module';
 import { QueuesModule } from './queues/queues.module';
 import { RealtimeModule } from './realtime/realtime.module';
 import { ProjectsModule } from './projects/projects.module';
@@ -62,6 +63,7 @@ import { TasksModule } from './tasks/tasks.module';
     // guard to have run first.
     RateLimitModule,
     AuditModule,
+    SearchModule,
     ProjectsModule,
     TasksModule,
     RecurringTasksModule,

@@ -969,6 +969,71 @@
         ]
       }
     },
+    "/api/v1/organizations/{orgId}/search": {
+      "get": {
+        "operationId": "SearchController_find_v1",
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "required": true,
+            "in": "query",
+            "description": "Words to look for; each is matched as a prefix",
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "name": "projectId",
+            "required": false,
+            "in": "query",
+            "description": "Only tasks of this project (projects are not searched)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "search"
+        ]
+      }
+    },
     "/api/v1/organizations/{orgId}/projects": {
       "post": {
         "operationId": "ProjectsController_create_v1",
@@ -3326,6 +3391,110 @@
           "nextCursor"
         ]
       },
+      "TaskStatus": {
+        "type": "string",
+        "enum": [
+          "TODO",
+          "IN_PROGRESS",
+          "IN_REVIEW",
+          "DONE"
+        ]
+      },
+      "TaskPriority": {
+        "type": "string",
+        "enum": [
+          "LOW",
+          "MEDIUM",
+          "HIGH",
+          "URGENT"
+        ]
+      },
+      "TaskSearchResultDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskStatus"
+              }
+            ]
+          },
+          "priority": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskPriority"
+              }
+            ]
+          },
+          "projectId": {
+            "type": "string"
+          },
+          "projectName": {
+            "type": "string"
+          },
+          "parentId": {
+            "type": "string",
+            "nullable": true,
+            "description": "Set for subtasks"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "status",
+          "priority",
+          "projectId",
+          "projectName",
+          "parentId"
+        ]
+      },
+      "ProjectSearchResultDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "department": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "department"
+        ]
+      },
+      "SearchResponseDto": {
+        "type": "object",
+        "properties": {
+          "tasks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaskSearchResultDto"
+            }
+          },
+          "projects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectSearchResultDto"
+            }
+          }
+        },
+        "required": [
+          "tasks",
+          "projects"
+        ]
+      },
       "CreateProjectDto": {
         "type": "object",
         "properties": {
@@ -3406,24 +3575,6 @@
             "nullable": true
           }
         }
-      },
-      "TaskStatus": {
-        "type": "string",
-        "enum": [
-          "TODO",
-          "IN_PROGRESS",
-          "IN_REVIEW",
-          "DONE"
-        ]
-      },
-      "TaskPriority": {
-        "type": "string",
-        "enum": [
-          "LOW",
-          "MEDIUM",
-          "HIGH",
-          "URGENT"
-        ]
       },
       "CreateTaskDto": {
         "type": "object",
