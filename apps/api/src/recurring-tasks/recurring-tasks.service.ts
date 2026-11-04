@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import type { OrgMembership } from '../common/auth/current-user.decorator';
 import { Prisma, TaskEventType, TaskStatus } from '../generated/prisma/client';
+import { DomainEvents } from '../events/domain-events';
 import { PrismaService } from '../prisma/prisma.service';
 import { recordEvent } from '../tasks/task-events';
 import { endPosition } from '../tasks/task-ordering';
@@ -42,7 +43,10 @@ type Template = Prisma.RecurringTaskGetPayload<{ select: typeof templateSelect }
 export class RecurringTasksService {
   private readonly logger = new Logger(RecurringTasksService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly events: DomainEvents,
+  ) {}
 
   async create(actor: OrgMembership, dto: CreateRecurringTaskDto) {
     const { organizationId } = actor;
@@ -137,8 +141,17 @@ export class RecurringTasksService {
 
     let created = 0;
     for (const template of due) {
-      if (await this.generateOne(template, now)) {
+      const taskId = await this.generateOne(template, now);
+      if (taskId) {
         created++;
+        // Nobody acted: the schedule did. Open boards of the project show the new task.
+        await this.events.publish('task.changed', {
+          organizationId: template.organizationId,
+          actorId: null,
+          taskId,
+          projectId: template.projectId,
+          kind: 'created',
+        });
       }
     }
     return created;
@@ -147,7 +160,7 @@ export class RecurringTasksService {
   private async generateOne(
     template: Template & { organizationId: string; createdById: string },
     now: Date,
-  ): Promise<boolean> {
+  ): Promise<string | null> {
     const { organizationId } = template;
     const occurrence = template.nextRunAt!;
     const next = occurrenceAfter(this.rule(template.rrule, template.startsAt), now);
@@ -161,7 +174,7 @@ export class RecurringTasksService {
           data: { nextRunAt: next, lastRunAt: now },
         });
         if (claimed.count === 0) {
-          return false;
+          return null;
         }
 
         // The assignee may have left the organization since the template was written.
@@ -205,16 +218,16 @@ export class RecurringTasksService {
           changes: diffSnapshots(null, snapshot),
           snapshot,
         });
-        return true;
+        return task.id;
       });
     } catch (error) {
       // The unique (recurringTaskId, occurrenceAt) pair says this occurrence already has its task.
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-        return false;
+        return null;
       }
       // One broken template must not stop the others.
       this.logger.error({ err: error, recurringTaskId: template.id }, 'Failed to generate task');
-      return false;
+      return null;
     }
   }
 

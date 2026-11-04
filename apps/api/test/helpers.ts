@@ -4,6 +4,7 @@ import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { configureApp } from '../src/app.setup';
 import { MailService, type MailMessage } from '../src/mail/mail.service';
+import { QueuesService } from '../src/queues/queues.service';
 
 export const PASSWORD = 'correct horse battery';
 
@@ -20,6 +21,8 @@ export interface TestContext {
   mails: MailMessage[];
   // Signs up a user; by default also confirms their email through the real emailed link.
   signUp: (name: string, options?: { verified?: boolean }) => Promise<TestUser>;
+  // Waits until the background jobs a request set off (notifications, ...) have run.
+  settle: () => Promise<void>;
   // The token inside the newest email to `email` whose subject contains `subjectPart`.
   mailToken: (email: string, subjectPart: string) => string;
 }
@@ -107,5 +110,7 @@ export async function createTestApp(): Promise<TestContext> {
     return { name, email, token, id: (me.body as { id: string }).id };
   };
 
-  return { app, http, mails, signUp, mailToken };
+  const settle = () => app.get(QueuesService).whenIdle();
+
+  return { app, http, mails, signUp, mailToken, settle };
 }

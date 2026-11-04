@@ -73,6 +73,7 @@ export class CommentsService {
       return created;
     });
 
+    await this.announce(organizationId, actor.userId, taskId, task.projectId);
     await this.events.publish('comment.created', {
       organizationId,
       actorId: actor.userId,
@@ -105,6 +106,8 @@ export class CommentsService {
       select: commentSelect,
     });
 
+    await this.announce(organizationId, actor.userId, taskId, existing.task.projectId);
+
     // Only people who were not mentioned by the old text get a notification.
     const mentioned = await this.membersAmong(organizationId, parseMentions(dto.body));
     await this.events.publish('comment.updated', {
@@ -130,12 +133,25 @@ export class CommentsService {
       where: { id: commentId, deletedAt: null },
       data: { deletedAt: new Date() },
     });
+    await this.announce(organizationId, actor.userId, taskId, existing.task.projectId);
+  }
+
+  // Open task dialogs of the project show the comment list, so they should look again.
+  private announce(organizationId: string, actorId: string, taskId: string, projectId: string) {
+    return this.events.publish('task.changed', {
+      organizationId,
+      actorId,
+      taskId,
+      projectId,
+      kind: 'comment',
+    });
   }
 
   private async loadTask(organizationId: string, taskId: string) {
     const task = await this.prisma.forTenant(organizationId).task.findFirst({
       where: { id: taskId, deletedAt: null },
       select: {
+        projectId: true,
         title: true,
         description: true,
         status: true,
@@ -154,7 +170,7 @@ export class CommentsService {
   private async loadComment(organizationId: string, taskId: string, commentId: string) {
     const comment = await this.prisma.forTenant(organizationId).comment.findFirst({
       where: { id: commentId, taskId, deletedAt: null },
-      select: { authorId: true, body: true },
+      select: { authorId: true, body: true, task: { select: { projectId: true } } },
     });
     if (!comment) {
       throw new NotFoundException('Comment not found');

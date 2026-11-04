@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { RecurringTasksController } from './recurring-tasks.controller';
+import { RecurringTasksProcessor } from './recurring-tasks.processor';
 import { RecurringTasksService } from './recurring-tasks.service';
 
 @Module({
   controllers: [RecurringTasksController],
-  providers: [RecurringTasksService],
-  // Exported so the scheduled job (week 10) can call generateDue().
+  providers: [RecurringTasksService, RecurringTasksProcessor],
   exports: [RecurringTasksService],
 })
 export class RecurringTasksModule {}

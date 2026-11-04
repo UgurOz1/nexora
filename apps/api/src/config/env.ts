@@ -23,6 +23,14 @@ export const envSchema = z.object({
   SMTP_HOST: z.string().default('127.0.0.1'),
   SMTP_PORT: z.coerce.number().int().min(1).max(65535).default(1025),
   MAIL_FROM: z.string().default('NEXORA <no-reply@nexora.test>'),
+  // Every BullMQ key in Redis starts with this, so several apps (or test runs) can share one Redis.
+  QUEUE_PREFIX: z.string().min(1).default('nexora'),
+  // The recurring-task job is added to its queue on startup. Turn it off where it must not run
+  // on its own (the e2e tests call the generator directly with a fixed clock).
+  QUEUE_SCHEDULER_ENABLED: z
+    .enum(['true', 'false'])
+    .default('true')
+    .transform((value) => value === 'true'),
   // Google sign-in is optional: without these two, the Google endpoints answer 404.
   GOOGLE_CLIENT_ID: optionalString,
   GOOGLE_CLIENT_SECRET: optionalString,

@@ -1,6 +1,9 @@
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, type OpenAPIObject } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 import cookieParser from 'cookie-parser';
+import type { Env } from './config/env';
+import { RedisIoAdapter, realtimeOrigins } from './realtime/realtime.adapter';
 
 // Title, auth schemes and the like of the OpenAPI document. Used by the live /api/docs page and
 // by the script that writes openapi.json, so both describe the same API.
@@ -43,6 +46,18 @@ export function completePathParameters(document: OpenAPIObject): OpenAPIObject {
 // Everything that changes how requests are handled. Shared by main.ts and the e2e tests so
 // the tests exercise the same routing, parsing and validation as production.
 export function configureApp(app: INestApplication): void {
+  // WebSockets: Socket.IO, with its rooms shared between API servers through Redis.
+  const config = app.get<ConfigService<Env, true>>(ConfigService);
+  app.useWebSocketAdapter(
+    new RedisIoAdapter(
+      app,
+      config.get('REDIS_URL', { infer: true }),
+      realtimeOrigins(
+        config.get('APP_URL', { infer: true }),
+        config.get('NODE_ENV', { infer: true }),
+      ),
+    ),
+  );
   // Routes look like /api/v1/projects; a breaking change ships as v2 next to v1.
   app.setGlobalPrefix('api');
   app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
