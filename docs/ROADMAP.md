@@ -185,9 +185,9 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 
 **Öğrenilecekler:** Mesaj kuyruğu kavramı, BullMQ (job, worker, retry, backoff, dead-letter), WebSocket ve Socket.IO, room yapısı, Redis adapter ile yatay ölçekleme, WebSocket'te kimlik doğrulama.
 
-- [ ] BullMQ: e-posta kuyruğu, bildirim kuyruğu, retry + backoff
-- [ ] Tekrarlayan görevlerin zamanlanmış job ile üretilmesi
-- [ ] Socket.IO gateway, JWT ile bağlantı doğrulama, org/proje room'ları
+- [x] BullMQ: e-posta kuyruğu, bildirim kuyruğu, retry + backoff, ölü mektup kuyruğu ([ADR-0009](adr/0009-queues-and-realtime.md))
+- [x] Tekrarlayan görevlerin zamanlanmış job ile üretilmesi (dakikada bir, job scheduler)
+- [x] Socket.IO gateway, JWT ile bağlantı doğrulama, org/proje room'ları, Redis adapter
 - [ ] Gerçek zamanlı bildirimler + bildirim merkezi UI (okundu/okunmadı)
 - [ ] Kanban'da başka kullanıcının değişikliğinin canlı yansıması
 

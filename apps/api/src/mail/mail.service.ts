@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { createTransport, Transporter } from 'nodemailer';
-import type { Env } from '../config/env';
+import { QueueName, QueuesService } from '../queues/queues.service';
 
 export interface MailMessage {
   to: string;
@@ -10,23 +8,15 @@ export interface MailMessage {
   html: string;
 }
 
-// Thin wrapper around SMTP. Locally SMTP goes to Mailpit; in production it will point at a
-// real provider. Sending moves to a BullMQ queue in week 10.
+// What the rest of the app calls to send an email. It does not talk to the mail server: it puts
+// the message on the "mail" queue and returns, so a request never waits for SMTP and a mail
+// outage cannot fail it. The MailProcessor takes the message from the queue and delivers it, and
+// tries again with a growing delay if the mail server is down.
 @Injectable()
 export class MailService {
-  private readonly transport: Transporter;
-  private readonly from: string;
-
-  constructor(config: ConfigService<Env, true>) {
-    this.transport = createTransport({
-      host: config.get('SMTP_HOST', { infer: true }),
-      port: config.get('SMTP_PORT', { infer: true }),
-      secure: false,
-    });
-    this.from = config.get('MAIL_FROM', { infer: true });
-  }
+  constructor(private readonly queues: QueuesService) {}
 
   async send(message: MailMessage): Promise<void> {
-    await this.transport.sendMail({ from: this.from, ...message });
+    await this.queues.queue(QueueName.Mail).add('send', message);
   }
 }

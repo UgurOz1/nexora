@@ -5,6 +5,8 @@ import type { TaskStatus } from '../generated/prisma/client';
 // Things that happened in the domain, named in the past tense. A service says "this happened" and
 // does not know or care who reacts (notifications today, live updates and e-mail queues later), so
 // adding a reaction never means editing the service that caused the event.
+export type TaskChangeKind = 'created' | 'updated' | 'moved' | 'deleted' | 'comment' | 'dependency';
+
 export interface DomainEventMap {
   'task.created': {
     organizationId: string;
@@ -19,6 +21,17 @@ export interface DomainEventMap {
     projectId: string;
     from: TaskStatus;
     to: TaskStatus;
+  };
+  // Anything that changes what a project's board, list or task dialog shows. Carries no content:
+  // listeners (live updates) only say "look again", and the data itself is fetched through the
+  // normal, permission-checked API.
+  'task.changed': {
+    organizationId: string;
+    // null when the system acted (a recurring task being generated)
+    actorId: string | null;
+    taskId: string;
+    projectId: string;
+    kind: TaskChangeKind;
   };
   // Someone other than the new assignee set the assignee.
   'task.assigned': {

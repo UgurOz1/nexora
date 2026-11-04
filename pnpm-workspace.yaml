@@ -7,3 +7,4 @@ allowBuilds:
   '@scarf/scarf': false
   prisma: true
   unrs-resolver: false
+  msgpackr-extract: false

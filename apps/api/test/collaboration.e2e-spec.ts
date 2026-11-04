@@ -65,12 +65,19 @@ describe('collaboration (e2e)', () => {
     body<Comment>(
       await api.post(user, path(acme, `/tasks/${task.id}/comments`), { body: text }).expect(201),
     );
-  const notifications = async (user: TestUser, query = '') =>
-    body<Page<Notification>>(await api.get(user, path(acme, `/notifications${query}`)).expect(200));
-  const unread = async (user: TestUser) =>
-    body<{ count: number }>(
+  // Notifications are written by a background worker: wait for it before looking.
+  const notifications = async (user: TestUser, query = '') => {
+    await ctx.settle();
+    return body<Page<Notification>>(
+      await api.get(user, path(acme, `/notifications${query}`)).expect(200),
+    );
+  };
+  const unread = async (user: TestUser) => {
+    await ctx.settle();
+    return body<{ count: number }>(
       await api.get(user, path(acme, '/notifications/unread-count')).expect(200),
     ).count;
+  };
 
   beforeAll(async () => {
     ctx = await createTestApp();
@@ -216,6 +223,7 @@ describe('collaboration (e2e)', () => {
       await comment(mia, task, `${mention(grace)}`);
       await comment(mia, task, '@[Nobody](00000000-0000-4000-8000-000000000000) and plain @ada');
 
+      await ctx.settle();
       // Looked at in the database: through the API, Grace could only ever see Globex's notifications.
       expect(await prisma.notification.count({ where: { userId: grace.id } })).toBe(0);
       expect(await prisma.notification.count({ where: { taskId: task.id } })).toBe(0);

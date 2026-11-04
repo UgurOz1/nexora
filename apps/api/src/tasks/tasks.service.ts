@@ -158,6 +158,13 @@ export class TasksService {
       taskId: created.id,
       projectId: created.projectId,
     });
+    await this.events.publish('task.changed', {
+      organizationId,
+      actorId: actor.userId,
+      taskId: created.id,
+      projectId: created.projectId,
+      kind: 'created',
+    });
     await this.announceAssignee(organizationId, actor.userId, created.id, null, created.assigneeId);
     return created;
   }
@@ -266,7 +273,7 @@ export class TasksService {
         return { before, task: present(task) };
       });
 
-    await this.announceChanges(organizationId, actor.userId, before, updated);
+    await this.announceChanges(organizationId, actor.userId, before, updated, 'updated');
     return updated;
   }
 
@@ -345,7 +352,7 @@ export class TasksService {
         return { before, task: present(task) };
       });
 
-    await this.announceChanges(organizationId, actor.userId, before, moved);
+    await this.announceChanges(organizationId, actor.userId, before, moved, 'moved');
     return moved;
   }
 
@@ -355,7 +362,15 @@ export class TasksService {
     actorId: string,
     before: { status: TaskStatus; assigneeId: string | null },
     after: { id: string; projectId: string; status: TaskStatus; assigneeId: string | null },
+    kind: 'updated' | 'moved',
   ) {
+    await this.events.publish('task.changed', {
+      organizationId,
+      actorId,
+      taskId: after.id,
+      projectId: after.projectId,
+      kind,
+    });
     if (before.status !== after.status) {
       await this.events.publish('task.status_changed', {
         organizationId,
@@ -412,7 +427,7 @@ export class TasksService {
 
   // Soft delete, subtasks included, with one history entry per deleted task.
   async remove(organizationId: string, actor: OrgMembership, taskId: string): Promise<void> {
-    await this.prisma.forTenant(organizationId).$transaction(async (tx) => {
+    const projectId = await this.prisma.forTenant(organizationId).$transaction(async (tx) => {
       const rows = await tx.task.findMany({
         where: { OR: [{ id: taskId }, { parentId: taskId }], deletedAt: null },
         select: { ...taskSelect, createdById: true },
@@ -441,6 +456,15 @@ export class TasksService {
           snapshot: snapshotOf(row),
         })),
       );
+      return target.projectId;
+    });
+
+    await this.events.publish('task.changed', {
+      organizationId,
+      actorId: actor.userId,
+      taskId,
+      projectId,
+      kind: 'deleted',
     });
   }
 

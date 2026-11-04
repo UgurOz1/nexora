@@ -16,6 +16,8 @@ import { Env, validateEnv } from './config/env';
 import { HealthModule } from './health/health.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { QueuesModule } from './queues/queues.module';
+import { RealtimeModule } from './realtime/realtime.module';
 import { ProjectsModule } from './projects/projects.module';
 import { RecurringTasksModule } from './recurring-tasks/recurring-tasks.module';
 import { RedisModule } from './redis/redis.module';
@@ -57,6 +59,8 @@ import { TasksModule } from './tasks/tasks.module';
     ProjectsModule,
     TasksModule,
     RecurringTasksModule,
+    QueuesModule,
+    RealtimeModule,
     EventsModule,
     CommentsModule,
     NotificationsModule,

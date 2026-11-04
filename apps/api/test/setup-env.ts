@@ -8,3 +8,7 @@ process.env.JWT_ACCESS_SECRET = 'e2e-secret-e2e-secret-e2e-secret-0123456789';
 // Google credentials from a developer's .env must not leak into the tests.
 process.env.GOOGLE_CLIENT_ID = '';
 process.env.GOOGLE_CLIENT_SECRET = '';
+// Each test run uses its own queue names in Redis, so it never touches (or is touched by) the
+// jobs of a developer's running app. The recurring-task job must not tick by itself in tests.
+process.env.QUEUE_PREFIX = `nexora-test-${Date.now().toString(36)}-${process.pid}`;
+process.env.QUEUE_SCHEDULER_ENABLED = 'false';
