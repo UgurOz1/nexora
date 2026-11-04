@@ -81,8 +81,9 @@ export function useDeleteComment(orgId: string, taskId: string) {
   });
 }
 
-// There is no live push yet (that comes in week 10), so the bell asks again every half minute.
-const NOTIFICATION_POLL_MS = 30_000;
+// New notifications arrive live over the WebSocket. This slow poll is only the safety net for a
+// connection that is down or was missed.
+const NOTIFICATION_POLL_MS = 120_000;
 
 export function useUnreadCount(orgId: string) {
   return useQuery({

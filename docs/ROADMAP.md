@@ -188,8 +188,8 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 - [x] BullMQ: e-posta kuyruğu, bildirim kuyruğu, retry + backoff, ölü mektup kuyruğu ([ADR-0009](adr/0009-queues-and-realtime.md))
 - [x] Tekrarlayan görevlerin zamanlanmış job ile üretilmesi (dakikada bir, job scheduler)
 - [x] Socket.IO gateway, JWT ile bağlantı doğrulama, org/proje room'ları, Redis adapter
-- [ ] Gerçek zamanlı bildirimler + bildirim merkezi UI (okundu/okunmadı)
-- [ ] Kanban'da başka kullanıcının değişikliğinin canlı yansıması
+- [x] Gerçek zamanlı bildirimler + bildirim merkezi UI (okundu/okunmadı)
+- [x] Kanban'da başka kullanıcının değişikliğinin canlı yansıması
 
 **Çıktı:** Asenkron işler ve canlı güncellenen arayüz.
 **Mülakat soruları:** E-postayı neden istek içinde göndermiyorsun? 3 API sunucun olsa WebSocket mesajları nasıl doğru kişiye gider?
