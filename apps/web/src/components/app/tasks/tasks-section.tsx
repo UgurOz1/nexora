@@ -8,6 +8,7 @@ import { TaskDialog } from '@/components/app/tasks/task-dialog';
 import { TaskList } from '@/components/app/tasks/task-list';
 import { Button } from '@/components/ui/button';
 import type { Role } from '@/lib/api/types';
+import { useProjectLive } from '@/lib/realtime/hooks';
 
 type View = 'board' | 'list' | 'activity';
 
@@ -24,6 +25,7 @@ interface TasksSectionProps {
 }
 
 export function TasksSection({ orgId, projectId, role }: TasksSectionProps) {
+  useProjectLive(orgId, projectId);
   const [view, setView] = useState<View>('board');
   // The task the person picked in the page, and a ?task=<id> link (from a notification) that
   // they have already closed. The open task is worked out from these two, so there is no effect

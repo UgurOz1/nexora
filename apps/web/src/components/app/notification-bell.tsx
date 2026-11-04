@@ -20,6 +20,7 @@ import {
   useNotifications,
   useUnreadCount,
 } from '@/lib/collab-queries';
+import { useNotificationsLive } from '@/lib/realtime/hooks';
 import { cn } from '@/lib/utils';
 
 export function notificationText(notification: Notification): string {
@@ -32,6 +33,7 @@ export function notificationText(notification: Notification): string {
 const day = new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short' });
 
 export function NotificationBell({ orgId }: { orgId: string }) {
+  useNotificationsLive(orgId);
   const [open, setOpen] = useState(false);
   const { data: unread } = useUnreadCount(orgId);
   // The list is fetched only when the menu is opened; the count is polled all the time.

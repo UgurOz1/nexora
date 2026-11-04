@@ -189,3 +189,28 @@ Bu dosya mülakat hazırlığında da ana kaynağın olacak.
 **Dürüst notlar:** Olaylar bellekte yaşar: commit ile dinleyici arasında süreç çökerse bildirim kaybolur. Hafta 10'da BullMQ ile kalıcı hale gelecek (ADR-0008'de yazılı). Zil şimdilik 30 saniyede bir sorgular; canlı itme Hafta 10'da (Socket.IO). Yorum listesi tek sayfa (100); sonsuz kaydırma yok.
 
 **Sonraki adım:** Hafta 10, arka plan işleri (BullMQ) ve gerçek zamanlı güncelleme (Socket.IO).
+
+### 2026-11-04 · Hafta 10 · Arka plan işleri ve gerçek zamanlı
+
+**Ne yaptık:** API: BullMQ kuyrukları (e-posta, bildirim, tekrarlayan görev, ölü mektup), yeniden deneme + üstel bekleme, dakikada bir çalışan zamanlanmış iş, Socket.IO ağ geçidi (token ile kimlik, odaya girerken yetki kontrolü, token bitince bağlantıyı kapatma, Redis adapter). Web: tek bağlantı yöneten `RealtimeClient` (yeniden bağlanınca odalara tekrar girer, süresi biten token'ı yenileyip bağlanır), board ve bildirim zilinin canlı güncellenmesi. Karar kaydı: ADR-0009.
+**Kavramlar:**
+
+- _Kuyruk neden:_ İstek SMTP'yi beklemez, SMTP düşse istek bozulmaz; iş Redis'te durur, işçi alır, başarısızsa 1 s, 2 s, 4 s, 8 s sonra tekrar dener. Tüm denemeler biterse iş **ölü mektup** kuyruğuna kopyalanır: kaybolmaz.
+- _En az bir kez teslim:_ İşçi yazıp onaydan önce ölürse iş tekrar çalışır; çift bildirim olabilir. Para gibi işler için idempotency anahtarı gerekir.
+- _Job scheduler:_ Zamanlama Redis'te; on sunucu da başlasa dakikada **bir** iş üretilir. `@nestjs/schedule` (cron) her sunucuda ayrı çalışırdı.
+- _WebSocket yetkisi iki yerde:_ Kim olduğun **bağlanırken** bir kez (token), ne dinleyebileceğin **odaya girerken** (veritabanı). Bağlanmak tek başına hiçbir şey vermez.
+- _Olay içerik taşımaz:_ "Bir şey değişti, tekrar bak" der; veri normal API'den, yetki kontrolüyle gelir. WebSocket yeni bir sızıntı yüzeyi açmaz.
+- _Redis adapter:_ A sunucusundaki `emit`, Redis pub/sub ile B sunucusundaki tarayıcıya ulaşır. İki gerçek uygulama örneğiyle testte kanıtlandı.
+- _Token ömrü ve açık soket:_ Soket 15 dakikalık token'dan uzun yaşamasın diye sunucu süre bitince kapatır, tarayıcı token'ı yenileyip bağlanır.
+
+**Dersler:**
+
+- Mutasyon testi 10 korumayı tek tek kaldırdı, hepsi yakalandı. Ama önce testlerin kendisi iki yerde yanlıştı: ölü mektup kuyruğundaki iş hiç tüketilmediği için "kuyruk boşta mı?" kontrolü sonsuza kadar bekliyordu; ortam ayarı `ConfigModule` modül yüklenirken okunduğu için testte `process.env` değiştirmek işe yaramıyordu.
+- Beklemek için `sleep` yerine `whenIdle()` (kuyruklar boşalana kadar): test hem hızlı hem kararlı.
+- Çalışan sistemde ölçmek işe yaradı: sayfayı yenilemeden, başka kullanıcı API'den görev oluşturunca kart göründü ve zil "1" oldu.
+- Optimistic sürükleme sırasında başka bir canlı olay gelirse kart bir an eski yerine dönebilirdi; devam eden bir değişiklik varken canlı yenileme beklemeye alındı (o değişikliğin kendi yenilemesi her şeyi getirir).
+- Kökten `eslint . --fix` üretilmiş `schema.d.ts`'yi yeniden biçimlendiriyor; hedefli çalıştırılmalı (CI'ı bir kez kırmıştı).
+
+**Dürüst notlar:** Üyelikten çıkarılan kişi, soketi yeniden bağlanana kadar (en çok 15 dk) eski odaları dinleyebilir. Commit ile Redis'e `add` arasındaki an hâlâ kapsanmıyor (tam çözüm transactional outbox). İşçiler API sürecinin içinde çalışıyor; ayrı sürece alınabilir. Sürükle-bırağın gerçek fare/klavye akışı hâlâ elle denenmedi (Playwright Hafta 13).
+
+**Sonraki adım:** Hafta 11, dosya yükleme (S3), tam metin arama, rate limiting, audit log.
