@@ -52,6 +52,7 @@ Bir göreve yalnızca aynı şirketin üyesi atanabilir. Silme "soft delete"tir:
 | Başkasının yorumunu silmek                      |   ✓   |   ✓   |    ✓    |        |
 | Kendi bildirimlerini görmek, okundu işaretlemek |   ✓   |   ✓   |    ✓    |   ✓    |
 | Proje ve organizasyon aktivite akışını görmek   |   ✓   |   ✓   |    ✓    |   ✓    |
+| Denetim kaydını (audit log) görmek              |   ✓   |   ✓   |         |        |
 
 Bildirimler kişiye özeldir: başkasının bildirimi (rolü ne olursa olsun) 404 döner. Yorum düzenleme "yazar" kuralıdır, rol kuralı değil: OWNER bile başkasının yorumunu düzenleyemez.
 

@@ -17,6 +17,8 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { AuditAction } from '../audit/audit-actions';
+import { Audited } from '../audit/audited.decorator';
 import { AuthUser, CurrentUser, OrgMembership } from '../common/auth/current-user.decorator';
 import { CurrentMembership } from '../common/auth/current-membership.decorator';
 import { Role } from '../generated/prisma/client';
@@ -50,6 +52,12 @@ export class OrganizationsController {
   constructor(private readonly organizations: OrganizationsService) {}
 
   @Post()
+  @Audited({
+    action: AuditAction.OrganizationCreated,
+    target: { type: 'organization', resultField: 'id' },
+    // The organization is brand new: its id is in the answer, not in the URL.
+    organization: ({ result }) => (result as { id: string }).id,
+  })
   @ApiCreatedResponse({ type: OrganizationResponseDto })
   create(@CurrentUser() user: AuthUser, @Body() dto: OrganizationNameDto) {
     return this.organizations.create(user.id, dto.name);
@@ -76,6 +84,12 @@ export class OrganizationsController {
 
   @Delete(':orgId')
   @MinRole(Role.OWNER)
+  // Not filed under the organization: its rows are deleted with it, and this record must stay.
+  @Audited({
+    action: AuditAction.OrganizationDeleted,
+    target: { type: 'organization', param: 'orgId' },
+    organization: () => null,
+  })
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiNoContentResponse()
   remove(@Param('orgId') orgId: string): Promise<void> {
@@ -97,6 +111,11 @@ export class MembersController {
 
   @Patch(':userId')
   @MinRole(Role.ADMIN)
+  @Audited({
+    action: AuditAction.MemberRoleChanged,
+    target: { type: 'user', param: 'userId' },
+    metadata: ({ request }) => ({ newRole: (request.body as { role?: string }).role }),
+  })
   @ApiOkResponse({ type: MemberRoleChangeResponseDto })
   changeRole(
     @CurrentMembership() actor: OrgMembership,
@@ -108,6 +127,11 @@ export class MembersController {
 
   // Also how a member leaves: removing yourself.
   @Delete(':userId')
+  @Audited({
+    action: AuditAction.MemberRemoved,
+    target: { type: 'user', param: 'userId' },
+    metadata: ({ request }) => ({ left: request.params.userId === request.user?.id }),
+  })
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiNoContentResponse()
   remove(
@@ -126,6 +150,14 @@ export class OrganizationInvitationsController {
 
   @Post()
   @MinRole(Role.ADMIN)
+  @Audited({
+    action: AuditAction.MemberInvited,
+    target: { type: 'invitation', resultField: 'id' },
+    metadata: ({ request }) => {
+      const { email, role } = request.body as { email?: string; role?: string };
+      return { email, role };
+    },
+  })
   @ApiCreatedResponse({ type: InvitationResponseDto })
   invite(@CurrentMembership() actor: OrgMembership, @Body() dto: InviteMemberDto) {
     return this.invitations.create(actor, dto.email, dto.role);
@@ -140,6 +172,10 @@ export class OrganizationInvitationsController {
 
   @Delete(':invitationId')
   @MinRole(Role.ADMIN)
+  @Audited({
+    action: AuditAction.InvitationRevoked,
+    target: { type: 'invitation', param: 'invitationId' },
+  })
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiNoContentResponse()
   revoke(
@@ -158,6 +194,12 @@ export class InvitationAcceptController {
 
   @Post('accept')
   @HttpCode(HttpStatus.OK)
+  @Audited({
+    action: AuditAction.InvitationAccepted,
+    target: { type: 'organization', resultField: 'id' },
+    organization: ({ result }) => (result as { id: string }).id,
+    metadata: ({ result }) => ({ role: (result as { role: string }).role }),
+  })
   @ApiOkResponse({ type: OrganizationWithRoleDto })
   accept(@CurrentUser() user: AuthUser, @Body() dto: AcceptInvitationDto) {
     return this.invitations.accept(user.id, dto.token);

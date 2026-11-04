@@ -28,3 +28,5 @@ export type Member = Schemas['MemberResponseDto'];
 export type Comment = Schemas['CommentResponseDto'];
 export type Notification = Schemas['NotificationResponseDto'];
 export type ActivityItem = Schemas['ActivityItemResponseDto'];
+
+export type AuditLogEntry = Schemas['AuditLogResponseDto'];

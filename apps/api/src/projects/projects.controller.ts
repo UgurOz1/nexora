@@ -17,6 +17,8 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { AuditAction } from '../audit/audit-actions';
+import { Audited } from '../audit/audited.decorator';
 import { Role } from '../generated/prisma/client';
 import { MinRole } from '../organizations/roles';
 import { CreateProjectDto, UpdateProjectDto } from './dto/projects.dto';
@@ -62,6 +64,10 @@ export class ProjectsController {
 
   @Delete(':projectId')
   @MinRole(Role.ADMIN)
+  @Audited({
+    action: AuditAction.ProjectDeleted,
+    target: { type: 'project', param: 'projectId' },
+  })
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiNoContentResponse()
   remove(
