@@ -22,9 +22,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import type { CookieOptions, Request, Response } from 'express';
+import { AuditAction } from '../audit/audit-actions';
+import { Audited } from '../audit/audited.decorator';
 import { AuthUser, CurrentUser } from '../common/auth/current-user.decorator';
 import { Public } from '../common/auth/public.decorator';
 import type { Env } from '../config/env';
+import { RateLimit } from '../rate-limit/rate-limit.decorator';
 import { AccountService } from './account.service';
 import { AuthService, Session } from './auth.service';
 import {
@@ -57,6 +60,12 @@ export class AuthController {
 
   @Public()
   @Post('register')
+  @RateLimit('register')
+  @Audited({
+    action: AuditAction.AuthRegistered,
+    actor: ({ result }) => userIdOf(result),
+    target: { type: 'user' },
+  })
   @ApiCreatedResponse({ type: AccessTokenResponseDto })
   async register(
     @Body() dto: RegisterDto,
@@ -68,6 +77,15 @@ export class AuthController {
 
   @Public()
   @Post('login')
+  @RateLimit('login', { byEmail: true })
+  @Audited({
+    action: AuditAction.AuthLogin,
+    failureAction: AuditAction.AuthLoginFailed,
+    actor: ({ result }) => userIdOf(result),
+    // The address that was tried (never the password): needed to see who is being attacked.
+    metadata: ({ request, error }) =>
+      error ? { email: (request.body as { email?: string }).email } : undefined,
+  })
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ type: AccessTokenResponseDto })
   async login(
@@ -112,6 +130,7 @@ export class AuthController {
   }
 
   @Post('logout-all')
+  @Audited({ action: AuditAction.AuthLogoutAll })
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth()
   @ApiNoContentResponse()
@@ -133,6 +152,7 @@ export class AuthController {
   // Browsers navigate to this URL (it is a link, not an AJAX call): it redirects to Google.
   @Public()
   @Get('google')
+  @RateLimit('oauth')
   @ApiExcludeEndpoint()
   async googleStart(@Res() res: Response): Promise<void> {
     const { url, state, codeVerifier } = await this.google.createAuthorization();
@@ -146,6 +166,7 @@ export class AuthController {
   // The access token never travels through a URL, where it could leak into history or logs.
   @Public()
   @Get('google/callback')
+  @RateLimit('oauth')
   @ApiExcludeEndpoint()
   async googleCallback(
     @Query() query: Record<string, string | undefined>,
@@ -179,6 +200,7 @@ export class AuthController {
 
   @Public()
   @Post('verify-email')
+  @RateLimit('token')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiNoContentResponse()
   verifyEmail(@Body() dto: TokenDto): Promise<void> {
@@ -186,6 +208,7 @@ export class AuthController {
   }
 
   @Post('resend-verification')
+  @RateLimit('email')
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiBearerAuth()
   @ApiAcceptedResponse({ type: MessageResponseDto })
@@ -196,6 +219,12 @@ export class AuthController {
 
   @Public()
   @Post('forgot-password')
+  @RateLimit('email', { byEmail: true })
+  @Audited({
+    action: AuditAction.AuthPasswordResetRequested,
+    // Not who asked (anyone can type any address), only which address.
+    metadata: ({ request }) => ({ email: (request.body as { email?: string }).email }),
+  })
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiAcceptedResponse({ type: MessageResponseDto })
   async forgotPassword(@Body() dto: ForgotPasswordDto) {
@@ -205,6 +234,8 @@ export class AuthController {
 
   @Public()
   @Post('reset-password')
+  @RateLimit('token')
+  @Audited({ action: AuditAction.AuthPasswordResetCompleted })
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiNoContentResponse()
   async resetPassword(
@@ -265,4 +296,21 @@ function readRefreshCookie(req: Request): string | undefined {
 
 function clientMeta(req: Request): ClientMeta {
   return { userAgent: req.headers['user-agent']?.slice(0, 255), ip: req.ip };
+}
+
+// The id of the user an access token was just issued to. We made the token a moment ago, so it is
+// read without verifying it again.
+function userIdOf(result: unknown): string | undefined {
+  const token = (result as { accessToken?: string } | undefined)?.accessToken;
+  if (!token) return undefined;
+  try {
+    const payload = JSON.parse(
+      Buffer.from(token.split('.')[1] ?? '', 'base64url').toString('utf8'),
+    ) as {
+      sub?: string;
+    };
+    return payload.sub;
+  } catch {
+    return undefined;
+  }
 }

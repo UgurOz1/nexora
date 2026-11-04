@@ -31,6 +31,16 @@ export const envSchema = z.object({
     .enum(['true', 'false'])
     .default('true')
     .transform((value) => value === 'true'),
+  // Switch for the request rate limits. Only the tests turn it off.
+  RATE_LIMIT_ENABLED: z
+    .enum(['true', 'false'])
+    .default('true')
+    .transform((value) => value === 'true'),
+  // How many reverse proxies stand between the internet and the API. Behind none, the client IP
+  // is the connection's; behind N, it is read N hops from the end of X-Forwarded-For. Setting this
+  // too high lets a client choose its own IP (and so dodge the limits); too low would make
+  // everyone look like the proxy. 0 = no proxy.
+  TRUST_PROXY: z.coerce.number().int().min(0).default(0),
   // Google sign-in is optional: without these two, the Google endpoints answer 404.
   GOOGLE_CLIENT_ID: optionalString,
   GOOGLE_CLIENT_SECRET: optionalString,

@@ -308,6 +308,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/organizations/{orgId}/audit-logs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AuditController_list_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/organizations/{orgId}/projects": {
         parameters: {
             query?: never;
@@ -802,6 +818,30 @@ export interface components {
             /** @description Token from the invitation email link */
             token: string;
         };
+        UserSummaryDto: {
+            id: string;
+            name: string;
+        };
+        AuditLogResponseDto: {
+            id: string;
+            /** @enum {string} */
+            action: "auth.login" | "auth.login_failed" | "auth.registered" | "auth.logout_all" | "auth.password_reset_requested" | "auth.password_reset_completed" | "organization.created" | "organization.deleted" | "member.invited" | "invitation.revoked" | "invitation.accepted" | "member.role_changed" | "member.removed" | "project.deleted";
+            /** Format: date-time */
+            createdAt: string;
+            /** @description null when nobody was signed in */
+            actor: components["schemas"]["UserSummaryDto"] | null;
+            targetType: string | null;
+            targetId: string | null;
+            metadata: {
+                [key: string]: unknown;
+            } | null;
+            ip: string | null;
+            userAgent: string | null;
+        };
+        AuditLogPageResponseDto: {
+            items: components["schemas"]["AuditLogResponseDto"][];
+            nextCursor: string | null;
+        };
         CreateProjectDto: {
             /** @example Website Redesign */
             name: string;
@@ -846,10 +886,6 @@ export interface components {
             /** @description Must be a member of the organization */
             assigneeId?: string;
             labels?: string[];
-        };
-        UserSummaryDto: {
-            id: string;
-            name: string;
         };
         TaskResponseDto: {
             id: string;
@@ -1680,6 +1716,35 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["OrganizationWithRoleDto"];
+                };
+            };
+        };
+    };
+    AuditController_list_v1: {
+        parameters: {
+            query?: {
+                limit?: number;
+                /** @description nextCursor from the previous page */
+                cursor?: string;
+                /** @description Only entries of this action */
+                action?: "auth.login" | "auth.login_failed" | "auth.registered" | "auth.logout_all" | "auth.password_reset_requested" | "auth.password_reset_completed" | "organization.created" | "organization.deleted" | "member.invited" | "invitation.revoked" | "invitation.accepted" | "member.role_changed" | "member.removed" | "project.deleted";
+                /** @description Only entries caused by this user */
+                actorId?: string;
+            };
+            header?: never;
+            path: {
+                orgId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuditLogPageResponseDto"];
                 };
             };
         };

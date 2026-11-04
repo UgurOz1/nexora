@@ -2,6 +2,7 @@ import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common
 import { DocumentBuilder, type OpenAPIObject } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 import type { Env } from './config/env';
 import { RedisIoAdapter, realtimeOrigins } from './realtime/realtime.adapter';
 
@@ -61,6 +62,17 @@ export function configureApp(app: INestApplication): void {
   // Routes look like /api/v1/projects; a breaking change ships as v2 next to v1.
   app.setGlobalPrefix('api');
   app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
+  // Security headers (no sniffing, no framing, HSTS, ...). The CSP is left to the web app: this
+  // server answers JSON, where a content policy has nothing to protect, and the Swagger page
+  // needs inline scripts.
+  app.use(helmet({ contentSecurityPolicy: false }));
+  const hops = config.get('TRUST_PROXY', { infer: true });
+  if (hops > 0) {
+    (app.getHttpAdapter().getInstance() as { set: (name: string, value: number) => void }).set(
+      'trust proxy',
+      hops,
+    );
+  }
   app.use(cookieParser());
   // whitelist + forbidNonWhitelisted: unknown fields are rejected, so a client cannot sneak in
   // e.g. `role: "OWNER"` on an endpoint that never meant to accept it (mass assignment).

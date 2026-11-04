@@ -880,6 +880,95 @@
         ]
       }
     },
+    "/api/v1/organizations/{orgId}/audit-logs": {
+      "get": {
+        "operationId": "AuditController_list_v1",
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25,
+              "type": "number"
+            }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "description": "nextCursor from the previous page",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "action",
+            "required": false,
+            "in": "query",
+            "description": "Only entries of this action",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "auth.login",
+                "auth.login_failed",
+                "auth.registered",
+                "auth.logout_all",
+                "auth.password_reset_requested",
+                "auth.password_reset_completed",
+                "organization.created",
+                "organization.deleted",
+                "member.invited",
+                "invitation.revoked",
+                "invitation.accepted",
+                "member.role_changed",
+                "member.removed",
+                "project.deleted"
+              ]
+            }
+          },
+          {
+            "name": "actorId",
+            "required": false,
+            "in": "query",
+            "description": "Only entries caused by this user",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditLogPageResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "audit"
+        ]
+      }
+    },
     "/api/v1/organizations/{orgId}/projects": {
       "post": {
         "operationId": "ProjectsController_create_v1",
@@ -3130,6 +3219,113 @@
           "token"
         ]
       },
+      "UserSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "AuditLogResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "auth.login",
+              "auth.login_failed",
+              "auth.registered",
+              "auth.logout_all",
+              "auth.password_reset_requested",
+              "auth.password_reset_completed",
+              "organization.created",
+              "organization.deleted",
+              "member.invited",
+              "invitation.revoked",
+              "invitation.accepted",
+              "member.role_changed",
+              "member.removed",
+              "project.deleted"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "actor": {
+            "nullable": true,
+            "description": "null when nobody was signed in",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserSummaryDto"
+              }
+            ]
+          },
+          "targetType": {
+            "type": "string",
+            "nullable": true
+          },
+          "targetId": {
+            "type": "string",
+            "nullable": true
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "ip": {
+            "type": "string",
+            "nullable": true
+          },
+          "userAgent": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "action",
+          "createdAt",
+          "actor",
+          "targetType",
+          "targetId",
+          "metadata",
+          "ip",
+          "userAgent"
+        ]
+      },
+      "AuditLogPageResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditLogResponseDto"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "items",
+          "nextCursor"
+        ]
+      },
       "CreateProjectDto": {
         "type": "object",
         "properties": {
@@ -3276,21 +3472,6 @@
         },
         "required": [
           "title"
-        ]
-      },
-      "UserSummaryDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "name"
         ]
       },
       "TaskResponseDto": {

@@ -12,6 +12,7 @@ const TENANT_MODELS = new Set([
   'RecurringTask',
   'Comment',
   'Notification',
+  'AuditLog',
 ]);
 
 const WHERE_OPERATIONS = new Set([

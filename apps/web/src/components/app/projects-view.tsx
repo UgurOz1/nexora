@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { EmptyState, ErrorState, ListSkeleton } from '@/components/app/query-state';
 import { ProjectFormDialog } from '@/components/app/project-form-dialog';
 import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { hasAtLeast } from '@/lib/roles';
 import { useOrganization, useOrganizations, useProjects } from '@/lib/queries';
@@ -27,7 +28,14 @@ export function ProjectsView({ orgId }: { orgId: string }) {
               ` · ${organization.memberCount} ${organization.memberCount === 1 ? 'member' : 'members'}`}
           </p>
         </div>
-        {canCreate && <ProjectFormDialog orgId={orgId} />}
+        <div className="flex items-center gap-2">
+          {hasAtLeast(role, 'ADMIN') && (
+            <Link href={`/orgs/${orgId}/audit`} className={buttonVariants({ variant: 'outline' })}>
+              Audit log
+            </Link>
+          )}
+          {canCreate && <ProjectFormDialog orgId={orgId} />}
+        </div>
       </div>
 
       {isPending && <ListSkeleton />}

@@ -6,6 +6,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ActivityModule } from './activity/activity.module';
+import { AuditModule } from './audit/audit.module';
 import { AuthModule } from './auth/auth.module';
 import { CommentsModule } from './comments/comments.module';
 import { EventsModule } from './events/domain-events';
@@ -16,6 +17,7 @@ import { Env, validateEnv } from './config/env';
 import { HealthModule } from './health/health.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { RateLimitModule } from './rate-limit/rate-limit.module';
 import { QueuesModule } from './queues/queues.module';
 import { RealtimeModule } from './realtime/realtime.module';
 import { ProjectsModule } from './projects/projects.module';
@@ -56,6 +58,10 @@ import { TasksModule } from './tasks/tasks.module';
     AuthModule,
     // After AuthModule so its guard runs after the JWT guard.
     OrganizationsModule,
+    // Also after AuthModule: the rate limit counts signed-in users by id, so it needs the JWT
+    // guard to have run first.
+    RateLimitModule,
+    AuditModule,
     ProjectsModule,
     TasksModule,
     RecurringTasksModule,
