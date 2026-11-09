@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { DomainEvents } from '../events/domain-events';
 import { PrismaService } from '../prisma/prisma.service';
 import type { CreateProjectDto, UpdateProjectDto } from './dto/projects.dto';
 
@@ -20,7 +21,10 @@ function present<T extends { _count: { tasks: number } }>(project: T) {
 
 @Injectable()
 export class ProjectsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly events: DomainEvents,
+  ) {}
 
   async create(organizationId: string, dto: CreateProjectDto) {
     const project = await this.prisma.forTenant(organizationId).project.create({
@@ -57,6 +61,7 @@ export class ProjectsService {
       data: dto,
       select: projectSelect,
     });
+    await this.events.publish('project.changed', { organizationId, projectId });
     return present(project);
   }
 
@@ -71,5 +76,6 @@ export class ProjectsService {
       tenant.project.updateMany({ where: { id: projectId, deletedAt: null }, data: { deletedAt } }),
       tenant.task.updateMany({ where: { projectId, deletedAt: null }, data: { deletedAt } }),
     ]);
+    await this.events.publish('project.changed', { organizationId, projectId });
   }
 }

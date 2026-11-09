@@ -15,6 +15,9 @@ process.env.QUEUE_SCHEDULER_ENABLED = 'false';
 // The rate limits would trip over the many sign-ins the tests make from one address. The rate
 // limit tests switch the limiter on for themselves.
 process.env.RATE_LIMIT_ENABLED = 'false';
+// Turns the metrics endpoint on, so the tests can read it.
+process.env.METRICS_TOKEN = 'e2e-metrics-token-0123456789';
+process.env.ANALYTICS_CACHE_TTL_SECONDS = '300';
 // Object storage for the attachment tests (a real S3-compatible server: docker compose up).
 process.env.S3_ENDPOINT = process.env.S3_ENDPOINT ?? 'http://localhost:8333';
 process.env.S3_BUCKET = 'nexora-test';

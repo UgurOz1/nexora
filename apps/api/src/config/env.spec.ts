@@ -52,4 +52,11 @@ describe('validateEnv', () => {
       /S3_SECRET_ACCESS_KEY/,
     );
   });
+
+  it('leaves the metrics endpoint off by default and refuses a short metrics token', () => {
+    expect(validateEnv(validEnv).METRICS_TOKEN).toBeUndefined();
+    expect(validateEnv({ ...validEnv, METRICS_TOKEN: '' }).METRICS_TOKEN).toBeUndefined();
+    expect(() => validateEnv({ ...validEnv, METRICS_TOKEN: 'short' })).toThrow(/METRICS_TOKEN/);
+    expect(validateEnv(validEnv).ANALYTICS_CACHE_TTL_SECONDS).toBe(300);
+  });
 });

@@ -4,6 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import type { Env } from './config/env';
+import { httpMetrics } from './metrics/http-metrics.middleware';
+import { MetricsService } from './metrics/metrics.service';
 import { RedisIoAdapter, realtimeOrigins } from './realtime/realtime.adapter';
 
 // Title, auth schemes and the like of the OpenAPI document. Used by the live /api/docs page and
@@ -59,6 +61,8 @@ export function configureApp(app: INestApplication): void {
       ),
     ),
   );
+  // First, so the measured time covers everything below (headers, cookies, guards, the handler).
+  app.use(httpMetrics(app.get(MetricsService)));
   // Routes look like /api/v1/projects; a breaking change ships as v2 next to v1.
   app.setGlobalPrefix('api');
   app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });

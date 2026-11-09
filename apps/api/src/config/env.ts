@@ -47,6 +47,13 @@ export const envSchema = z.object({
     .enum(['true', 'false'])
     .default('true')
     .transform((value) => value === 'true'),
+  // How long a computed dashboard stays in Redis. Every change to the organization's tasks,
+  // projects or members drops it earlier; the time limit is the upper bound for what changes on
+  // its own (a task becoming overdue at midnight). 0 = no caching (used to measure the difference).
+  ANALYTICS_CACHE_TTL_SECONDS: z.coerce.number().int().min(0).max(3600).default(300),
+  // Bearer token Prometheus sends to scrape GET /api/metrics. Without it the endpoint answers 404:
+  // the numbers describe the system (routes, error rates, queue sizes) and are not for the public.
+  METRICS_TOKEN: z.preprocess((v) => (v === '' ? undefined : v), z.string().min(16).optional()),
   // How many reverse proxies stand between the internet and the API. Behind none, the client IP
   // is the connection's; behind N, it is read N hops from the end of X-Forwarded-For. Setting this
   // too high lets a client choose its own IP (and so dodge the limits); too low would make

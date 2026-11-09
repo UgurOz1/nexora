@@ -3002,6 +3002,115 @@
           "activity"
         ]
       }
+    },
+    "/api/v1/organizations/{orgId}/analytics/overview": {
+      "get": {
+        "operationId": "AnalyticsController_overview_v1",
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "days",
+            "required": false,
+            "in": "query",
+            "description": "Days to look back",
+            "schema": {
+              "default": 30,
+              "type": "number",
+              "enum": [
+                7,
+                30,
+                90
+              ]
+            }
+          },
+          {
+            "name": "projectId",
+            "required": false,
+            "in": "query",
+            "description": "Only this project",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyticsOverviewDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
+    "/api/v1/organizations/{orgId}/analytics/team": {
+      "get": {
+        "operationId": "AnalyticsController_team_v1",
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "days",
+            "required": false,
+            "in": "query",
+            "description": "Days to look back",
+            "schema": {
+              "default": 30,
+              "type": "number",
+              "enum": [
+                7,
+                30,
+                90
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamStatsDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      }
     }
   },
   "info": {
@@ -4831,6 +4940,304 @@
         "required": [
           "items",
           "nextCursor"
+        ]
+      },
+      "AnalyticsRangeDto": {
+        "type": "object",
+        "properties": {
+          "days": {
+            "type": "number",
+            "enum": [
+              7,
+              30,
+              90
+            ]
+          },
+          "from": {
+            "type": "string",
+            "description": "Start of the first day (UTC midnight), ISO 8601"
+          },
+          "generatedAt": {
+            "type": "string",
+            "description": "When the numbers were computed, ISO 8601"
+          }
+        },
+        "required": [
+          "days",
+          "from",
+          "generatedAt"
+        ]
+      },
+      "StatusCountsDto": {
+        "type": "object",
+        "properties": {
+          "TODO": {
+            "type": "number"
+          },
+          "IN_PROGRESS": {
+            "type": "number"
+          },
+          "IN_REVIEW": {
+            "type": "number"
+          },
+          "DONE": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "TODO",
+          "IN_PROGRESS",
+          "IN_REVIEW",
+          "DONE"
+        ]
+      },
+      "AnalyticsTotalsDto": {
+        "type": "object",
+        "properties": {
+          "byStatus": {
+            "$ref": "#/components/schemas/StatusCountsDto"
+          },
+          "overdue": {
+            "type": "number",
+            "description": "Not done and past the due date"
+          },
+          "dueSoon": {
+            "type": "number",
+            "description": "Not done and due within the next 7 days"
+          },
+          "completed": {
+            "type": "number",
+            "description": "Finished within the range"
+          },
+          "created": {
+            "type": "number",
+            "description": "Created within the range"
+          },
+          "medianCycleHours": {
+            "type": "number",
+            "nullable": true,
+            "description": "Median hours from creation to completion of the tasks finished in the range"
+          }
+        },
+        "required": [
+          "byStatus",
+          "overdue",
+          "dueSoon",
+          "completed",
+          "created",
+          "medianCycleHours"
+        ]
+      },
+      "DailyCountDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "example": "2026-11-09",
+            "description": "Day (UTC), YYYY-MM-DD"
+          },
+          "completed": {
+            "type": "number"
+          },
+          "created": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "date",
+          "completed",
+          "created"
+        ]
+      },
+      "ProjectStatsDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "department": {
+            "type": "string",
+            "nullable": true
+          },
+          "open": {
+            "type": "number",
+            "description": "Not done"
+          },
+          "done": {
+            "type": "number"
+          },
+          "overdue": {
+            "type": "number"
+          },
+          "completed": {
+            "type": "number",
+            "description": "Finished within the range"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "department",
+          "open",
+          "done",
+          "overdue",
+          "completed"
+        ]
+      },
+      "DepartmentStatsDto": {
+        "type": "object",
+        "properties": {
+          "department": {
+            "type": "string",
+            "nullable": true,
+            "description": "Null: projects without one"
+          },
+          "projects": {
+            "type": "number"
+          },
+          "open": {
+            "type": "number"
+          },
+          "overdue": {
+            "type": "number"
+          },
+          "completed": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "department",
+          "projects",
+          "open",
+          "overdue",
+          "completed"
+        ]
+      },
+      "AnalyticsOverviewDto": {
+        "type": "object",
+        "properties": {
+          "range": {
+            "$ref": "#/components/schemas/AnalyticsRangeDto"
+          },
+          "totals": {
+            "$ref": "#/components/schemas/AnalyticsTotalsDto"
+          },
+          "daily": {
+            "description": "One entry per day of the range, oldest first",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DailyCountDto"
+            }
+          },
+          "projects": {
+            "description": "Most open work first (at most 50)",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectStatsDto"
+            }
+          },
+          "departments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DepartmentStatsDto"
+            }
+          }
+        },
+        "required": [
+          "range",
+          "totals",
+          "daily",
+          "projects",
+          "departments"
+        ]
+      },
+      "MemberStatsDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Role"
+              }
+            ]
+          },
+          "open": {
+            "type": "number",
+            "description": "Assigned and not done"
+          },
+          "overdue": {
+            "type": "number"
+          },
+          "completed": {
+            "type": "number",
+            "description": "Finished within the range"
+          },
+          "medianCycleHours": {
+            "type": "number",
+            "nullable": true,
+            "description": "Median hours, creation to done"
+          }
+        },
+        "required": [
+          "userId",
+          "name",
+          "role",
+          "open",
+          "overdue",
+          "completed",
+          "medianCycleHours"
+        ]
+      },
+      "UnassignedStatsDto": {
+        "type": "object",
+        "properties": {
+          "open": {
+            "type": "number"
+          },
+          "overdue": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "open",
+          "overdue"
+        ]
+      },
+      "TeamStatsDto": {
+        "type": "object",
+        "properties": {
+          "range": {
+            "$ref": "#/components/schemas/AnalyticsRangeDto"
+          },
+          "members": {
+            "description": "Most finished work first",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberStatsDto"
+            }
+          },
+          "unassigned": {
+            "description": "Open work with no assignee, or one who has left the organization",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UnassignedStatsDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "range",
+          "members",
+          "unassigned"
         ]
       }
     }

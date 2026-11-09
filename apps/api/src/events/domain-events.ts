@@ -34,6 +34,16 @@ export interface DomainEventMap {
     projectId: string;
     kind: TaskChangeKind;
   };
+  // A project was renamed, moved to another department or deleted (with its tasks).
+  'project.changed': {
+    organizationId: string;
+    projectId: string;
+  };
+  // Someone joined or left the organization, or their role changed.
+  'membership.changed': {
+    organizationId: string;
+    userId: string;
+  };
   // Someone other than the new assignee set the assignee.
   'task.assigned': {
     organizationId: string;

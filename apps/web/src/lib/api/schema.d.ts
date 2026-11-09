@@ -756,6 +756,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/organizations/{orgId}/analytics/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AnalyticsController_overview_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/organizations/{orgId}/analytics/team": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AnalyticsController_team_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1253,6 +1285,93 @@ export interface components {
         ActivityPageResponseDto: {
             items: components["schemas"]["ActivityItemResponseDto"][];
             nextCursor: string | null;
+        };
+        AnalyticsRangeDto: {
+            /** @enum {number} */
+            days: 7 | 30 | 90;
+            /** @description Start of the first day (UTC midnight), ISO 8601 */
+            from: string;
+            /** @description When the numbers were computed, ISO 8601 */
+            generatedAt: string;
+        };
+        StatusCountsDto: {
+            TODO: number;
+            IN_PROGRESS: number;
+            IN_REVIEW: number;
+            DONE: number;
+        };
+        AnalyticsTotalsDto: {
+            byStatus: components["schemas"]["StatusCountsDto"];
+            /** @description Not done and past the due date */
+            overdue: number;
+            /** @description Not done and due within the next 7 days */
+            dueSoon: number;
+            /** @description Finished within the range */
+            completed: number;
+            /** @description Created within the range */
+            created: number;
+            /** @description Median hours from creation to completion of the tasks finished in the range */
+            medianCycleHours: number | null;
+        };
+        DailyCountDto: {
+            /**
+             * @description Day (UTC), YYYY-MM-DD
+             * @example 2026-11-09
+             */
+            date: string;
+            completed: number;
+            created: number;
+        };
+        ProjectStatsDto: {
+            id: string;
+            name: string;
+            department: string | null;
+            /** @description Not done */
+            open: number;
+            done: number;
+            overdue: number;
+            /** @description Finished within the range */
+            completed: number;
+        };
+        DepartmentStatsDto: {
+            /** @description Null: projects without one */
+            department: string | null;
+            projects: number;
+            open: number;
+            overdue: number;
+            completed: number;
+        };
+        AnalyticsOverviewDto: {
+            range: components["schemas"]["AnalyticsRangeDto"];
+            totals: components["schemas"]["AnalyticsTotalsDto"];
+            /** @description One entry per day of the range, oldest first */
+            daily: components["schemas"]["DailyCountDto"][];
+            /** @description Most open work first (at most 50) */
+            projects: components["schemas"]["ProjectStatsDto"][];
+            departments: components["schemas"]["DepartmentStatsDto"][];
+        };
+        MemberStatsDto: {
+            userId: string;
+            name: string;
+            role: components["schemas"]["Role"];
+            /** @description Assigned and not done */
+            open: number;
+            overdue: number;
+            /** @description Finished within the range */
+            completed: number;
+            /** @description Median hours, creation to done */
+            medianCycleHours: number | null;
+        };
+        UnassignedStatsDto: {
+            open: number;
+            overdue: number;
+        };
+        TeamStatsDto: {
+            range: components["schemas"]["AnalyticsRangeDto"];
+            /** @description Most finished work first */
+            members: components["schemas"]["MemberStatsDto"][];
+            /** @description Open work with no assignee, or one who has left the organization */
+            unassigned: components["schemas"]["UnassignedStatsDto"];
         };
     };
     responses: never;
@@ -2836,6 +2955,56 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ActivityPageResponseDto"];
+                };
+            };
+        };
+    };
+    AnalyticsController_overview_v1: {
+        parameters: {
+            query?: {
+                /** @description Days to look back */
+                days?: 7 | 30 | 90;
+                /** @description Only this project */
+                projectId?: string;
+            };
+            header?: never;
+            path: {
+                orgId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnalyticsOverviewDto"];
+                };
+            };
+        };
+    };
+    AnalyticsController_team_v1: {
+        parameters: {
+            query?: {
+                /** @description Days to look back */
+                days?: 7 | 30 | 90;
+            };
+            header?: never;
+            path: {
+                orgId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeamStatsDto"];
                 };
             };
         };
