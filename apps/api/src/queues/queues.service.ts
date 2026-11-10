@@ -91,6 +91,19 @@ export class QueuesService implements OnApplicationShutdown {
     }
   }
 
+  // How many jobs each queue holds right now, for the metrics endpoint. A growing "waiting" means
+  // the workers do not keep up; a growing dead-letter "waiting" means jobs keep failing for good.
+  async jobCounts(): Promise<{ queue: QueueName; state: string; count: number }[]> {
+    const states = ['waiting', 'active', 'delayed', 'failed'] as const;
+    const perQueue = await Promise.all(
+      Object.values(QueueName).map(async (name) => {
+        const counts = await this.queue(name).getJobCounts(...states);
+        return states.map((state) => ({ queue: name, state, count: counts[state] ?? 0 }));
+      }),
+    );
+    return perQueue.flat();
+  }
+
   private onFailed(name: QueueName, job: Job | undefined, error: Error) {
     if (!job) return;
     const attempts = job.opts.attempts ?? 1;

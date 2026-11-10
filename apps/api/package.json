@@ -14,6 +14,7 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy",
     "db:seed": "prisma db seed",
+    "seed:load": "ts-node scripts/seed-load.ts",
     "openapi:generate": "ts-node scripts/generate-openapi.ts"
   },
   "jest": {
@@ -66,6 +67,7 @@
     "nodemailer": "^8.0.11",
     "pino": "^10.4.0",
     "pino-http": "^11.0.0",
+    "prom-client": "^15.1.3",
     "reflect-metadata": "^0.2.2",
     "rrule": "^2.8.1",
     "rxjs": "^7.8.2",

@@ -1,7 +1,10 @@
 generator client {
-  provider     = "prisma-client"
-  output       = "../src/generated/prisma"
-  moduleFormat = "cjs"
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  moduleFormat    = "cjs"
+  // Indexes with a WHERE clause (the analytics indexes on Task). Declared here, not only in a
+  // migration, so a later `prisma migrate dev` knows them and does not generate a DROP INDEX.
+  previewFeatures = ["partialIndexes"]
 }
 
 datasource db {
@@ -192,6 +195,9 @@ model Task {
   title           String
   description     String?
   status          TaskStatus   @default(TODO)
+  // When the task last became DONE; null while it is not DONE. Kept by a database trigger (see
+  // the task_completed_at migration), so every way a status can change sets it.
+  completedAt     DateTime?
   priority        TaskPriority @default(MEDIUM)
   dueDate         DateTime?
   labels          String[]     @default([])
@@ -230,6 +236,11 @@ model Task {
   @@index([assigneeId])
   @@index([parentId])
   @@index([searchVector], type: Gin, map: "tasks_search_idx")
+  // Dashboard indexes (docs/PERFORMANCE.md). Each holds only the rows one part of the dashboard
+  // reads, and every column that part needs, so Postgres answers from the index alone without
+  // visiting the table ("index-only scan").
+  @@index([organizationId, dueDate, status, projectId, assigneeId], map: "tasks_open_work_idx", where: raw("\"deletedAt\" IS NULL AND status <> 'DONE'::\"TaskStatus\""))
+  @@index([organizationId, completedAt, createdAt, projectId, assigneeId], map: "tasks_completed_idx", where: raw("\"deletedAt\" IS NULL AND \"completedAt\" IS NOT NULL"))
   @@map("tasks")
 }
 

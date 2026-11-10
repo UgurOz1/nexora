@@ -38,3 +38,10 @@ export type CreatedAttachment = Schemas['CreatedAttachmentResponseDto'];
 
 // The types the API accepts for an attachment (the client checks the same list first).
 export type AllowedContentType = Schemas['CreateAttachmentDto']['contentType'];
+
+export type AnalyticsOverview = Schemas['AnalyticsOverviewDto'];
+export type DailyCount = Schemas['DailyCountDto'];
+export type ProjectStats = Schemas['ProjectStatsDto'];
+export type DepartmentStats = Schemas['DepartmentStatsDto'];
+export type TeamStats = Schemas['TeamStatsDto'];
+export type MemberStats = Schemas['MemberStatsDto'];

@@ -1,12 +1,16 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import type { OrgMembership } from '../common/auth/current-user.decorator';
+import { DomainEvents } from '../events/domain-events';
 import { Role } from '../generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { canChangeRole, canRemove } from './policies';
 
 @Injectable()
 export class MembersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly events: DomainEvents,
+  ) {}
 
   list(organizationId: string) {
     return this.prisma.forTenant(organizationId).membership.findMany({
@@ -32,13 +36,18 @@ export class MembersService {
       throw new ForbiddenException('You cannot change this member to that role');
     }
 
-    return tenant.membership.update({
+    const updated = await tenant.membership.update({
       where: {
         userId_organizationId: { userId: targetUserId, organizationId: actor.organizationId },
       },
       data: { role: newRole },
       select: { role: true, user: { select: { id: true, name: true, email: true } } },
     });
+    await this.events.publish('membership.changed', {
+      organizationId: actor.organizationId,
+      userId: targetUserId,
+    });
+    return updated;
   }
 
   async remove(actor: OrgMembership, targetUserId: string): Promise<void> {
@@ -58,6 +67,10 @@ export class MembersService {
 
     await this.prisma.forTenant(actor.organizationId).membership.deleteMany({
       where: { userId: targetUserId },
+    });
+    await this.events.publish('membership.changed', {
+      organizationId: actor.organizationId,
+      userId: targetUserId,
     });
   }
 

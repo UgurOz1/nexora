@@ -13,6 +13,7 @@ import { canDeleteTask } from '../organizations/policies';
 import { PrismaService } from '../prisma/prisma.service';
 import type { TenantTx } from '../prisma/tenant-scope';
 import type { CreateTaskDto, ListTasksQueryDto, MoveTaskDto, UpdateTaskDto } from './dto/tasks.dto';
+import { withCount, withCounts } from './task-counts';
 import { recordEvent, recordEvents } from './task-events';
 import { endPosition, positionAfter } from './task-ordering';
 import { diffSnapshots, snapshotOf } from './task-snapshot';
@@ -49,12 +50,7 @@ const taskSelect = {
   updatedAt: true,
   assignee: userSummary,
   createdBy: userSummary,
-  _count: {
-    select: {
-      subtasks: { where: { deletedAt: null } },
-      dependencies: { where: openBlockers },
-    },
-  },
+  // subtaskCount and isBlocked are added by withCounts (task-counts.ts), not with _count here.
 } as const;
 
 const taskDetailSelect = {
@@ -67,11 +63,6 @@ const taskDetailSelect = {
   dependencies: { where: { dependsOn: { deletedAt: null } }, select: { dependsOn: taskSummary } },
   dependents: { where: { task: { deletedAt: null } }, select: { task: taskSummary } },
 } satisfies Prisma.TaskSelect;
-
-function present<T extends { _count: { subtasks: number; dependencies: number } }>(task: T) {
-  const { _count, ...rest } = task;
-  return { ...rest, subtaskCount: _count.subtasks, isBlocked: _count.dependencies > 0 };
-}
 
 @Injectable()
 export class TasksService {
@@ -149,7 +140,7 @@ export class TasksService {
         changes: diffSnapshots(null, snapshot),
         snapshot,
       });
-      return present(task);
+      return withCount(tx, task);
     });
 
     await this.events.publish('task.created', {
@@ -205,10 +196,14 @@ export class TasksService {
       select: taskSelect,
     });
 
-    return toPage(rows.map(present), query.limit, (row) => ({
-      value: row[query.sort].toISOString(),
-      id: row.id,
-    }));
+    return toPage(
+      await withCounts(this.prisma.forTenant(organizationId), rows),
+      query.limit,
+      (row) => ({
+        value: row[query.sort].toISOString(),
+        id: row.id,
+      }),
+    );
   }
 
   async get(organizationId: string, taskId: string) {
@@ -219,10 +214,14 @@ export class TasksService {
     if (!task) {
       throw new NotFoundException('Task not found');
     }
-    const { subtasks, dependencies, dependents, ...rest } = present(task);
+    const { subtasks, dependencies, dependents, ...rest } = task;
+    const [counted, ...countedSubtasks] = await withCounts(this.prisma.forTenant(organizationId), [
+      rest,
+      ...subtasks,
+    ]);
     return {
-      ...rest,
-      subtasks: subtasks.map(present),
+      ...counted,
+      subtasks: countedSubtasks,
       blockedBy: dependencies.map((d) => d.dependsOn),
       blocks: dependents.map((d) => d.task),
     };
@@ -270,7 +269,7 @@ export class TasksService {
             snapshot,
           });
         }
-        return { before, task: present(task) };
+        return { before, task: await withCount(tx, task) };
       });
 
     await this.announceChanges(organizationId, actor.userId, before, updated, 'updated');
@@ -299,12 +298,23 @@ export class TasksService {
         });
         return {
           status,
-          tasks: rows.slice(0, BOARD_COLUMN_LIMIT).map(present),
+          tasks: rows.slice(0, BOARD_COLUMN_LIMIT),
           hasMore: rows.length > BOARD_COLUMN_LIMIT,
         };
       }),
     );
-    return { columns };
+    // The counts of every card on the board in one go.
+    const counted = await withCounts(
+      tenant,
+      columns.flatMap((column) => column.tasks),
+    );
+    const byId = new Map(counted.map((task) => [task.id, task]));
+    return {
+      columns: columns.map((column) => ({
+        ...column,
+        tasks: column.tasks.map((task) => byId.get(task.id)!),
+      })),
+    };
   }
 
   // Drag and drop: put the task into a column, right after `afterId` (or at the top). Moving to
@@ -349,7 +359,7 @@ export class TasksService {
             snapshot,
           });
         }
-        return { before, task: present(task) };
+        return { before, task: await withCount(tx, task) };
       });
 
     await this.announceChanges(organizationId, actor.userId, before, moved, 'moved');

@@ -238,3 +238,29 @@ Bu dosya mülakat hazırlığında da ana kaynağın olacak.
 **Dürüst notlar:** CSP yok (Next.js nonce gerekir), bağımlılık taraması yok, Swagger üretimde açık: hepsi `docs/SECURITY.md`'de öncelik listesinde. Etiketler aranmıyor, yorumlar aranmıyor. Virüs taraması yok. Gerçek tarayıcıda dosya yükleme (CORS dahil) elle denendi ve çalıştı; Playwright ile Hafta 13'te otomatiğe bağlanacak.
 
 **Sonraki adım:** Hafta 12, analitik ve gözlemlenebilirlik (esnek hafta).
+
+### 2026-11-10 · Hafta 12 · Analitik ve gözlemlenebilirlik
+
+**Ne yaptık:** Dashboard (durum dağılımı, gecikenler, günlük tamamlanan/oluşturulan grafiği, proje, departman ve kişi bazlı tablolar; kişi tablosu MANAGER ve üstü), görevlere veritabanı tetikleyicisiyle tutulan `completedAt`, Redis cache (sürümle geçersiz kılma), `EXPLAIN ANALYZE` ile iki kısmi + kapsayan indeks, Prometheus metrikleri (`/api/metrics`), 1 milyon görevlik veri üretme betiği ve k6 yük testi. Kararlar: ADR-0013. Rakamlar: `docs/PERFORMANCE.md`.
+**Kavramlar:**
+
+- _Cache invalidation:_ Anahtar silmek yerine şirket başına sürüm sayacı; değişiklikte sayaç artar, eski girdiler okunmaz olur ve kendiliğinden sona erer. Değişiklikten önce başlamış yavaş hesaplama, sonucunu kimsenin okumadığı eski anahtara yazar: "sil, sonra bayat veri geri yazılsın" yarışı yok. TTL, yazma olmadan değişen sayıların (gece yarısı gecikmiş olan görev) üst sınırı.
+- _Cache stampede:_ Aynı anda kaçıran istekler tek bir hesaplamayı paylaşır (single-flight).
+- _Index her zaman iyi midir?_ Hayır. Kısmi + kapsayan indeksler dashboard'u ~5 kat hızlandırdı, ama 130 MB yer kaplıyor ve toplu eklemeyi ~1,5 kat yavaşlattı. Mevcut `(organizationId, createdAt)` indeksi %25 seçicilikte kullanılmadı ve planlayıcı haklıydı: eşleşen satırlar her sayfaya dağılmıştı.
+- _Index-only scan:_ Sorgunun okuduğu her sütun indekste ve indeksin koşulu sorgunun WHERE'inden çıkarılabiliyorsa tabloya hiç gidilmez (`Heap Fetches: 0`). Görünürlük haritası (`VACUUM`) güncel değilse yine tabloya bakılır.
+- _Kısmi indeks eşleşmesi:_ Postgres kısmi indeksi ancak sorgunun koşulunun indeksinkini kapsadığını kanıtlayabilirse kullanır; sorgular indeksin koşulunu kelimesi kelimesine tekrarlıyor.
+- _Metrik etiketlerinde kardinalite:_ Etiket olarak gerçek URL değil route şablonu; her farklı değer ayrı bir zaman serisi.
+- _p95 neden ortalama değil:_ Ortalama yavaş kuyruğu gizler; kullanıcıların %5'inin yaşadığı gecikme p95'tir.
+
+**Dersler:**
+
+- Yük testi, birim/e2e testlerin göremediği bir sorunu buldu: Prisma'nın `_count`'u 20 satırlık liste için bütün tablonun (1 M satır) alt görevlerini sayıyordu. Postgres'te `log_min_duration_statement` açınca üretilen SQL görüldü. Sayımlar, satır kimlikleriyle sınırlı `groupBy` sorgularına taşındı: board p95 7,6 s → 191 ms.
+- "Önce ölçümü ölç": API'nin logu PowerShell `*>` yönlendirmesinden geçerken olay döngüsü bekliyordu; düz dosya yönlendirmesiyle p95'ler 4–7 kat düştü. Bir ölçüm şaşırtıcıysa ortamdan şüphelen.
+- Yük senaryosu gerçekçi olmalı: her başlıkta geçen kelimeyle arama en kötü durumdur, tipik değil. İkisi de belgelendi.
+- Tetikleyicide yorumla kod uyuşmuyordu ("verilen değer korunur" yazıyordu ama güncellemede eziliyordu); e2e test yakaladı.
+- Docker'da Postgres'in paylaşımlı belleği 64 MB: paralel `VACUUM` hata verdi, `PARALLEL 0` ile çözüldü.
+- Gizli tarayıcı panelinde `ResizeObserver` hiç bildirim göndermedi ve grafik çizilmedi. Genişlik artık efekt içinde hemen de ölçülüyor.
+
+**Dürüst notlar:** Günler UTC'ye göre. Arayüz ekran görüntüsüyle kontrol edilmedi (tarayıcı paneli gizliydi); sayfa içi kontrollerle doğrulandı. Her başlıkta geçen kelimeyle arama hâlâ 0,5–1 s. Seed verisinde bitiş zamanı "şimdi"ye kırpıldığı için bugünün tamamlanan sayısı yapay olarak yüksek.
+
+**Sonraki adım:** Hafta 13: yayına alma, Playwright e2e (gerçek sürükle-bırak dahil), demo verisi ve README.

@@ -6,6 +6,8 @@ import { LoggerModule } from 'nestjs-pino';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ActivityModule } from './activity/activity.module';
+import { AnalyticsModule } from './analytics/analytics.module';
+import { MetricsModule } from './metrics/metrics.module';
 import { AttachmentsModule } from './attachments/attachments.module';
 import { AuditModule } from './audit/audit.module';
 import { AuthModule } from './auth/auth.module';
@@ -77,6 +79,8 @@ import { TasksModule } from './tasks/tasks.module';
     CommentsModule,
     NotificationsModule,
     ActivityModule,
+    MetricsModule,
+    AnalyticsModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_FILTER, useClass: AllExceptionsFilter }],

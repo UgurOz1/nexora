@@ -11,6 +11,7 @@ import { ConfigService } from '@nestjs/config';
 import { hashToken } from '../auth/token.service';
 import type { OrgMembership } from '../common/auth/current-user.decorator';
 import type { Env } from '../config/env';
+import { DomainEvents } from '../events/domain-events';
 import { Role } from '../generated/prisma/client';
 import { MailService } from '../mail/mail.service';
 import { invitationEmail } from '../mail/templates';
@@ -27,6 +28,7 @@ export class InvitationsService {
     private readonly prisma: PrismaService,
     private readonly mail: MailService,
     private readonly config: ConfigService<Env, true>,
+    private readonly events: DomainEvents,
   ) {}
 
   async create(actor: OrgMembership, email: string, role: Role) {
@@ -133,6 +135,11 @@ export class InvitationsService {
       await tx.membership.create({
         data: { userId, organizationId: invitation.organizationId, role: invitation.role },
       });
+    });
+
+    await this.events.publish('membership.changed', {
+      organizationId: invitation.organizationId,
+      userId,
     });
 
     const organization = await this.prisma.organization.findUniqueOrThrow({

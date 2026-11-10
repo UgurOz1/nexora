@@ -15,6 +15,8 @@ export default tseslint.config(
       'apps/api/src/generated/',
       // Generated from openapi.json; regenerated, never edited by hand.
       'apps/web/src/lib/api/schema.d.ts',
+      // k6 scripts run inside k6 (its own globals such as __ENV and __VU), not in Node.
+      'load/',
       // Copied in by the shadcn/ui CLI.
       'apps/web/src/components/ui/',
       'apps/web/next-env.d.ts',
