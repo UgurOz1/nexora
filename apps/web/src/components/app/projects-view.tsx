@@ -29,6 +29,12 @@ export function ProjectsView({ orgId }: { orgId: string }) {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <Link
+            href={`/orgs/${orgId}/analytics`}
+            className={buttonVariants({ variant: 'outline' })}
+          >
+            Dashboard
+          </Link>
           {hasAtLeast(role, 'ADMIN') && (
             <Link href={`/orgs/${orgId}/audit`} className={buttonVariants({ variant: 'outline' })}>
               Audit log

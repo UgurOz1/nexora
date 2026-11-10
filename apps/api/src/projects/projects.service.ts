@@ -10,14 +10,7 @@ const projectSelect = {
   department: true,
   createdAt: true,
   updatedAt: true,
-  // Only tasks that are not soft-deleted count.
-  _count: { select: { tasks: { where: { deletedAt: null } } } },
 } as const;
-
-function present<T extends { _count: { tasks: number } }>(project: T) {
-  const { _count, ...rest } = project;
-  return { ...rest, taskCount: _count.tasks };
-}
 
 @Injectable()
 export class ProjectsService {
@@ -26,12 +19,30 @@ export class ProjectsService {
     private readonly events: DomainEvents,
   ) {}
 
+  // Adds taskCount (tasks that are not deleted) with one query limited to these projects. Not
+  // Prisma's _count: that groups every task in the table (see tasks/task-counts.ts).
+  private async withTaskCounts<T extends { id: string }>(organizationId: string, projects: T[]) {
+    if (projects.length === 0) return [];
+    const counts = await this.prisma.forTenant(organizationId).task.groupBy({
+      by: ['projectId'],
+      where: { projectId: { in: projects.map((p) => p.id) }, deletedAt: null },
+      _count: { _all: true },
+    });
+    const byProject = new Map(counts.map((row) => [row.projectId, row._count._all]));
+    return projects.map((project) => ({ ...project, taskCount: byProject.get(project.id) ?? 0 }));
+  }
+
+  private async withTaskCount<T extends { id: string }>(organizationId: string, project: T) {
+    const [counted] = await this.withTaskCounts(organizationId, [project]);
+    return counted;
+  }
+
   async create(organizationId: string, dto: CreateProjectDto) {
     const project = await this.prisma.forTenant(organizationId).project.create({
       data: { organizationId, ...dto },
       select: projectSelect,
     });
-    return present(project);
+    return this.withTaskCount(organizationId, project);
   }
 
   async list(organizationId: string) {
@@ -40,7 +51,7 @@ export class ProjectsService {
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       select: projectSelect,
     });
-    return projects.map(present);
+    return this.withTaskCounts(organizationId, projects);
   }
 
   async get(organizationId: string, projectId: string) {
@@ -51,7 +62,7 @@ export class ProjectsService {
     if (!project) {
       throw new NotFoundException('Project not found');
     }
-    return present(project);
+    return this.withTaskCount(organizationId, project);
   }
 
   async update(organizationId: string, projectId: string, dto: UpdateProjectDto) {
@@ -62,7 +73,7 @@ export class ProjectsService {
       select: projectSelect,
     });
     await this.events.publish('project.changed', { organizationId, projectId });
-    return present(project);
+    return this.withTaskCount(organizationId, project);
   }
 
   // Soft delete: rows stay in the database (recoverable, auditable) but disappear from the API.

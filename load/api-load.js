@@ -77,8 +77,10 @@ export default function (data) {
   sleep(1);
   ok(http.get(`${org}/projects/${project}/tasks?limit=20`, params('tasks')));
   sleep(1);
-  const word = ['load', 'task', 'generated', 'description'][Math.floor(Math.random() * 4)];
-  ok(http.get(`${org}/search?q=${word}`, params('search')));
+  // A task number, like someone looking for a ticket they know. (A word that is in every one of
+  // the 200 000 titles, such as "load", is the worst case: docs/PERFORMANCE.md.)
+  const number = 1000 + Math.floor(Math.random() * 199000);
+  ok(http.get(`${org}/search?q=${number}`, params('search')));
   sleep(1);
   if (userIndex < 4) {
     ok(http.get(`${org}/analytics/team?days=30`, params('team')));

@@ -212,10 +212,11 @@ Her haftada: **Öğrenilecekler**, **Görevler**, **Çıktı** ve haftanın sonu
 
 **Öğrenilecekler:** Toplama sorguları ve index stratejisi, `EXPLAIN ANALYZE`, Redis ile cache (cache-aside, invalidation), metrikler (Prometheus formatı), load test (k6).
 
-- [ ] Dashboard: tamamlanan işler, gecikmiş görevler, ekip bazlı performans, grafikler
-- [ ] Ağır sorgular için cache
-- [ ] Yavaş sorguların `EXPLAIN ANALYZE` ile incelenip index eklenmesi
-- [ ] k6 ile load test, sonuçların README'ye yazılması (ör. p95 gecikme)
+- [x] Dashboard: tamamlanan işler, gecikmiş görevler, ekip bazlı performans, grafikler
+- [x] Ağır sorgular için cache
+- [x] Yavaş sorguların `EXPLAIN ANALYZE` ile incelenip index eklenmesi
+- [x] k6 ile load test, sonuçların README'ye yazılması (ör. p95 gecikme)
+- [x] Prometheus metrikleri (`/api/metrics`, ADR-0013); ölçümler `docs/PERFORMANCE.md`
 
 **Çıktı:** Ölçülebilir performans rakamları (CV için).
 **Mülakat soruları:** Cache invalidation'ı nasıl çözdün? Index her zaman iyi midir?

@@ -39,3 +39,21 @@ pnpm --filter @nexora/api test:e2e    # integration tests over HTTP (needs `pnpm
 
 The integration tests create their own `nexora_test` database and never touch your development data.
 They cover tenant isolation (one company can never see another's data) and the role rules.
+
+## Performance
+
+Measured on one laptop with **1,000,000 tasks** (200,000 in the measured organization), see
+[docs/PERFORMANCE.md](docs/PERFORMANCE.md) for the method, query plans and what the load test found.
+
+k6, 50 virtual users browsing (dashboard, board, task list, search), 0% errors:
+
+| Request           | p95    |
+| ----------------- | ------ |
+| Dashboard         | 68 ms  |
+| Search            | 69 ms  |
+| Task list         | 103 ms |
+| Board (400 cards) | 191 ms |
+
+- Partial covering indexes cut the dashboard's database time from ~1.1 s to ~220 ms (index-only scans).
+- Without the Redis cache, the same test pushes every request's p95 to about 1 s.
+- The load test caught Prisma `_count` counting the whole table for every list: board p95 7.6 s before the fix.
